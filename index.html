@@ -63,16 +63,19 @@ h3{margin:16px 0 8px;font-size:16px}
 .stk .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .stk svg{width:100%;height:90px;display:block;margin:8px 0}
 .stk .row{display:flex;gap:6px}.stk .row .btn{flex:1;padding:8px 2px;font-size:13px}
+.bal{padding:7px 10px;font-size:13px}.r2{display:flex;gap:5px}.r2 .btn{flex:1;padding:8px 4px;font-size:13px}.ev{background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:14px}.case s{color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
-<header><div class="me" data-a="tab" data-v="prof" id="head"></div><div class="bal">💰 <span id="bal">0</span> KX</div></header>
-<nav><button data-a="tab" data-v="cases" class="on">Кейсы</button><button data-a="tab" data-v="mk">Рынок</button><button data-a="tab" data-v="st">Акции</button><button data-a="tab" data-v="ch">Чат <span class="bdg" id="bdg" hidden></span></button><button data-a="tab" data-v="inv">Инвентарь</button><button data-a="tab" data-v="lb">Топ</button><button data-a="tab" data-v="prof">Профиль</button></nav>
+<header><div class="me" data-a="tab" data-v="prof" id="head"></div><div class="bal">💰 <span id="bal">0</span> KX · 💎 <span id="gem">0</span></div></header>
+<nav><button data-a="tab" data-v="cases" class="on">Магазин</button><button data-a="tab" data-v="mk">Рынок</button><button data-a="tab" data-v="st">Акции</button><button data-a="tab" data-v="ch">Чат <span class="bdg" id="bdg" hidden></span></button><button data-a="tab" data-v="inv">Инвентарь</button><button data-a="tab" data-v="lb">Топ</button><button data-a="tab" data-v="prof">Профиль</button></nav>
 
 <section id="cases" class="sec on">
+  <div class="ev" id="evBox"></div>
+  <h3>Кейсы</h3><p class="hint">Купленные кейсы попадают в Инвентарь → Кейсы, там их и открываем.</p>
   <div class="cases" id="caseList"></div>
-  <div class="rw" id="rw"><div class="strip" id="strip"></div></div>
-  <div class="res" id="res"><span style="color:var(--muted)">Выбери кейс и нажми «Открыть»</span></div>
+  <h3>Обмен валюты</h3><div id="exch"></div>
+  <h3>Промокоды</h3><div class="chrow"><input id="pcIn" maxlength="24" placeholder="Введи промокод"><button class="btn" data-a="promo">OK</button></div><div class="hint" id="pcMsg" style="margin-top:6px"></div>
 </section>
 
 <section id="mk" class="sec mk">
@@ -95,8 +98,11 @@ h3{margin:16px 0 8px;font-size:16px}
 </section>
 
 <section id="inv" class="sec">
-  <p class="hint" id="invInfo"></p>
-  <div class="grid" id="invGrid"></div>
+  <div class="r2" style="margin-bottom:10px"><button class="btn" data-a="itab" data-v="c" id="itc">Кейсы</button><button class="btn alt" data-a="itab" data-v="k" id="itk">Карты</button></div>
+  <div id="invC"><div class="cases" id="ownCases"></div>
+    <div class="rw" id="rw"><div class="strip" id="strip"></div></div>
+    <div class="res" id="res"><span style="color:var(--muted)">Выбери кейс и нажми «Открыть»</span></div></div>
+  <div id="invK" hidden><p class="hint" id="invInfo"></p><div class="grid" id="invGrid"></div></div>
 </section>
 
 <section id="prof" class="sec">
@@ -111,19 +117,22 @@ h3{margin:16px 0 8px;font-size:16px}
 <div class="toast" id="toast"></div>
 
 <script>
-const RAW="🍦 Ice Cream:300,🍪 Cookie:320,🍎 Apple:350,🍌 Banana:380,🍕 Pizza:420,🍔 Burger:450,🍩 Donut:480,🥑 Avocado:500,🌮 Taco:520,🍉 Melon:550,🌵 Cactus:600,🐱 Cat:620,🐶 Dog:650,🐸 Frog:680,🐧 Penguin:700,❤️ Heart:720,🍀 Clover:750,🌻 Sunflower:780,🌴 Palm:800,🐝 Bee:850,🦆 Duck:880,🐙 Octopus:900,🐢 Turtle:950,🦋 Butterfly:1000,❄️ Snowflake:1050,☀️ Sun:1100,☁️ Cloud:1150,🌈 Rainbow:1200,🍄 Mushroom:1250,🐼 Panda:1300,🦊 Fox:1400,🐨 Koala:1450,🦉 Owl:1500,🐬 Dolphin:1600,🎧 Headphones:1650,🎮 Gamepad:1700,🎸 Guitar:1800,🎩 Top Hat:1850,👻 Ghost:1900,⭐ Star:2000,🌙 Moon:2100,🐺 Wolf:2200,🦅 Eagle:2300,🐯 Tiger:2400,🦁 Lion:2500,🐻 Bear:2600,🦈 Shark:2700,⚽ Ball:2800,🏆 Trophy:3000,🔔 Bell:3100,🗝️ Key:3200,💣 Bomb:3300,💀 Skull:3400,👽 Alien:3500,🤖 Robot:3600,🎭 Masks:3800,🧿 Evil Eye:3900,🪐 Saturn:4000,🚀 Rocket:4200,🛸 UFO:4400,⚡ Lightning:4600,🔥 Flame:4800,🌊 Wave:5000,🌋 Volcano:5300,🦄 Unicorn:5600,🧙 Wizard:5900,🧛 Vampire:6200,🧜 Mermaid:6500,🧞 Genie:6800,🥷 Ninja:7000,💎 Diamond:7200,👑 Crown:7500,🔮 Crystal Ball:7800,📿 Beads:8000,🗡️ Dagger:8300,🛡️ Shield:8600,🌹 Rose:9000,🦚 Peacock:9400,🐲 Dragon Head:9800,🐉 Dragon:10000,🦂 Scorpion:10500,🕷️ Spider:11000,🦇 Bat:11500,🐍 Serpent:12000,🦖 T-Rex:12500,🦕 Brachio:13000,🐘 Elephant:13500,🦏 Rhino:14000,🦬 Bison:14500,🐎 Stallion:15000,🦢 Swan:15500,🦜 Parrot:16000,🦩 Flamingo:16500,🦥 Sloth:17000,🦔 Hedgehog:17500,🪬 Hamsa:18000,🪄 Magic Wand:18500,⚜️ Fleur:19000,🔱 Trident:19500,☄️ Comet:20000,🌌 Galaxy:21000,🌠 Meteor:22000,🌀 Cyclone:23000,🌪️ Tornado:24000,🧊 Ice Cube:25000,🏰 Castle:26000,🗿 Moai:27000,🛕 Temple:28000,🎆 Fireworks:29000,🎇 Sparkler:30000,🪙 Coin:32000,💰 Money Bag:34000,🏺 Amphora:36000,🪆 Matryoshka:38000,🕊️ Dove:40000,🦾 Mech Arm:43000,🧬 DNA:46000,⚛️ Atom:50000,☯️ Yin Yang:55000,👁️ Eye of Time:60000";
+const RAW="🍦 Ice Cream:300,🍪 Cookie:320,🍎 Apple:350,🍌 Banana:380,🍕 Pizza:420,🍔 Burger:450,🍩 Donut:480,🥑 Avocado:500,🌮 Taco:520,🍉 Melon:550,🌵 Cactus:600,🐱 Cat:620,🐶 Dog:650,🐸 Frog:680,🐧 Penguin:700,❤️ Heart:720,🍀 Clover:750,🌻 Sunflower:780,🌴 Palm:800,🐝 Bee:850,🦆 Duck:880,🐙 Octopus:900,🐢 Turtle:950,🦋 Butterfly:1000,❄️ Snowflake:1050,☀️ Sun:1100,☁️ Cloud:1150,🌈 Rainbow:1200,🍄 Mushroom:1250,🐼 Panda:1300,🦊 Fox:1400,🐨 Koala:1450,🦉 Owl:1500,🐬 Dolphin:1600,🎧 Headphones:1650,🎮 Gamepad:1700,🎸 Guitar:1800,🎩 Top Hat:1850,👻 Ghost:1900,⭐ Star:2000,🌙 Moon:2100,🐺 Wolf:2200,🦅 Eagle:2300,🐯 Tiger:2400,🦁 Lion:2500,🐻 Bear:2600,🦈 Shark:2700,⚽ Ball:2800,🏆 Trophy:3000,🔔 Bell:3100,🗝️ Key:3200,💣 Bomb:3300,💀 Skull:3400,👽 Alien:3500,🤖 Robot:3600,🎭 Masks:3800,🧿 Evil Eye:3900,🪐 Saturn:4000,🚀 Rocket:4200,🛸 UFO:4400,⚡ Lightning:4600,🔥 Flame:4800,🌊 Wave:5000,🌋 Volcano:5300,🦄 Unicorn:5600,🧙 Wizard:5900,🧛 Vampire:6200,🧜 Mermaid:6500,🧞 Genie:6800,🥷 Ninja:7000,💎 Diamond:7200,👑 Crown:7500,🔮 Crystal Ball:7800,📿 Beads:8000,🗡️ Dagger:8300,🛡️ Shield:8600,🌹 Rose:9000,🦚 Peacock:9400,🐲 Dragon Head:9800,🐉 Dragon:10000,🦂 Scorpion:10500,🕷️ Spider:11000,🦇 Bat:11500,🐍 Serpent:12000,🦖 T-Rex:12500,🦕 Brachio:13000,🐘 Elephant:13500,🦏 Rhino:14000,🦬 Bison:14500,🐎 Stallion:15000,🦢 Swan:15500,🦜 Parrot:16000,🦩 Flamingo:16500,🦥 Sloth:17000,🦔 Hedgehog:17500,🪬 Hamsa:18000,🪄 Magic Wand:18500,⚜️ Fleur:19000,🔱 Trident:19500,☄️ Comet:20000,🌌 Galaxy:21000,🌠 Meteor:22000,🌀 Cyclone:23000,🌪️ Tornado:24000,🧊 Ice Cube:25000,🏰 Castle:26000,🗿 Moai:27000,🛕 Temple:28000,🎆 Fireworks:29000,🎇 Sparkler:30000,🪙 Coin:32000,💰 Money Bag:34000,🏺 Amphora:36000,🪆 Matryoshka:38000,🕊️ Dove:40000,🦾 Mech Arm:43000,🧬 DNA:46000,⚛️ Atom:50000,☯️ Yin Yang:55000,👁️ Eye of Time:60000,🏝️ Island:70000,🛰️ Satellite:90000,🚁 Helicopter:120000,🏎️ Supercar:160000,🛥️ Yacht:200000,✈️ Jet:250000,🏯 Palace:300000,🌍 Planet:380000,🌟 Supernova:480000,🕳️ Black Hole:600000,🪩 Mirrorball:900000,🏛️ Parthenon:1000000";
 const CARDS=RAW.split(",").map(s=>{const i=s.indexOf(" "),j=s.lastIndexOf(":");return{i:s.slice(0,i),n:s.slice(i+1,j),p:+s.slice(j+1)}}).sort((a,b)=>a.p-b.p);
 const BGS=("Серый мел,#555a66,#3c404a,0,28;Песочный,#d2b27a,#8f6f3c,300,20;Небесный,#5db2ff,#2a5db0,800,13;Мята,#6fe3c1,#1f8f77,1200,11;Нефрит,#2fbf8f,#0f6b50,1800,9;Лаванда,#b79cff,#6a4fc4,2300,8;Закат,#ff9a5c,#c2406a,2700,7;Gold Rose,#f7c873,#b8505e,3000,6;Янтарь,#ffc14d,#b36a00,3500,5;Рубин,#ff4d6d,#7a0f2b,4200,4.2;Сапфир,#3d7bff,#0a1f66,5000,3.6;Изумруд,#20e08a,#02593a,6000,3;Океан,#00d0ff,#003a6b,7000,2.4;Black Nephrite,#1c1c1c,#050505,8000,2;Космос,#7b4dff,#0a0630,9500,1.6;Неон,#ff2bd6,#00a5c4,11000,1.2;Огонь,#ffb800,#ff2d2d,13000,.9;Платина,#c9cde0,#7b8099,15000,.6;Aurora,#4dffb8,#b84dff,18000,.35;Бриллиант,#9fe8ff,#5a9fff,20000,.2").split(";").map(s=>{const a=s.split(",");return{n:a[0],css:`linear-gradient(135deg,${a[1]},${a[2]})`,b:+a[3],w:+a[4]}});
 const CN=[["Летний кейс","🌞"],["Зимний кейс","🧊"],["Лесной кейс","🌲"],["Пиратский кейс","🏴‍☠️"],["Неоновый кейс","🔮"],["Космический кейс","🪐"],["Королевский кейс","👑"],["Огненный кейс","🔥"],["Мифический кейс","🐉"],["Легендарный кейс","💠"]];
 const AB=BGS.reduce((s,b)=>s+b.w*b.b,0)/BGS.reduce((s,b)=>s+b.w,0);
-const CASES=CN.map((x,k)=>{const cards=CARDS.map((_,i)=>i).slice(k*10,k*10+30);const sw=cards.reduce((s,i)=>s+1/CARDS[i].p,0);const ev=(cards.length+AB*sw)/sw;return{id:k,n:x[0],i:x[1],cards,price:Math.max(100,Math.round(ev/50)*50)}});
-const BOTS=[["NeonFox","🦊"],["Kostya_77","🐺"],["Мурка","🐱"],["DarkLord","🧛"],["Vasya_Pro","🤠"],["Лисёнок","🦝"],["XxSniperxX","🥷"],["Алиса_KX","👩‍🚀"],["Crypto_Dedus","🧓"],["Tima4","🐸"],["Рома_Лут","😎"],["SleepyBear","🐻"],["Ghost_404","👻"],["ЗлойКот","😼"]].map(a=>({n:a[0],a:a[1],afk:Math.random()<.35,bal:Math.round(6000+Math.random()*64000)}));
+CN.push(["Элитный кейс","🏆"],["Абсолютный кейс","🌟"],["Кристальный кейс","✨"]);
+const POOL=[[120,128],[123,130],[125,132]],rg=(a,b)=>{const r=[];for(let i=a;i<b;i++)r.push(i);return r};
+const CASES=CN.map((x,k)=>{const cards=k<10?rg(k*10,Math.min(k*10+30,120)):rg(...POOL[k-10]);const sw=cards.reduce((s,i)=>s+1/CARDS[i].p,0);const ev=cards.length/sw+AB;const st=ev>50000?5000:ev>5000?500:ev>1000?100:50;return{id:k,n:x[0],i:x[1],cards,price:Math.max(100,Math.round(ev*1.1/st)*st)}});
+CASES.push({id:13,n:"Гем-кейс",i:"💎",cards:rg(60,100),price:0,gem:4});
+const BOTS=[["NeonFox","🦊"],["Kostya_77","🐺"],["Мурка","🐱"],["DarkLord","🧛"],["Vasya_Pro","🤠"],["Лисёнок","🦝"],["XxSniperxX","🥷"],["Алиса_KX","👩‍🚀"],["Crypto_Dedus","🧓"],["Tima4","🐸"],["Рома_Лут","😎"],["SleepyBear","🐻"],["Ghost_404","👻"],["ЗлойКот","😼"]].map(a=>({n:a[0],a:a[1],afk:Math.random()<.35,bal:Math.round(Math.exp(Math.log(4e3)+Math.random()*(Math.log(1.2e6)-Math.log(4e3))))}));
 const DAV=["😎","🤠","🥷","🧑‍🚀","🦸","🧙","👾","🐱","🐺","🦊","🤖","👑"];
 /* Онлайн-режим: вставь сюда URL Firebase Realtime Database, например "https://kx-game-default-rtdb.firebaseio.com" */
 let DB_URL="";
-const START=15000,SELL=.85,FEE=.95;
-const def=()=>({bal:START,inv:[],list:[],nid:1,ts:Date.now(),st:{},out:[],seen:[],uid:Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4),prof:{nick:"Игрок"+(100+Math.floor(Math.random()*900)),av:"😎",show:[]}});
-let S=def(),M=[],busy=false,dirty=false,cnt=0,cur="cases",LB=[],LBR=[],lbErr=false;
+const START=5000,SELL=.8,FEE=.95;
+const def=()=>({bal:START,gem:0,cases:{},codes:[],inv:[],list:[],nid:1,ts:Date.now(),st:{},out:[],seen:[],uid:Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4),prof:{nick:"Игрок"+(100+Math.floor(Math.random()*900)),av:"😎",show:[]}});
+let invTab="c",S=def(),M=[],busy=false,dirty=false,cnt=0,cur="cases",LB=[],LBR=[],lbErr=false;
 const $=id=>document.getElementById(id);
 const fmt=n=>Math.round(n).toLocaleString("ru-RU");
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -139,14 +148,66 @@ function avHTML(av,s){let ic=av,bg="var(--panel)";if(typeof av==="object"){ic=CA
 function toast(t){const el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>el.classList.remove("show"),2800)}
 function save(){S.ts=Date.now();try{localStorage.setItem("kx2_save",JSON.stringify(S))}catch(e){}}
 function load(){try{const d=JSON.parse(localStorage.getItem("kx2_save")||"null");if(d&&typeof d.bal==="number"&&Array.isArray(d.inv)&&d.prof)S=Object.assign(def(),d)}catch(e){}}
-function upd(){$("bal").textContent=fmt(S.bal);rHead();rCases();if(cur==="st")rSt();save()}
+function upd(){$("bal").textContent=fmt(S.bal);$("gem").textContent=fmt(S.gem);rHead();rCases();if(cur==="st")rSt();save()}
 function rHead(){$("head").innerHTML=avHTML(S.prof.av,36)+`<span>${esc(S.prof.nick||"Игрок")}</span>`}
 
-/* Кейсы */
-function rCases(){$("caseList").innerHTML=CASES.map(c=>`<div class="case"><div class="big">${c.i}</div><b>${c.n}</b><small>${c.cards.slice(-6).map(k=>CARDS[k].i).join(" ")}</small><button class="btn" data-a="case" data-v="${c.id}" ${busy||S.bal<c.price?"disabled":""}>Открыть · ${fmt(c.price)} KX</button></div>`).join("")}
+/* Акции (общие для всех, каждые 10 минут) */
+const EVT=6e5,GX=5000;let evS=-1;
+function evNow(){const k=Math.floor(Date.now()/EVT),r=h32(k*7919+13),q=h32(k*104729+7);let e;
+  if(r<.5){const c=Math.floor(q*13),p=[10,15,20,25][Math.floor(h32(k+99)*4)];e={t:"c",k:c,pct:p,txt:`${CASES[c].n} −${p}%`}}
+  else if(r<.68)e={t:"all",pct:7,txt:"Все кейсы −7%"};
+  else if(r<.84)e={t:"sell",txt:"Скупка: карточки продаются на 10% дороже"};
+  else e={t:"gx",txt:`Курс гемов: 1 💎 = ${fmt(GX*.7)} KX`};
+  e.end=(k+1)*EVT;return e}
+function disc(c){if(c.gem)return 0;const e=evNow();return e.t==="all"||(e.t==="c"&&e.k===c.id)?e.pct:0}
+const cprice=c=>Math.round(c.price*(1-disc(c)/100)/10)*10;
+const gxRate=()=>evNow().t==="gx"?GX*.7:GX;
+const sellRate=()=>SELL+(evNow().t==="sell"?.1:0);
+function rEv(){const e=evNow(),k=e.end/EVT-1,ch=evS>=0&&k!==evS;evS=k;
+  if(ch){toast("🔥 Новая акция: "+e.txt);rCases();return}
+  const l=Math.max(0,Math.ceil((e.end-Date.now())/1000));
+  $("evBox").innerHTML=`🔥 <b>Акция:</b> ${e.txt}<br><span class="hint">осталось ${Math.floor(l/60)}:${String(l%60).padStart(2,"0")} · акции меняются каждые 10 минут</span>`}
+
+/* Магазин */
+function rCases(){rEv();
+  $("caseList").innerHTML=CASES.map(c=>{const p=cprice(c),d=disc(c),can=c.gem?S.gem>=c.gem:S.bal>=p,pr=c.gem?`${c.gem} 💎`:`${fmt(p)}`;
+    return `<div class="case"><div class="big">${c.i}</div><b>${c.n}</b>${d?` <span class="bdg">−${d}%</span>`:""}<small>${c.cards.slice(-6).map(k=>CARDS[k].i).join(" ")}</small>${d?`<s>${fmt(c.price)}</s> `:""}<div class="r2"><button class="btn" data-a="bc" data-v="${c.id}|1" ${can?"":"disabled"}>Купить · ${pr}</button><button class="btn alt" data-a="bc" data-v="${c.id}|5" ${(c.gem?S.gem>=c.gem*5:S.bal>=p*5)?"":"disabled"}>×5</button></div></div>`}).join("");
+  const g=gxRate();$("exch").innerHTML=`<div class="stk"><div class="top"><span>1 💎 = ${fmt(g)} KX</span><span class="hint">гемы также падают из кейсов и промокодов</span></div><div class="r2" style="margin-top:8px"><button class="btn" data-a="gx" data-v="1" ${S.bal>=g?"":"disabled"}>1 💎</button><button class="btn" data-a="gx" data-v="10" ${S.bal>=g*10?"":"disabled"}>10 💎</button></div></div>`;
+  rOwn()}
+function buyCase(id,n){const c=CASES[id];
+  if(c.gem){const t=c.gem*n;if(S.gem<t){toast("Не хватает гемов 💎");return}S.gem-=t}
+  else{const t=cprice(c)*n;if(S.bal<t){toast("Не хватает KX 😕");return}S.bal-=t}
+  S.cases[id]=(S.cases[id]||0)+n;toast(`${c.n} ×${n} → в Инвентаре`);upd()}
+function gx(n){const t=gxRate()*n;if(S.bal<t){toast("Не хватает KX 😕");return}S.bal-=t;S.gem+=n;toast(`+${n} 💎`);upd()}
+const LOCAL_PROMOS={BITCOINUP:{cs:{9:1}}};
+async function promo(){
+  const code=$("pcIn").value.toUpperCase().replace(/[^A-Z0-9А-ЯЁ_-]/g,""),msg=t=>$("pcMsg").textContent=t;
+  if(!code){msg("Введи код");return}
+  if(S.codes.includes(code)){msg("Ты уже активировал этот код");return}
+  let p=LOCAL_PROMOS[code],remote=0;
+  if(!p){if(!DB_URL){msg("Код не найден (онлайн недоступен)");return}
+    try{p=await db("promos/"+code)}catch(e){msg("Нет связи 😕");return}remote=1}
+  if(!p||typeof p!=="object"){msg("Такого кода нет");return}
+  if(p.exp&&Date.now()>p.exp){msg("Срок действия кода истёк");return}
+  if(p.maxbal&&S.bal>p.maxbal){msg(`Код только для игроков с балансом до ${fmt(p.maxbal)} KX`);return}
+  const used=p.used&&typeof p.used==="object"?p.used:{};
+  if(used[S.uid]){msg("Ты уже активировал этот код");return}
+  if(p.max&&Object.keys(used).length>=p.max){msg("Лимит активаций исчерпан");return}
+  if(remote){try{await db(`promos/${code}/used/${S.uid}`,"PUT",true)}catch(e){msg("Не удалось активировать");return}}
+  const kx=Math.min(Math.max(0,+p.kx||0),1e9),gm=Math.min(Math.max(0,+p.gem||0),1e6),got=[];
+  if(kx){S.bal+=kx;got.push(fmt(kx)+" KX")}if(gm){S.gem+=gm;got.push(gm+" 💎")}
+  for(const[i,n]of Object.entries(p.cs||{})){const c=CASES[+i],q=Math.min(Math.max(0,+n||0),100);if(c&&q){S.cases[c.id]=(S.cases[c.id]||0)+q;got.push(`${q}× ${c.n}`)}}
+  S.codes.push(code);$("pcIn").value="";msg("Активирован ✅ Получено: "+(got.join(", ")||"ничего"));toast("Промокод активирован 🎟");upd()}
+$("pcIn").onkeydown=e=>{if(e.key==="Enter")promo()};
+
+/* Инвентарь: кейсы */
+function rOwn(){const L=CASES.filter(c=>S.cases[c.id]>0),tot=L.reduce((t,c)=>t+S.cases[c.id],0);
+  $("ownCases").innerHTML=L.map(c=>`<div class="case"><div class="big">${c.i}</div><b>${c.n}</b> <span class="chip">×${S.cases[c.id]}</span><small>${c.cards.slice(-6).map(k=>CARDS[k].i).join(" ")}</small><button class="btn" data-a="case" data-v="${c.id}" ${busy?"disabled":""}>Открыть</button></div>`).join("")||'<span class="hint">Нет кейсов. Купи их в Магазине или активируй промокод.</span>';
+  $("itc").textContent=`Кейсы (${tot})`;$("itk").textContent=`Карты (${S.inv.length})`}
+function itab(v){invTab=v;$("invC").hidden=v!=="c";$("invK").hidden=v!=="k";$("itc").classList.toggle("alt",v!=="c");$("itk").classList.toggle("alt",v!=="k")}
 function openCase(cs){
-  if(busy||S.bal<cs.price)return;
-  busy=true;S.bal-=cs.price;upd();
+  if(busy||!(S.cases[cs.id]>0))return;
+  busy=true;S.cases[cs.id]--;upd();
   const items=[];for(let i=0;i<45;i++)items.push(roll(cs));
   const WIN=38,win=items[WIN],strip=$("strip");
   strip.style.transition="none";strip.style.transform="translateX(0)";
@@ -156,18 +217,18 @@ function openCase(cs){
   strip.style.transition="transform 5.5s cubic-bezier(.12,.7,.1,1)";
   strip.style.transform=`translateX(${-x}px)`;
   setTimeout(()=>{
-    const it={c:win.c,g:win.g,id:nid()};S.inv.push(it);busy=false;
-    $("res").innerHTML=`${cardHTML(win)}<div>Выпало: <b>${CARDS[win.c].n}</b> · фон «${BGS[win.g].n}»</div><button class="btn alt" id="sellNow" style="margin-top:8px">Продать за ${fmt(val(win)*SELL)} KX</button>`;
+    const it={c:win.c,g:win.g,id:nid()};S.inv.push(it);busy=false;const gd=Math.random()<.2?1+rn(2):0;S.gem+=gd;
+    $("res").innerHTML=`${cardHTML(win)}<div>Выпало: <b>${CARDS[win.c].n}</b> · фон «${BGS[win.g].n}»</div>${gd?`<div class="good">+${gd} 💎</div>`:""}<button class="btn alt" id="sellNow" style="margin-top:8px">Продать за ${fmt(val(win)*sellRate())} KX</button>`;
     $("sellNow").onclick=()=>{sell(it.id);$("res").innerHTML="Продано ✅"};
     upd();rInv();
   },5700);
 }
 
 /* Инвентарь */
-function sell(id){const i=S.inv.findIndex(x=>x.id===id);if(i<0)return;const c=S.inv.splice(i,1)[0];S.bal+=Math.floor(val(c)*SELL);upd();rInv();rProf()}
+function sell(id){const i=S.inv.findIndex(x=>x.id===id);if(i<0)return;const c=S.inv.splice(i,1)[0];S.bal+=Math.floor(val(c)*sellRate());upd();rInv();rProf()}
 function rInv(){
   const tot=S.inv.reduce((s,c)=>s+val(c),0);
-  $("invInfo").textContent=S.inv.length?`Карточек: ${S.inv.length} · общая стоимость ${fmt(tot)} KX · продажа системе за 85%, на рынке можно дороже`:"Пока пусто. Открой кейс или купи карточку на рынке.";
+  $("invInfo").textContent=S.inv.length?`Карточек: ${S.inv.length} · общая стоимость ${fmt(tot)} KX · продажа системе за ${Math.round(sellRate()*100)}%, на рынке можно дороже`:"Пока пусто. Открой кейс или купи карточку на рынке.";
   $("invGrid").innerHTML=S.inv.slice().sort((a,b)=>val(b)-val(a)).map(c=>`<div class="item">${cardHTML(c)}<div class="row"><button class="btn alt sm" data-a="sell" data-v="${c.id}">Продать</button><button class="btn sm" data-a="list" data-v="${c.id}">На рынок</button></div></div>`).join("")}
 
 /* Рынок */
@@ -190,9 +251,9 @@ const ch=r=>r<=.9?.03:r<=1.05?.012:r<=1.3?.004:r<=1.8?.001:.0002;
 const onl=()=>.5+BOTS.filter(b=>!b.afk).length/BOTS.length;
 function soldOwn(l,buyer){S.bal+=Math.round(l.price*FEE);toast(`${buyer.a} ${buyer.n} купил ${CARDS[l.c].n} за ${fmt(l.price)} KX`)}
 function tick(){
-  checkGifts();
+  checkGifts();rEv();
   if(mkSync()){save();if(cur==="st")rSt()}
-  if(cur==="st")$("stInfo").textContent=`Цены общие для всех игроков, обновление каждые 3 сек · через ${Math.max(0,Math.ceil(((MK.step+1)*STEP-Date.now())/1000))} с · портфель ≈ ${fmt(STK.reduce((t,a)=>t+(S.st[a.k]||0)*MK.p[a.k],0))} KX`;
+  if(cur==="st")$("stInfo").textContent=`Комиссия биржи 3% · цены общие для всех игроков, обновление каждые 3 сек · через ${Math.max(0,Math.ceil(((MK.step+1)*STEP-Date.now())/1000))} с · портфель ≈ ${fmt(STK.reduce((t,a)=>t+(S.st[a.k]||0)*MK.p[a.k],0))} KX`;
   if(cnt%3===0){moveBots();if(cur==="lb")rLb()}
   if(DB_URL){if(cnt%3===0)pollIn();if(cnt%(cur==="ch"?2:8)===0)pollChat();if(cur==="ch"&&cnt%15===0)pull()}
   if(cnt%20===0)push();if(cur==="lb"&&cnt%10===0)pull();
@@ -239,10 +300,10 @@ function rSt(){const L=$("stList");
   STK.forEach(a=>{const h=MK.h[a.k],p=MK.p[a.k],pr=h[h.length-2]||p,d=(p-pr)/pr*100,q=S.st[a.k]||0,e=$("s-"+a.k);
     e.querySelector(".pp").textContent=fmt(p)+" KX";const dd=e.querySelector(".dd");dd.className="dd "+(d>=0?"good":"bad");dd.textContent=(d>=0?"▲ ":"▼ ")+Math.abs(d).toFixed(2)+"%";
     e.querySelector(".cc").innerHTML=chart(h,h[h.length-1]>=h[0]);e.querySelector(".hh").textContent=`В портфеле: ${fmt(q)} шт · ≈ ${fmt(q*p)} KX`;
-    const b=e.querySelectorAll("button");b[0].disabled=S.bal<p;b[1].disabled=S.bal<p*10;b[2].disabled=b[3].disabled=q<1})}
+    const b=e.querySelectorAll("button");b[0].disabled=S.bal<p*1.03;b[1].disabled=S.bal<p*10.3;b[2].disabled=b[3].disabled=q<1})}
 function trade(v){const [k,side,n]=v.split("|"),p=MK.p[k],have=S.st[k]||0;
-  if(side==="buy"){const q=+n;if(S.bal<p*q){toast("Не хватает KX 😕");return}S.bal-=p*q;S.st[k]=have+q}
-  else{const q=n==="all"?have:Math.min(+n,have);if(!q){toast("Нечего продавать");return}S.bal+=p*q;S.st[k]=have-q}
+  if(side==="buy"){const q=+n;if(S.bal<Math.ceil(p*q*1.03)){toast("Не хватает KX 😕");return}S.bal-=Math.ceil(p*q*1.03);S.st[k]=have+q}
+  else{const q=n==="all"?have:Math.min(+n,have);if(!q){toast("Нечего продавать");return}S.bal+=Math.floor(p*q*.97);S.st[k]=have-q}
   upd();rSt()}
 
 /* Лидерборд */
@@ -278,15 +339,16 @@ function tab(v){
   cur=v;
   document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
   document.querySelectorAll(".sec").forEach(s=>s.classList.toggle("on",s.id===v));
-  if(v==="inv")rInv();if(v==="mk")rMarket();if(v==="prof")rProf();if(v==="lb"){rLb();push();pull()};if(v==="st")rSt();if(v==="ch"){unread=0;rBdg();rChat(1);pull();pollChat()}}
+  if(v==="inv"){rInv();rOwn();itab(invTab)}if(v==="mk")rMarket();if(v==="prof")rProf();if(v==="lb"){rLb();push();pull()};if(v==="st")rSt();if(v==="ch"){unread=0;rBdg();rChat(1);pull();pollChat()}}
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-a]");if(!t)return;const a=t.dataset.a,v=t.dataset.v;
   if(a==="tab")tab(v);else if(a==="case")openCase(CASES[+v]);else if(a==="sell")sell(+v);
   else if(a==="list")openList(+v);else if(a==="doList")doList(+v);else if(a==="close")closeM();
   else if(a==="unlist")unlist(+v);else if(a==="buy")buy(+v);else if(a==="av")setAv(v);else if(a==="show")toggleShow(+v);else if(a==="trade")trade(v);else if(a==="pl")openPl(+v);
   else if(a==="send")sendChat();else if(a==="cu"){const m=CH.find(x=>x.k===v);if(m&&m.u!==S.uid)openTrade(m.u,m.n)}
-  else if(a==="trd"){const r=LBR[+v];openTrade(r.id,r.n)}else if(a==="tsend")sendOffer();else if(a==="tacc")accOffer(v);else if(a==="tdec")decOffer(v);else if(a==="tcan")cancelOut(v)});
-$("reset").onclick=()=>{if(busy||!confirm("Сбросить весь прогресс?"))return;S=def();mkSync();upd();rInv();rMarket();rProf();toast("Прогресс сброшен")};
+  else if(a==="trd"){const r=LBR[+v];openTrade(r.id,r.n)}else if(a==="tsend")sendOffer();else if(a==="tacc")accOffer(v);else if(a==="tdec")decOffer(v);else if(a==="tcan")cancelOut(v);
+  else if(a==="bc"){const[i,n]=v.split("|");buyCase(+i,+n)}else if(a==="gx")gx(+v);else if(a==="promo")promo();else if(a==="itab")itab(v)});
+$("reset").onclick=()=>{if(busy||!confirm("Сбросить весь прогресс?"))return;const k=S.codes,u=S.uid;S=def();S.codes=k;S.uid=u;mkSync();upd();rInv();rMarket();rProf();toast("Прогресс сброшен")};
 
 /* Старт */
 load();mkSync();checkGifts();
