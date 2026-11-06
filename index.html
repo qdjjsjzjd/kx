@@ -55,11 +55,19 @@ h3{margin:16px 0 8px;font-size:16px}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel);border:1px solid var(--accent);padding:10px 16px;border-radius:12px;opacity:0;transition:.3s;pointer-events:none;z-index:20;max-width:90%;text-align:center}
 .toast.show{opacity:1}
 .foot{text-align:center;margin-top:20px}
+nav button{font-size:12px;padding:10px 2px}
+.lb{display:flex;flex-direction:column;gap:6px}
+.lr{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.lr.me{border-color:var(--accent)}.lr .rk{width:30px;font-weight:700;color:var(--muted)}.lr .nn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stk{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.stk .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.stk svg{width:100%;height:90px;display:block;margin:8px 0}
+.stk .row{display:flex;gap:6px}.stk .row .btn{flex:1;padding:8px 2px;font-size:13px}
 </style>
 </head>
 <body>
 <header><div class="me" data-a="tab" data-v="prof" id="head"></div><div class="bal">💰 <span id="bal">0</span> KX</div></header>
-<nav><button data-a="tab" data-v="cases" class="on">Кейсы</button><button data-a="tab" data-v="mk">Рынок</button><button data-a="tab" data-v="inv">Инвентарь</button><button data-a="tab" data-v="prof">Профиль</button></nav>
+<nav><button data-a="tab" data-v="cases" class="on">Кейсы</button><button data-a="tab" data-v="mk">Рынок</button><button data-a="tab" data-v="st">Акции</button><button data-a="tab" data-v="inv">Инвентарь</button><button data-a="tab" data-v="lb">Топ</button><button data-a="tab" data-v="prof">Профиль</button></nav>
 
 <section id="cases" class="sec on">
   <div class="cases" id="caseList"></div>
@@ -72,6 +80,16 @@ h3{margin:16px 0 8px;font-size:16px}
   <div class="chips" id="bots"></div>
   <h3>Мои лоты</h3><div class="grid" id="mine"></div>
   <h3>Лоты игроков</h3><div class="grid" id="mlots"></div>
+</section>
+
+<section id="st" class="sec">
+  <p class="hint" id="stInfo"></p>
+  <div id="stList"></div>
+</section>
+
+<section id="lb" class="sec">
+  <p class="hint" id="lbInfo"></p>
+  <div class="lb" id="lbList"></div>
 </section>
 
 <section id="inv" class="sec">
@@ -97,11 +115,11 @@ const BGS=("Серый мел,#555a66,#3c404a,0,28;Песочный,#d2b27a,#8f6
 const CN=[["Летний кейс","🌞"],["Зимний кейс","🧊"],["Лесной кейс","🌲"],["Пиратский кейс","🏴‍☠️"],["Неоновый кейс","🔮"],["Космический кейс","🪐"],["Королевский кейс","👑"],["Огненный кейс","🔥"],["Мифический кейс","🐉"],["Легендарный кейс","💠"]];
 const AB=BGS.reduce((s,b)=>s+b.w*b.b,0)/BGS.reduce((s,b)=>s+b.w,0);
 const CASES=CN.map((x,k)=>{const cards=CARDS.map((_,i)=>i).slice(k*10,k*10+30);const sw=cards.reduce((s,i)=>s+1/CARDS[i].p,0);const ev=(cards.length+AB*sw)/sw;return{id:k,n:x[0],i:x[1],cards,price:Math.max(100,Math.round(ev/50)*50)}});
-const BOTS=[["NeonFox","🦊"],["Kostya_77","🐺"],["Мурка","🐱"],["DarkLord","🧛"],["Vasya_Pro","🤠"],["Лисёнок","🦝"],["XxSniperxX","🥷"],["Алиса_KX","👩‍🚀"],["Crypto_Dedus","🧓"],["Tima4","🐸"],["Рома_Лут","😎"],["SleepyBear","🐻"],["Ghost_404","👻"],["ЗлойКот","😼"]].map(a=>({n:a[0],a:a[1],afk:Math.random()<.35}));
+const BOTS=[["NeonFox","🦊"],["Kostya_77","🐺"],["Мурка","🐱"],["DarkLord","🧛"],["Vasya_Pro","🤠"],["Лисёнок","🦝"],["XxSniperxX","🥷"],["Алиса_KX","👩‍🚀"],["Crypto_Dedus","🧓"],["Tima4","🐸"],["Рома_Лут","😎"],["SleepyBear","🐻"],["Ghost_404","👻"],["ЗлойКот","😼"]].map(a=>({n:a[0],a:a[1],afk:Math.random()<.35,bal:Math.round(6000+Math.random()*64000)}));
 const DAV=["😎","🤠","🥷","🧑‍🚀","🦸","🧙","👾","🐱","🐺","🦊","🤖","👑"];
 const START=15000,SELL=.85,FEE=.95;
-const def=()=>({bal:START,inv:[],list:[],nid:1,ts:Date.now(),prof:{nick:"Игрок"+(100+Math.floor(Math.random()*900)),av:"😎",show:[]}});
-let S=def(),M=[],busy=false,dirty=false,cnt=0;
+const def=()=>({bal:START,inv:[],list:[],nid:1,ts:Date.now(),st:{AAPL:0,BTC:0,TSLA:0},mk:null,prof:{nick:"Игрок"+(100+Math.floor(Math.random()*900)),av:"😎",show:[]}});
+let S=def(),M=[],busy=false,dirty=false,cnt=0,cur="cases";
 const $=id=>document.getElementById(id);
 const fmt=n=>Math.round(n).toLocaleString("ru-RU");
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -117,7 +135,7 @@ function avHTML(av,s){let ic=av,bg="var(--panel)";if(typeof av==="object"){ic=CA
 function toast(t){const el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>el.classList.remove("show"),2800)}
 function save(){S.ts=Date.now();try{localStorage.setItem("kx2_save",JSON.stringify(S))}catch(e){}}
 function load(){try{const d=JSON.parse(localStorage.getItem("kx2_save")||"null");if(d&&typeof d.bal==="number"&&Array.isArray(d.inv)&&d.prof)S=Object.assign(def(),d)}catch(e){}}
-function upd(){$("bal").textContent=fmt(S.bal);rHead();rCases();save()}
+function upd(){$("bal").textContent=fmt(S.bal);rHead();rCases();if(cur==="st")rSt();save()}
 function rHead(){$("head").innerHTML=avHTML(S.prof.av,36)+`<span>${esc(S.prof.nick||"Игрок")}</span>`}
 
 /* Кейсы */
@@ -168,6 +186,10 @@ const ch=r=>r<=.9?.03:r<=1.05?.012:r<=1.3?.004:r<=1.8?.001:.0002;
 const onl=()=>.5+BOTS.filter(b=>!b.afk).length/BOTS.length;
 function soldOwn(l,buyer){S.bal+=Math.round(l.price*FEE);toast(`${buyer.a} ${buyer.n} купил ${CARDS[l.c].n} за ${fmt(l.price)} KX`)}
 function tick(){
+  checkGifts();
+  if(mkSync()){save();if(cur==="st")rSt()}
+  if(cur==="st")$("stInfo").textContent=`Цены обновляются каждые 10 сек · следующее обновление через ${Math.max(0,Math.ceil((S.mk.ts+1e4-Date.now())/1000))} с`;
+  if(cnt%3===0){moveBots();if(cur==="lb")rLb()}
   const keep=[];let sold=false;
   for(const l of S.list){if(Math.random()<ch(l.price/val(l))*onl()){const on=BOTS.filter(b=>!b.afk);soldOwn(l,on[rn(on.length)]||BOTS[0]);sold=true}else keep.push(l)}
   S.list=keep;
@@ -181,10 +203,11 @@ function tick(){
 
 /* Профиль */
 function rProf(){
+  const stv=STK.reduce((a,x)=>a+(S.st[x.k]||0)*S.mk.p[x.k],0);
   S.prof.show=S.prof.show.filter(id=>S.inv.some(x=>x.id===id));
   $("bigAv").innerHTML=avHTML(S.prof.av,72);$("nick").value=S.prof.nick;
   const tot=S.inv.reduce((s,c)=>s+val(c),0)+S.list.reduce((s,c)=>s+val(c),0);
-  $("stats").textContent=`Карточек: ${S.inv.length+S.list.length} · капитал ${fmt(tot+S.bal)} KX`;
+  $("stats").textContent=`Карточек: ${S.inv.length+S.list.length} · капитал ${fmt(tot+S.bal+stv)} KX`;
   $("showc").innerHTML=S.prof.show.length?S.prof.show.map(id=>cardHTML(S.inv.find(x=>x.id===id))).join(""):'<span class="hint">Витрина пуста.</span>';
   const seen={},own=S.inv.slice().sort((a,b)=>val(b)-val(a)).filter(c=>{const k=c.c+"-"+c.g;return seen[k]?false:seen[k]=true}).slice(0,40);
   $("avs").innerHTML=DAV.map(e=>`<span data-a="av" data-v="e|${e}">${avHTML(e,48)}</span>`).join("")+own.map(c=>`<span data-a="av" data-v="c|${c.c}|${c.g}">${avHTML(c,48)}</span>`).join("");
@@ -193,20 +216,54 @@ function setAv(v){const p=v.split("|");S.prof.av=p[0]==="e"?p[1]:{c:+p[1],g:+p[2
 function toggleShow(id){const a=S.prof.show,i=a.indexOf(id);if(i>=0)a.splice(i,1);else if(a.length<5)a.push(id);else{toast("Максимум 5 карточек");return}save();rProf()}
 $("nick").oninput=e=>{S.prof.nick=e.target.value;rHead();save()};
 
+/* Акции */
+const STK=[{k:"AAPL",n:"Apple",i:"🍎",b:1200,v:.015},{k:"BTC",n:"Bitcoin",i:"₿",b:18000,v:.04},{k:"TSLA",n:"Tesla",i:"🚗",b:3000,v:.028}];
+const gauss=()=>Math.sqrt(-2*Math.log(1-Math.random()))*Math.cos(2*Math.PI*Math.random());
+const stepP=(a,p)=>Math.min(a.b*3,Math.max(a.b*.3,Math.round(p*Math.exp(a.v*gauss()-.03*Math.log(p/a.b)))));
+function mkStep(){for(const a of STK){const h=S.mk.h[a.k];const p=stepP(a,S.mk.p[a.k]);S.mk.p[a.k]=p;h.push(p);if(h.length>60)h.shift()}}
+function initMk(){if(S.mk&&S.mk.p&&S.mk.h&&STK.every(a=>S.mk.h[a.k]))return;
+  S.mk={ts:Date.now(),p:{},h:{}};for(const a of STK){S.mk.p[a.k]=a.b;S.mk.h[a.k]=[a.b]}for(let i=0;i<40;i++)mkStep()}
+function mkSync(){const n=Date.now();if(n-S.mk.ts>3.6e6)S.mk.ts=n-3.6e6;let k=Math.floor((n-S.mk.ts)/1e4);if(k<1)return false;while(k-->0){mkStep();S.mk.ts+=1e4}return true}
+function chart(h,up){const mn=Math.min(...h),mx=Math.max(...h),r=mx-mn||1;
+  const pts=h.map((v,i)=>`${(i/(h.length-1||1)*300).toFixed(1)},${(84-(v-mn)/r*78).toFixed(1)}`).join(" ");
+  return `<svg viewBox="0 0 300 90" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--${up?"ok":"bad"})" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>`}
+function rSt(){
+  $("stList").innerHTML=STK.map(a=>{const h=S.mk.h[a.k],p=S.mk.p[a.k],pr=h[h.length-2]||p,d=(p-pr)/pr*100,q=S.st[a.k]||0;
+    return `<div class="stk"><div class="top"><b>${a.i} ${a.n} <span class="hint">${a.k}</span></b><span><b>${fmt(p)} KX</b> <span class="${d>=0?"good":"bad"}">${d>=0?"▲":"▼"} ${Math.abs(d).toFixed(2)}%</span></span></div>${chart(h,h[h.length-1]>=h[0])}
+<div class="hint" style="margin-bottom:8px">В портфеле: ${fmt(q)} шт · ≈ ${fmt(q*p)} KX</div>
+<div class="row"><button class="btn" data-a="trade" data-v="${a.k}|buy|1" ${S.bal<p?"disabled":""}>Купить 1</button><button class="btn" data-a="trade" data-v="${a.k}|buy|10" ${S.bal<p*10?"disabled":""}>Купить 10</button><button class="btn alt" data-a="trade" data-v="${a.k}|sell|1" ${q<1?"disabled":""}>Продать 1</button><button class="btn alt" data-a="trade" data-v="${a.k}|sell|all" ${q<1?"disabled":""}>Всё</button></div></div>`}).join("")}
+function trade(v){const [k,side,n]=v.split("|"),p=S.mk.p[k],have=S.st[k]||0;
+  if(side==="buy"){const q=+n;if(S.bal<p*q){toast("Не хватает KX 😕");return}S.bal-=p*q;S.st[k]=have+q}
+  else{const q=n==="all"?have:Math.min(+n,have);if(!q){toast("Нечего продавать");return}S.bal+=p*q;S.st[k]=have-q}
+  upd();rSt()}
+
+/* Лидерборд */
+function rLb(){
+  const rows=BOTS.map(b=>({n:b.n,av:b.a,bal:b.bal})).concat({n:S.prof.nick||"Игрок",av:S.prof.av,bal:S.bal,me:1}).sort((a,b)=>b.bal-a.bal);
+  $("lbInfo").textContent=`Рейтинг по балансу KX · твоё место: ${rows.findIndex(r=>r.me)+1} из ${rows.length}`;
+  $("lbList").innerHTML=rows.map((r,i)=>`<div class="lr ${r.me?"me":""}"><span class="rk">${["🥇","🥈","🥉"][i]||i+1}</span>${avHTML(r.av,32)}<span class="nn">${esc(r.n)}${r.me?" (ты)":""}</span><b>${fmt(r.bal)} KX</b></div>`).join("")}
+function moveBots(){for(const b of BOTS)b.bal=Math.max(1000,Math.round(b.bal*(1+(Math.random()-.47)*.06)))}
+
+/* Выдача карточек из admin.html */
+function checkGifts(){try{const r=localStorage.getItem("kx2_gifts");if(!r)return;localStorage.removeItem("kx2_gifts");let n=0;
+  for(const g of JSON.parse(r))if(CARDS[g.c]&&BGS[g.g]){S.inv.push({c:g.c,g:g.g,id:nid()});n++}
+  if(n){toast(`Выдано карточек: ${n} 🎁`);upd();rInv();rProf()}}catch(e){}}
+
 /* Навигация и события */
 function tab(v){
+  cur=v;
   document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
   document.querySelectorAll(".sec").forEach(s=>s.classList.toggle("on",s.id===v));
-  if(v==="inv")rInv();if(v==="mk")rMarket();if(v==="prof")rProf()}
+  if(v==="inv")rInv();if(v==="mk")rMarket();if(v==="prof")rProf();if(v==="lb")rLb();if(v==="st")rSt()}
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-a]");if(!t)return;const a=t.dataset.a,v=t.dataset.v;
   if(a==="tab")tab(v);else if(a==="case")openCase(CASES[+v]);else if(a==="sell")sell(+v);
   else if(a==="list")openList(+v);else if(a==="doList")doList(+v);else if(a==="close")closeM();
-  else if(a==="unlist")unlist(+v);else if(a==="buy")buy(+v);else if(a==="av")setAv(v);else if(a==="show")toggleShow(+v)});
-$("reset").onclick=()=>{if(busy||!confirm("Сбросить весь прогресс?"))return;S=def();upd();rInv();rMarket();rProf();toast("Прогресс сброшен")};
+  else if(a==="unlist")unlist(+v);else if(a==="buy")buy(+v);else if(a==="av")setAv(v);else if(a==="show")toggleShow(+v);else if(a==="trade")trade(v)});
+$("reset").onclick=()=>{if(busy||!confirm("Сбросить весь прогресс?"))return;S=def();initMk();upd();rInv();rMarket();rProf();toast("Прогресс сброшен")};
 
 /* Старт */
-load();
+load();initMk();mkSync();checkGifts();
 for(let i=0;i<16;i++)M.push(genL(false));
 const away=Math.min((Date.now()-S.ts)/1000,6*3600);let n=0,gain=0;
 if(away>5&&S.list.length){const keep=[];for(const l of S.list){if(Math.random()<1-Math.pow(1-ch(l.price/val(l))*onl(),away)){S.bal+=Math.round(l.price*FEE);gain+=Math.round(l.price*FEE);n++}else keep.push(l)}S.list=keep}
