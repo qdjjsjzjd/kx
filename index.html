@@ -16,8 +16,8 @@ header{display:flex;justify-content:space-between;align-items:center;gap:8px;mar
 .me span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px}
 .bal{background:var(--panel);border:1px solid var(--line);padding:8px 14px;border-radius:12px;font-weight:700;white-space:nowrap}
 .avt{display:flex;align-items:center;justify-content:center;border-radius:50%;flex:none;border:2px solid var(--line);color:#fff;text-shadow:0 1px 3px #0008}
-nav{display:flex;gap:6px;margin-bottom:12px}
-nav button{flex:1;padding:10px 4px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;font-size:14px;cursor:pointer}
+nav{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto}
+nav button{flex:0 0 auto;white-space:nowrap;padding:10px 12px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;font-size:14px;cursor:pointer}
 nav button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .sec{display:none}.sec.on{display:block}
 h3{margin:16px 0 8px;font-size:16px}
@@ -55,7 +55,7 @@ h3{margin:16px 0 8px;font-size:16px}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel);border:1px solid var(--accent);padding:10px 16px;border-radius:12px;opacity:0;transition:.3s;pointer-events:none;z-index:20;max-width:90%;text-align:center}
 .toast.show{opacity:1}
 .foot{text-align:center;margin-top:20px}
-nav button{font-size:12px;padding:10px 2px}
+.bdg{background:var(--bad);color:#fff;border-radius:10px;font-size:11px;padding:1px 6px}.bdg[hidden]{display:none}#stList{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}.stk{margin-bottom:0}.mb select{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px;font-size:15px}.chbox{height:45vh;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px}.msg{display:flex;gap:8px;font-size:14px;word-break:break-word}.msg small{color:var(--muted)}.msg b{cursor:pointer}.chrow{display:flex;gap:6px;margin-top:8px}.chrow input{flex:1;min-width:0;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:16px}
 .lb{display:flex;flex-direction:column;gap:6px}
 .lr{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
 .lr.me{border-color:var(--accent)}.lr .rk{width:30px;font-weight:700;color:var(--muted)}.lr .nn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -67,7 +67,7 @@ nav button{font-size:12px;padding:10px 2px}
 </head>
 <body>
 <header><div class="me" data-a="tab" data-v="prof" id="head"></div><div class="bal">💰 <span id="bal">0</span> KX</div></header>
-<nav><button data-a="tab" data-v="cases" class="on">Кейсы</button><button data-a="tab" data-v="mk">Рынок</button><button data-a="tab" data-v="st">Акции</button><button data-a="tab" data-v="inv">Инвентарь</button><button data-a="tab" data-v="lb">Топ</button><button data-a="tab" data-v="prof">Профиль</button></nav>
+<nav><button data-a="tab" data-v="cases" class="on">Кейсы</button><button data-a="tab" data-v="mk">Рынок</button><button data-a="tab" data-v="st">Акции</button><button data-a="tab" data-v="ch">Чат <span class="bdg" id="bdg" hidden></span></button><button data-a="tab" data-v="inv">Инвентарь</button><button data-a="tab" data-v="lb">Топ</button><button data-a="tab" data-v="prof">Профиль</button></nav>
 
 <section id="cases" class="sec on">
   <div class="cases" id="caseList"></div>
@@ -86,6 +86,8 @@ nav button{font-size:12px;padding:10px 2px}
   <p class="hint" id="stInfo"></p>
   <div id="stList"></div>
 </section>
+
+<section id="ch" class="sec"><p class="hint" id="chInfo"></p><div id="offers"></div><div class="chbox" id="chBox"></div><div class="chrow"><input id="chIn" maxlength="200" placeholder="Сообщение..."><button class="btn" data-a="send">➤</button></div></section>
 
 <section id="lb" class="sec">
   <p class="hint" id="lbInfo"></p>
@@ -117,9 +119,11 @@ const AB=BGS.reduce((s,b)=>s+b.w*b.b,0)/BGS.reduce((s,b)=>s+b.w,0);
 const CASES=CN.map((x,k)=>{const cards=CARDS.map((_,i)=>i).slice(k*10,k*10+30);const sw=cards.reduce((s,i)=>s+1/CARDS[i].p,0);const ev=(cards.length+AB*sw)/sw;return{id:k,n:x[0],i:x[1],cards,price:Math.max(100,Math.round(ev/50)*50)}});
 const BOTS=[["NeonFox","🦊"],["Kostya_77","🐺"],["Мурка","🐱"],["DarkLord","🧛"],["Vasya_Pro","🤠"],["Лисёнок","🦝"],["XxSniperxX","🥷"],["Алиса_KX","👩‍🚀"],["Crypto_Dedus","🧓"],["Tima4","🐸"],["Рома_Лут","😎"],["SleepyBear","🐻"],["Ghost_404","👻"],["ЗлойКот","😼"]].map(a=>({n:a[0],a:a[1],afk:Math.random()<.35,bal:Math.round(6000+Math.random()*64000)}));
 const DAV=["😎","🤠","🥷","🧑‍🚀","🦸","🧙","👾","🐱","🐺","🦊","🤖","👑"];
+/* Онлайн-режим: вставь сюда URL Firebase Realtime Database, например "https://kx-game-default-rtdb.firebaseio.com" */
+let DB_URL="";
 const START=15000,SELL=.85,FEE=.95;
-const def=()=>({bal:START,inv:[],list:[],nid:1,ts:Date.now(),st:{AAPL:0,BTC:0,TSLA:0},mk:null,prof:{nick:"Игрок"+(100+Math.floor(Math.random()*900)),av:"😎",show:[]}});
-let S=def(),M=[],busy=false,dirty=false,cnt=0,cur="cases";
+const def=()=>({bal:START,inv:[],list:[],nid:1,ts:Date.now(),st:{},out:[],seen:[],uid:Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4),prof:{nick:"Игрок"+(100+Math.floor(Math.random()*900)),av:"😎",show:[]}});
+let S=def(),M=[],busy=false,dirty=false,cnt=0,cur="cases",LB=[],LBR=[],lbErr=false;
 const $=id=>document.getElementById(id);
 const fmt=n=>Math.round(n).toLocaleString("ru-RU");
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -188,8 +192,10 @@ function soldOwn(l,buyer){S.bal+=Math.round(l.price*FEE);toast(`${buyer.a} ${buy
 function tick(){
   checkGifts();
   if(mkSync()){save();if(cur==="st")rSt()}
-  if(cur==="st")$("stInfo").textContent=`Цены обновляются каждые 10 сек · следующее обновление через ${Math.max(0,Math.ceil((S.mk.ts+1e4-Date.now())/1000))} с`;
+  if(cur==="st")$("stInfo").textContent=`Цены общие для всех игроков, обновление каждые 3 сек · через ${Math.max(0,Math.ceil(((MK.step+1)*STEP-Date.now())/1000))} с · портфель ≈ ${fmt(STK.reduce((t,a)=>t+(S.st[a.k]||0)*MK.p[a.k],0))} KX`;
   if(cnt%3===0){moveBots();if(cur==="lb")rLb()}
+  if(DB_URL){if(cnt%3===0)pollIn();if(cnt%(cur==="ch"?2:8)===0)pollChat();if(cur==="ch"&&cnt%15===0)pull()}
+  if(cnt%20===0)push();if(cur==="lb"&&cnt%10===0)pull();
   const keep=[];let sold=false;
   for(const l of S.list){if(Math.random()<ch(l.price/val(l))*onl()){const on=BOTS.filter(b=>!b.afk);soldOwn(l,on[rn(on.length)]||BOTS[0]);sold=true}else keep.push(l)}
   S.list=keep;
@@ -203,7 +209,7 @@ function tick(){
 
 /* Профиль */
 function rProf(){
-  const stv=STK.reduce((a,x)=>a+(S.st[x.k]||0)*S.mk.p[x.k],0);
+  const stv=STK.reduce((a,x)=>a+(S.st[x.k]||0)*MK.p[x.k],0);
   S.prof.show=S.prof.show.filter(id=>S.inv.some(x=>x.id===id));
   $("bigAv").innerHTML=avHTML(S.prof.av,72);$("nick").value=S.prof.nick;
   const tot=S.inv.reduce((s,c)=>s+val(c),0)+S.list.reduce((s,c)=>s+val(c),0);
@@ -217,31 +223,49 @@ function toggleShow(id){const a=S.prof.show,i=a.indexOf(id);if(i>=0)a.splice(i,1
 $("nick").oninput=e=>{S.prof.nick=e.target.value;rHead();save()};
 
 /* Акции */
-const STK=[{k:"AAPL",n:"Apple",i:"🍎",b:1200,v:.015},{k:"BTC",n:"Bitcoin",i:"₿",b:18000,v:.04},{k:"TSLA",n:"Tesla",i:"🚗",b:3000,v:.028}];
-const gauss=()=>Math.sqrt(-2*Math.log(1-Math.random()))*Math.cos(2*Math.PI*Math.random());
-const stepP=(a,p)=>Math.min(a.b*3,Math.max(a.b*.3,Math.round(p*Math.exp(a.v*gauss()-.03*Math.log(p/a.b)))));
-function mkStep(){for(const a of STK){const h=S.mk.h[a.k];const p=stepP(a,S.mk.p[a.k]);S.mk.p[a.k]=p;h.push(p);if(h.length>60)h.shift()}}
-function initMk(){if(S.mk&&S.mk.p&&S.mk.h&&STK.every(a=>S.mk.h[a.k]))return;
-  S.mk={ts:Date.now(),p:{},h:{}};for(const a of STK){S.mk.p[a.k]=a.b;S.mk.h[a.k]=[a.b]}for(let i=0;i<40;i++)mkStep()}
-function mkSync(){const n=Date.now();if(n-S.mk.ts>3.6e6)S.mk.ts=n-3.6e6;let k=Math.floor((n-S.mk.ts)/1e4);if(k<1)return false;while(k-->0){mkStep();S.mk.ts+=1e4}return true}
+const STK=[["AAPL","Apple","🍎",1200,.015],["MSFT","Microsoft","🪟",2800,.014],["GOOG","Google","🔍",2400,.018],["AMZN","Amazon","📦",2100,.02],["META","Meta","♾️",1700,.025],["NFLX","Netflix","🎬",1500,.026],["TSLA","Tesla","🚗",3000,.028],["NVDA","Nvidia","🟢",4500,.03],["GOLD","Золото","🥇",2000,.008],["OIL","Нефть","🛢️",900,.02],["BTC","Bitcoin","₿",18000,.04],["ETH","Ethereum","💠",9000,.035],["KXC","KX Coin","🪙",500,.05],["DOGE","Dogecoin","🐕",150,.06],["GME","GameStop","🕹️",600,.07]].map(a=>({k:a[0],n:a[1],i:a[2],b:a[3],v:a[4]}));
+const h32=a=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const gaussAt=(ki,t)=>{const u1=h32(Math.imul(t,0x9E3779B1)^Math.imul(ki+1,0x85EBCA6B)^1),u2=h32(Math.imul(t,0x9E3779B1)^Math.imul(ki+1,0x85EBCA6B)^2);return Math.sqrt(-2*Math.log(1-u1))*Math.cos(2*Math.PI*u2)};
+const stepP=(a,p,g)=>Math.min(a.b*3,Math.max(a.b*.3,Math.round(p*Math.exp(a.v*.6*g-.03*Math.log(p/a.b)))));
+/* Цены считаются из времени, поэтому у всех игроков одинаковые */
+const STEP=3e3;let MK={step:-1,p:{},h:{}};
+function mkSync(){const st=Math.floor(Date.now()/STEP);if(st===MK.step)return false;const from=Math.floor(st/1000)*1000-1000;
+  STK.forEach((a,ki)=>{let p=a.b;const h=[];for(let t=from;t<=st;t++){p=stepP(a,p,gaussAt(ki,t));if(t>st-80)h.push(p)}MK.p[a.k]=p;MK.h[a.k]=h});MK.step=st;return true}
 function chart(h,up){const mn=Math.min(...h),mx=Math.max(...h),r=mx-mn||1;
   const pts=h.map((v,i)=>`${(i/(h.length-1||1)*300).toFixed(1)},${(84-(v-mn)/r*78).toFixed(1)}`).join(" ");
   return `<svg viewBox="0 0 300 90" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--${up?"ok":"bad"})" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>`}
-function rSt(){
-  $("stList").innerHTML=STK.map(a=>{const h=S.mk.h[a.k],p=S.mk.p[a.k],pr=h[h.length-2]||p,d=(p-pr)/pr*100,q=S.st[a.k]||0;
-    return `<div class="stk"><div class="top"><b>${a.i} ${a.n} <span class="hint">${a.k}</span></b><span><b>${fmt(p)} KX</b> <span class="${d>=0?"good":"bad"}">${d>=0?"▲":"▼"} ${Math.abs(d).toFixed(2)}%</span></span></div>${chart(h,h[h.length-1]>=h[0])}
-<div class="hint" style="margin-bottom:8px">В портфеле: ${fmt(q)} шт · ≈ ${fmt(q*p)} KX</div>
-<div class="row"><button class="btn" data-a="trade" data-v="${a.k}|buy|1" ${S.bal<p?"disabled":""}>Купить 1</button><button class="btn" data-a="trade" data-v="${a.k}|buy|10" ${S.bal<p*10?"disabled":""}>Купить 10</button><button class="btn alt" data-a="trade" data-v="${a.k}|sell|1" ${q<1?"disabled":""}>Продать 1</button><button class="btn alt" data-a="trade" data-v="${a.k}|sell|all" ${q<1?"disabled":""}>Всё</button></div></div>`}).join("")}
-function trade(v){const [k,side,n]=v.split("|"),p=S.mk.p[k],have=S.st[k]||0;
+function rSt(){const L=$("stList");
+  if(L.children.length!==STK.length)L.innerHTML=STK.map(a=>`<div class="stk" id="s-${a.k}"><div class="top"><b>${a.i} ${a.n} <span class="hint">${a.k}</span></b><span><b class="pp"></b> <span class="dd"></span></span></div><div class="cc"></div><div class="hint hh" style="margin-bottom:8px"></div><div class="row">${[["buy",1,"Купить 1"],["buy",10,"Купить 10"],["sell",1,"Продать 1"],["sell","all","Всё"]].map(([x,n,t])=>`<button class="btn ${x==="sell"?"alt":""}" data-a="trade" data-v="${a.k}|${x}|${n}">${t}</button>`).join("")}</div></div>`).join("");
+  STK.forEach(a=>{const h=MK.h[a.k],p=MK.p[a.k],pr=h[h.length-2]||p,d=(p-pr)/pr*100,q=S.st[a.k]||0,e=$("s-"+a.k);
+    e.querySelector(".pp").textContent=fmt(p)+" KX";const dd=e.querySelector(".dd");dd.className="dd "+(d>=0?"good":"bad");dd.textContent=(d>=0?"▲ ":"▼ ")+Math.abs(d).toFixed(2)+"%";
+    e.querySelector(".cc").innerHTML=chart(h,h[h.length-1]>=h[0]);e.querySelector(".hh").textContent=`В портфеле: ${fmt(q)} шт · ≈ ${fmt(q*p)} KX`;
+    const b=e.querySelectorAll("button");b[0].disabled=S.bal<p;b[1].disabled=S.bal<p*10;b[2].disabled=b[3].disabled=q<1})}
+function trade(v){const [k,side,n]=v.split("|"),p=MK.p[k],have=S.st[k]||0;
   if(side==="buy"){const q=+n;if(S.bal<p*q){toast("Не хватает KX 😕");return}S.bal-=p*q;S.st[k]=have+q}
   else{const q=n==="all"?have:Math.min(+n,have);if(!q){toast("Нечего продавать");return}S.bal+=p*q;S.st[k]=have-q}
   upd();rSt()}
 
 /* Лидерборд */
+const safeAv=av=>typeof av==="string"?(DAV.includes(av)?av:"😎"):(av&&CARDS[+av.c]&&BGS[+av.g]?{c:+av.c,g:+av.g}:"😎");
+const safeCard=c=>c&&CARDS[+c.c]&&BGS[+c.g]?{c:+c.c,g:+c.g}:null;
+const myShow=()=>S.prof.show.map(id=>S.inv.find(x=>x.id===id)).filter(Boolean).map(c=>({c:c.c,g:c.g}));
+function push(){if(!DB_URL)return;
+  fetch(`${DB_URL}/players/${S.uid}.json`,{method:"PUT",keepalive:true,body:JSON.stringify({n:String(S.prof.nick||"Игрок").slice(0,16),av:S.prof.av,bal:Math.round(S.bal),show:myShow(),ts:Date.now()})}).catch(()=>{})}
+async function pull(){if(!DB_URL)return;
+  try{const r=await fetch(`${DB_URL}/players.json`);if(!r.ok)throw 0;const d=await r.json()||{};
+    LB=Object.entries(d).filter(([k,v])=>v&&typeof v==="object"&&k!==S.uid&&Date.now()-(+v.ts||0)<14*864e5).map(([k,v])=>({id:k,ts:+v.ts||0,n:String(v.n||"Игрок").slice(0,16),av:safeAv(v.av),bal:Math.max(0,+v.bal||0),show:(Array.isArray(v.show)?v.show:[]).slice(0,5).map(safeCard).filter(Boolean)}));lbErr=false}
+  catch(e){lbErr=true}
+  if(cur==="lb")rLb()}
 function rLb(){
-  const rows=BOTS.map(b=>({n:b.n,av:b.a,bal:b.bal})).concat({n:S.prof.nick||"Игрок",av:S.prof.av,bal:S.bal,me:1}).sort((a,b)=>b.bal-a.bal);
-  $("lbInfo").textContent=`Рейтинг по балансу KX · твоё место: ${rows.findIndex(r=>r.me)+1} из ${rows.length}`;
-  $("lbList").innerHTML=rows.map((r,i)=>`<div class="lr ${r.me?"me":""}"><span class="rk">${["🥇","🥈","🥉"][i]||i+1}</span>${avHTML(r.av,32)}<span class="nn">${esc(r.n)}${r.me?" (ты)":""}</span><b>${fmt(r.bal)} KX</b></div>`).join("")}
+  let rows=LB.concat({id:S.uid,n:S.prof.nick||"Игрок",av:S.prof.av,bal:S.bal,show:myShow(),me:1});
+  if(rows.length<10)rows=rows.concat(BOTS.slice(0,10-rows.length).map(b=>({n:b.n,av:b.a,bal:b.bal,show:[],bot:1})));
+  rows.sort((a,b)=>b.bal-a.bal);LBR=rows;
+  const real=rows.filter(r=>!r.bot).length;
+  $("lbInfo").textContent=(DB_URL?(lbErr?"Нет связи с сервером · ":""):"Онлайн-режим не подключён · ")+`Баланс KX · игроков онлайн-рейтинга: ${real} · твоё место: ${rows.findIndex(r=>r.me)+1}`;
+  $("lbList").innerHTML=rows.map((r,i)=>`<div class="lr ${r.me?"me":""}" ${r.bot?"":`data-a="pl" data-v="${i}" style="cursor:pointer"`}><span class="rk">${["🥇","🥈","🥉"][i]||i+1}</span>${avHTML(r.av,32)}<span class="nn">${esc(r.n)}${r.me?" (ты)":""}${r.bot?" 🤖":""}</span><b>${fmt(r.bal)} KX</b></div>`).join("")}
+function openPl(i){const r=LBR[i];if(!r)return;
+  $("modal").innerHTML=`<div class="mb">${avHTML(r.av,72)}<b>${esc(r.n)}</b><div>💰 ${fmt(r.bal)} KX</div><div class="show" style="justify-content:center">${r.show.map(cardHTML).join("")||'<span class="hint">Витрина пуста</span>'}</div>${r.id&&!r.me&&DB_URL?`<button class="btn" data-a="trd" data-v="${i}">🔁 Предложить карточку</button>`:""}<button class="btn alt" data-a="close" style="width:100%">Закрыть</button></div>`;
+  $("modal").classList.add("on")}
 function moveBots(){for(const b of BOTS)b.bal=Math.max(1000,Math.round(b.bal*(1+(Math.random()-.47)*.06)))}
 
 /* Выдача карточек из admin.html */
@@ -254,22 +278,78 @@ function tab(v){
   cur=v;
   document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
   document.querySelectorAll(".sec").forEach(s=>s.classList.toggle("on",s.id===v));
-  if(v==="inv")rInv();if(v==="mk")rMarket();if(v==="prof")rProf();if(v==="lb")rLb();if(v==="st")rSt()}
+  if(v==="inv")rInv();if(v==="mk")rMarket();if(v==="prof")rProf();if(v==="lb"){rLb();push();pull()};if(v==="st")rSt();if(v==="ch"){unread=0;rBdg();rChat(1);pull();pollChat()}}
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-a]");if(!t)return;const a=t.dataset.a,v=t.dataset.v;
   if(a==="tab")tab(v);else if(a==="case")openCase(CASES[+v]);else if(a==="sell")sell(+v);
   else if(a==="list")openList(+v);else if(a==="doList")doList(+v);else if(a==="close")closeM();
-  else if(a==="unlist")unlist(+v);else if(a==="buy")buy(+v);else if(a==="av")setAv(v);else if(a==="show")toggleShow(+v);else if(a==="trade")trade(v)});
-$("reset").onclick=()=>{if(busy||!confirm("Сбросить весь прогресс?"))return;S=def();initMk();upd();rInv();rMarket();rProf();toast("Прогресс сброшен")};
+  else if(a==="unlist")unlist(+v);else if(a==="buy")buy(+v);else if(a==="av")setAv(v);else if(a==="show")toggleShow(+v);else if(a==="trade")trade(v);else if(a==="pl")openPl(+v);
+  else if(a==="send")sendChat();else if(a==="cu"){const m=CH.find(x=>x.k===v);if(m&&m.u!==S.uid)openTrade(m.u,m.n)}
+  else if(a==="trd"){const r=LBR[+v];openTrade(r.id,r.n)}else if(a==="tsend")sendOffer();else if(a==="tacc")accOffer(v);else if(a==="tdec")decOffer(v);else if(a==="tcan")cancelOut(v)});
+$("reset").onclick=()=>{if(busy||!confirm("Сбросить весь прогресс?"))return;S=def();mkSync();upd();rInv();rMarket();rProf();toast("Прогресс сброшен")};
 
 /* Старт */
-load();initMk();mkSync();checkGifts();
+load();mkSync();checkGifts();
 for(let i=0;i<16;i++)M.push(genL(false));
 const away=Math.min((Date.now()-S.ts)/1000,6*3600);let n=0,gain=0;
 if(away>5&&S.list.length){const keep=[];for(const l of S.list){if(Math.random()<1-Math.pow(1-ch(l.price/val(l))*onl(),away)){S.bal+=Math.round(l.price*FEE);gain+=Math.round(l.price*FEE);n++}else keep.push(l)}S.list=keep}
 upd();rBots();rInv();rMarket();rProf();
 if(n)setTimeout(()=>toast(`Пока тебя не было, продано лотов: ${n} (+${fmt(gain)} KX)`),500);
-setInterval(tick,1000);
+/* Онлайн: чат и обмен между игроками */
+let CH=[],chLast="",chBusy=0,unread=0,chInit=0,IN={},inBusy=0,lastSend=0,TRG=null;
+const okId=x=>/^[a-z0-9]{6,20}$/i.test(x);
+async function db(p,m,b){const[a,q]=p.split("?");const r=await fetch(`${DB_URL}/${a}.json${q?"?"+q:""}`,{method:m||"GET",body:b===undefined?undefined:JSON.stringify(b)});if(!r.ok)throw 0;return r.json()}
+async function detectDb(){const c=["https://kxgame-default-rtdb.firebaseio.com","https://kxgame-default-rtdb.europe-west1.firebasedatabase.app","https://kxgame-default-rtdb.asia-southeast1.firebasedatabase.app"];
+  const res=await Promise.all(c.map(u=>fetch(u+"/.json?shallow=true",{signal:AbortSignal.timeout(5000)}).then(r=>r.status).catch(()=>0)));
+  const i=res.findIndex(x=>x&&x!==404);if(i>=0)DB_URL=c[i];else toast("Онлайн недоступен: проверь URL базы")}
+function rBdg(){const n=unread+Object.keys(IN).length,b=$("bdg");b.hidden=!n;b.textContent=n}
+const online=()=>LB.filter(p=>Date.now()-p.ts<6e4).length+1;
+function rChat(sc){const box=$("chBox"),bot=box.scrollHeight-box.scrollTop-box.clientHeight<60;
+  box.innerHTML=CH.map(m=>`<div class="msg"><span data-a="cu" data-v="${m.k}">${avHTML(m.av,26)}</span><div><b data-a="cu" data-v="${m.k}">${esc(m.n)}</b> <small>${new Date(m.ts).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})}</small><div>${esc(m.t)}</div></div></div>`).join("")||'<span class="hint">Пока тихо. Напиши первым!</span>';
+  if(sc||bot)box.scrollTop=box.scrollHeight;
+  $("chInfo").textContent=DB_URL?`Онлайн: ${online()} · нажми на ник игрока, чтобы предложить ему карточку`:"Онлайн-режим не подключён";rOffers()}
+async function pollChat(){if(!DB_URL||chBusy)return;chBusy=1;
+  try{const d=await db("chat?orderBy=%22%24key%22&"+(chLast?`startAt=%22${chLast}%22`:"limitToLast=50"))||{};let add=0;
+    for(const k of Object.keys(d).sort()){const m=d[k];if(k===chLast||!m||typeof m!=="object")continue;
+      CH.push({k,u:String(m.u||""),n:String(m.n||"Игрок").slice(0,16),av:safeAv(m.av),t:String(m.t||"").slice(0,300),ts:+m.ts||0});chLast=k;add++;
+      if(chInit&&m.u!==S.uid&&cur!=="ch")unread++}
+    chInit=1;CH=CH.slice(-100);if(add){if(cur==="ch")rChat();rBdg()}}catch(e){}chBusy=0}
+async function sendChat(){const inp=$("chIn"),t=inp.value.trim().slice(0,200);if(!t||!DB_URL)return;
+  if(Date.now()-lastSend<1200){toast("Не так быстро");return}lastSend=Date.now();inp.value="";
+  try{await db("chat","POST",{u:S.uid,n:String(S.prof.nick||"Игрок").slice(0,16),av:S.prof.av,t,ts:{".sv":"timestamp"}});pollChat();
+    if(Math.random()<.03){const k=Object.keys(await db("chat?shallow=true")||{}).sort();if(k.length>300){const o={};k.slice(0,100).forEach(x=>o[x]=null);await db("chat","PATCH",o)}}}
+  catch(e){toast("Не отправилось 😕");inp.value=t}}
+$("chIn").onkeydown=e=>{if(e.key==="Enter")sendChat()};
+function openTrade(id,n){if(!okId(id)||!DB_URL)return;if(!S.inv.length){toast("Нет карточек для обмена");return}if(S.out.length>=5){toast("Максимум 5 открытых предложений");return}
+  TRG={id,n};$("modal").innerHTML=`<div class="mb"><b>Предложить игроку ${esc(n)}</b><select id="tsel">${S.inv.slice().sort((a,b)=>val(b)-val(a)).map(c=>`<option value="${c.id}">${CARDS[c.c].i} ${CARDS[c.c].n} · ${BGS[c.g].n} · ${fmt(val(c))}</option>`).join("")}</select><input id="tpr" type="number" min="0" placeholder="Цена в KX (0 = подарок)"><button class="btn" data-a="tsend" style="width:100%">Отправить</button><button class="btn alt" data-a="close" style="width:100%">Отмена</button></div>`;$("modal").classList.add("on")}
+async function sendOffer(){const id=+$("tsel").value,pk=Math.max(0,Math.round(+$("tpr").value||0)),i=S.inv.findIndex(x=>x.id===id);if(i<0||!TRG)return;const c=S.inv[i];
+  try{const r=await db(`inbox/${TRG.id}`,"POST",{t:"offer",f:S.uid,fn:String(S.prof.nick).slice(0,16),fa:S.prof.av,gc:{c:c.c,g:c.g},pk,ts:Date.now()});
+    S.inv.splice(i,1);S.out.push({k:r.name,to:TRG.id,tn:TRG.n,c:{c:c.c,g:c.g},pk});closeM();toast("Предложение отправлено");upd();rInv();rProf();rOffers()}catch(e){toast("Нет связи 😕")}}
+async function pollIn(){if(!DB_URL||inBusy)return;inBusy=1;
+  try{const d=await db(`inbox/${S.uid}`)||{};IN={};let ch=0;
+    for(const[k,m]of Object.entries(d)){if(!m||typeof m!=="object")continue;
+      if(m.t==="offer"){const c=safeCard(m.gc);if(c&&okId(m.f))IN[k]={k,f:m.f,fn:String(m.fn||"Игрок").slice(0,16),fa:safeAv(m.fa),c,pk:Math.min(Math.max(0,+m.pk||0),1e9)};continue}
+      if(!S.seen.includes(k)){const c=safeCard(m.gc),a=Math.min(Math.max(0,+m.kx||0),1e9);
+        if(m.t==="acc"){S.bal+=a;toast(`${String(m.fn||"Игрок").slice(0,16)} принял предложение: +${fmt(a)} KX`)}
+        else if(m.t==="ret"){if(c)S.inv.push({c:c.c,g:c.g,id:nid()});toast("Предложение отклонено, карточка вернулась")}
+        S.out=S.out.filter(x=>x.k!==m.ok);S.seen=S.seen.slice(-80).concat(k);ch=1}
+      await db(`inbox/${S.uid}/${k}`,"DELETE")}
+    if(ch){upd();rInv();rProf()}rOffers();rBdg()}catch(e){}inBusy=0}
+function rOffers(){const ks=Object.keys(IN);
+  $("offers").innerHTML=(ks.length?"<h3>Входящие предложения</h3>"+ks.map(k=>{const o=IN[k];return `<div class="stk"><div class="top"><span>${avHTML(o.fa,28)} <b>${esc(o.fn)}</b> предлагает карточку:</span></div><div class="show" style="justify-content:center;margin:8px 0">${cardHTML(o.c)}</div><div class="row"><button class="btn" data-a="tacc" data-v="${k}" ${S.bal<o.pk?"disabled":""}>${o.pk?`Купить за ${fmt(o.pk)} KX`:"Взять даром"}</button><button class="btn alt" data-a="tdec" data-v="${k}">Отклонить</button></div></div>`}).join(""):"")
+  +(S.out.length?"<h3>Мои предложения</h3>"+S.out.map(o=>`<div class="stk"><div class="top"><span>${CARDS[o.c.c].i} ${CARDS[o.c.c].n} → ${esc(o.tn||"")} · ${o.pk?fmt(o.pk)+" KX":"подарок"}</span><button class="btn alt sm" data-a="tcan" data-v="${o.k}">Отозвать</button></div></div>`).join(""):"")}
+async function accOffer(k){const o=IN[k];if(!o)return;if(S.bal<o.pk){toast("Не хватает KX 😕");return}
+  try{if(!await db(`inbox/${S.uid}/${k}`)){toast("Предложение уже отозвано");delete IN[k];rOffers();return}
+    await db(`inbox/${S.uid}/${k}`,"DELETE");S.bal-=o.pk;S.inv.push({c:o.c.c,g:o.c.g,id:nid()});delete IN[k];
+    await db(`inbox/${o.f}`,"POST",{t:"acc",ok:k,kx:Math.round(o.pk*FEE),fn:String(S.prof.nick).slice(0,16),ts:Date.now()});
+    toast(`Получено: ${CARDS[o.c.c].n}`);upd();rInv();rProf();rOffers();rBdg()}catch(e){toast("Нет связи 😕")}}
+async function decOffer(k){const o=IN[k];if(!o)return;
+  try{await db(`inbox/${S.uid}/${k}`,"DELETE");await db(`inbox/${o.f}`,"POST",{t:"ret",ok:k,gc:{c:o.c.c,g:o.c.g},ts:Date.now()});delete IN[k];rOffers();rBdg()}catch(e){toast("Нет связи 😕")}}
+async function cancelOut(k){const o=S.out.find(x=>x.k===k);if(!o)return;
+  try{if(!await db(`inbox/${o.to}/${k}`)){toast("Уже обработано, жди ответ");return}await db(`inbox/${o.to}/${k}`,"DELETE");
+    S.out=S.out.filter(x=>x!==o);S.inv.push({c:o.c.c,g:o.c.g,id:nid()});upd();rInv();rProf();rOffers()}catch(e){toast("Нет связи 😕")}}
+detectDb().then(()=>{push();pollIn();pollChat();pull()});
+setInterval(tick,1000);push();addEventListener("pagehide",push);
 </script>
 </body>
 </html>
