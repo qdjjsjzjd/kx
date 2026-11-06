@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KX Кейсы</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark;--bg:#0f1117;--panel:#1a1d27;--line:#2a2f3d;--text:#eef0f6;--muted:#8b92a8;--accent:#6c8cff;--ok:#3ecf8e;--bad:#ff5c6c}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){color-scheme:light;--bg:#f2f4fa;--panel:#fff;--line:#dde1ee;--text:#171a24;--muted:#6a7189;--accent:#4a68e8}}
+:root[data-theme="dark"]{color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0 auto;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:960px;padding:12px}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.me{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;min-width:0}
+.me span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px}
+.bal{background:var(--panel);border:1px solid var(--line);padding:8px 14px;border-radius:12px;font-weight:700;white-space:nowrap}
+.avt{display:flex;align-items:center;justify-content:center;border-radius:50%;flex:none;border:2px solid var(--line);color:#fff;text-shadow:0 1px 3px #0008}
+nav{display:flex;gap:6px;margin-bottom:12px}
+nav button{flex:1;padding:10px 4px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;font-size:14px;cursor:pointer}
+nav button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.sec{display:none}.sec.on{display:block}
+h3{margin:16px 0 8px;font-size:16px}
+.cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:12px}
+.case{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.case .big{font-size:40px}.case small{color:var(--muted);display:block;margin:4px 0 8px;font-size:13px}
+.btn{padding:10px 14px;border:0;border-radius:10px;background:var(--accent);color:#fff;font-size:14px;cursor:pointer;font-weight:600}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.alt{background:var(--line);color:var(--text)}
+.btn.sm{padding:6px;font-size:12px}
+.rw{position:relative;overflow:hidden;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 0;min-height:176px}
+.rw::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;background:var(--accent);transform:translateX(-50%);z-index:2}
+.strip{display:flex;gap:8px;will-change:transform}
+.card{flex:none;width:112px;border-radius:12px;padding:10px 6px;text-align:center;color:#fff;border:2px solid #888;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.card .ic{font-size:36px}.card .nm{font-weight:700;font-size:13px}.card .bgn{font-size:11px;opacity:.9;min-height:14px}.card .pr{font-size:12px;font-weight:700;margin-top:4px}
+.t1{border-color:#9aa0b0}.t2{border-color:#4aa3ff}.t3{border-color:#a566ff}.t4{border-color:#ff5cc8}.t5{border-color:#ffc83d;box-shadow:0 0 12px #ffc83d88}
+.res{text-align:center;margin-top:12px;min-height:20px}.res .card{margin:0 auto 8px;width:140px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
+.grid .card{width:auto}
+.item{display:flex;flex-direction:column;gap:5px}
+.item.pick .card{outline:3px solid var(--ok)}
+.item .row{display:flex;gap:5px}.item .row .btn{flex:1}
+.mk .sub{font-size:12px;text-align:center;color:var(--muted)}
+.good{color:var(--ok)}.bad{color:var(--bad)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:4px 10px;font-size:13px}
+.hint{color:var(--muted);font-size:13px;margin:0 0 10px}
+.pf{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.pf input{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px;font-size:16px;width:100%;max-width:220px}
+.show{display:flex;gap:6px;flex-wrap:wrap}.show .card{width:86px;padding:6px 2px}.show .card .ic{font-size:26px}.show .card .nm{font-size:11px}.show .card .bgn{display:none}.show .card .pr{font-size:10px}
+.avs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}.avs .avt{cursor:pointer}
+.modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:10}.modal.on{display:flex}
+.mb{background:var(--panel);padding:16px;border-radius:14px;max-width:320px;width:90%;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center}
+.mb .card{width:140px}.mb input{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px;font-size:16px;width:100%}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel);border:1px solid var(--accent);padding:10px 16px;border-radius:12px;opacity:0;transition:.3s;pointer-events:none;z-index:20;max-width:90%;text-align:center}
+.toast.show{opacity:1}
+.foot{text-align:center;margin-top:20px}
+</style>
+</head>
+<body>
+<header><div class="me" data-a="tab" data-v="prof" id="head"></div><div class="bal">💰 <span id="bal">0</span> KX</div></header>
+<nav><button data-a="tab" data-v="cases" class="on">Кейсы</button><button data-a="tab" data-v="mk">Рынок</button><button data-a="tab" data-v="inv">Инвентарь</button><button data-a="tab" data-v="prof">Профиль</button></nav>
+
+<section id="cases" class="sec on">
+  <div class="cases" id="caseList"></div>
+  <div class="rw" id="rw"><div class="strip" id="strip"></div></div>
+  <div class="res" id="res"><span style="color:var(--muted)">Выбери кейс и нажми «Открыть»</span></div>
+</section>
+
+<section id="mk" class="sec mk">
+  <p class="hint">Игроки покупают карточки друг у друга. Выставь свою карточку из инвентаря по своей цене (комиссия 5%). Чем дешевле цена, тем быстрее купят, даже если ты AFK или закрыл страницу.</p>
+  <div class="chips" id="bots"></div>
+  <h3>Мои лоты</h3><div class="grid" id="mine"></div>
+  <h3>Лоты игроков</h3><div class="grid" id="mlots"></div>
+</section>
+
+<section id="inv" class="sec">
+  <p class="hint" id="invInfo"></p>
+  <div class="grid" id="invGrid"></div>
+</section>
+
+<section id="prof" class="sec">
+  <div class="pf"><div id="bigAv"></div><div><input id="nick" maxlength="16" placeholder="Ник"><div class="hint" id="stats" style="margin:6px 0 0"></div></div></div>
+  <h3>Витрина</h3><div class="show" id="showc"></div>
+  <h3>Аватарка</h3><div class="avs" id="avs"></div>
+  <h3>Выбери до 5 карточек в витрину</h3><div class="grid" id="pickGrid"></div>
+</section>
+
+<div class="foot"><button class="btn alt" id="reset">Сбросить прогресс</button></div>
+<div class="modal" id="modal"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const RAW="🍦 Ice Cream:300,🍪 Cookie:320,🍎 Apple:350,🍌 Banana:380,🍕 Pizza:420,🍔 Burger:450,🍩 Donut:480,🥑 Avocado:500,🌮 Taco:520,🍉 Melon:550,🌵 Cactus:600,🐱 Cat:620,🐶 Dog:650,🐸 Frog:680,🐧 Penguin:700,❤️ Heart:720,🍀 Clover:750,🌻 Sunflower:780,🌴 Palm:800,🐝 Bee:850,🦆 Duck:880,🐙 Octopus:900,🐢 Turtle:950,🦋 Butterfly:1000,❄️ Snowflake:1050,☀️ Sun:1100,☁️ Cloud:1150,🌈 Rainbow:1200,🍄 Mushroom:1250,🐼 Panda:1300,🦊 Fox:1400,🐨 Koala:1450,🦉 Owl:1500,🐬 Dolphin:1600,🎧 Headphones:1650,🎮 Gamepad:1700,🎸 Guitar:1800,🎩 Top Hat:1850,👻 Ghost:1900,⭐ Star:2000,🌙 Moon:2100,🐺 Wolf:2200,🦅 Eagle:2300,🐯 Tiger:2400,🦁 Lion:2500,🐻 Bear:2600,🦈 Shark:2700,⚽ Ball:2800,🏆 Trophy:3000,🔔 Bell:3100,🗝️ Key:3200,💣 Bomb:3300,💀 Skull:3400,👽 Alien:3500,🤖 Robot:3600,🎭 Masks:3800,🧿 Evil Eye:3900,🪐 Saturn:4000,🚀 Rocket:4200,🛸 UFO:4400,⚡ Lightning:4600,🔥 Flame:4800,🌊 Wave:5000,🌋 Volcano:5300,🦄 Unicorn:5600,🧙 Wizard:5900,🧛 Vampire:6200,🧜 Mermaid:6500,🧞 Genie:6800,🥷 Ninja:7000,💎 Diamond:7200,👑 Crown:7500,🔮 Crystal Ball:7800,📿 Beads:8000,🗡️ Dagger:8300,🛡️ Shield:8600,🌹 Rose:9000,🦚 Peacock:9400,🐲 Dragon Head:9800,🐉 Dragon:10000,🦂 Scorpion:10500,🕷️ Spider:11000,🦇 Bat:11500,🐍 Serpent:12000,🦖 T-Rex:12500,🦕 Brachio:13000,🐘 Elephant:13500,🦏 Rhino:14000,🦬 Bison:14500,🐎 Stallion:15000,🦢 Swan:15500,🦜 Parrot:16000,🦩 Flamingo:16500,🦥 Sloth:17000,🦔 Hedgehog:17500,🪬 Hamsa:18000,🪄 Magic Wand:18500,⚜️ Fleur:19000,🔱 Trident:19500,☄️ Comet:20000,🌌 Galaxy:21000,🌠 Meteor:22000,🌀 Cyclone:23000,🌪️ Tornado:24000,🧊 Ice Cube:25000,🏰 Castle:26000,🗿 Moai:27000,🛕 Temple:28000,🎆 Fireworks:29000,🎇 Sparkler:30000,🪙 Coin:32000,💰 Money Bag:34000,🏺 Amphora:36000,🪆 Matryoshka:38000,🕊️ Dove:40000,🦾 Mech Arm:43000,🧬 DNA:46000,⚛️ Atom:50000,☯️ Yin Yang:55000,👁️ Eye of Time:60000";
+const CARDS=RAW.split(",").map(s=>{const i=s.indexOf(" "),j=s.lastIndexOf(":");return{i:s.slice(0,i),n:s.slice(i+1,j),p:+s.slice(j+1)}}).sort((a,b)=>a.p-b.p);
+const BGS=("Серый мел,#555a66,#3c404a,0,28;Песочный,#d2b27a,#8f6f3c,300,20;Небесный,#5db2ff,#2a5db0,800,13;Мята,#6fe3c1,#1f8f77,1200,11;Нефрит,#2fbf8f,#0f6b50,1800,9;Лаванда,#b79cff,#6a4fc4,2300,8;Закат,#ff9a5c,#c2406a,2700,7;Gold Rose,#f7c873,#b8505e,3000,6;Янтарь,#ffc14d,#b36a00,3500,5;Рубин,#ff4d6d,#7a0f2b,4200,4.2;Сапфир,#3d7bff,#0a1f66,5000,3.6;Изумруд,#20e08a,#02593a,6000,3;Океан,#00d0ff,#003a6b,7000,2.4;Black Nephrite,#1c1c1c,#050505,8000,2;Космос,#7b4dff,#0a0630,9500,1.6;Неон,#ff2bd6,#00a5c4,11000,1.2;Огонь,#ffb800,#ff2d2d,13000,.9;Платина,#c9cde0,#7b8099,15000,.6;Aurora,#4dffb8,#b84dff,18000,.35;Бриллиант,#9fe8ff,#5a9fff,20000,.2").split(";").map(s=>{const a=s.split(",");return{n:a[0],css:`linear-gradient(135deg,${a[1]},${a[2]})`,b:+a[3],w:+a[4]}});
+const CN=[["Летний кейс","🌞"],["Зимний кейс","🧊"],["Лесной кейс","🌲"],["Пиратский кейс","🏴‍☠️"],["Неоновый кейс","🔮"],["Космический кейс","🪐"],["Королевский кейс","👑"],["Огненный кейс","🔥"],["Мифический кейс","🐉"],["Легендарный кейс","💠"]];
+const AB=BGS.reduce((s,b)=>s+b.w*b.b,0)/BGS.reduce((s,b)=>s+b.w,0);
+const CASES=CN.map((x,k)=>{const cards=CARDS.map((_,i)=>i).slice(k*10,k*10+30);const sw=cards.reduce((s,i)=>s+1/CARDS[i].p,0);const ev=(cards.length+AB*sw)/sw;return{id:k,n:x[0],i:x[1],cards,price:Math.max(100,Math.round(ev/50)*50)}});
+const BOTS=[["NeonFox","🦊"],["Kostya_77","🐺"],["Мурка","🐱"],["DarkLord","🧛"],["Vasya_Pro","🤠"],["Лисёнок","🦝"],["XxSniperxX","🥷"],["Алиса_KX","👩‍🚀"],["Crypto_Dedus","🧓"],["Tima4","🐸"],["Рома_Лут","😎"],["SleepyBear","🐻"],["Ghost_404","👻"],["ЗлойКот","😼"]].map(a=>({n:a[0],a:a[1],afk:Math.random()<.35}));
+const DAV=["😎","🤠","🥷","🧑‍🚀","🦸","🧙","👾","🐱","🐺","🦊","🤖","👑"];
+const START=15000,SELL=.85,FEE=.95;
+const def=()=>({bal:START,inv:[],list:[],nid:1,ts:Date.now(),prof:{nick:"Игрок"+(100+Math.floor(Math.random()*900)),av:"😎",show:[]}});
+let S=def(),M=[],busy=false,dirty=false,cnt=0;
+const $=id=>document.getElementById(id);
+const fmt=n=>Math.round(n).toLocaleString("ru-RU");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const val=c=>CARDS[c.c].p+BGS[c.g].b;
+const tier=p=>p<1500?1:p<4000?2:p<9000?3:p<20000?4:5;
+const rnd=(a,b)=>a+Math.random()*(b-a),rn=n=>Math.floor(Math.random()*n);
+const nid=()=>S.nid++;
+function wpick(list,wf){let t=0;for(const x of list)t+=wf(x);let r=Math.random()*t;for(const x of list){r-=wf(x);if(r<=0)return x}return list[list.length-1]}
+const pickBg=()=>BGS.indexOf(wpick(BGS,b=>b.w));
+const roll=cs=>({c:wpick(cs.cards,k=>1/CARDS[k].p),g:pickBg()});
+function cardHTML(c){const k=CARDS[c.c],b=BGS[c.g],p=val(c);return `<div class="card t${tier(p)}" style="background:${b.css}"><div class="ic">${k.i}</div><div class="nm">${k.n}</div><div class="bgn">${b.n}</div><div class="pr">${fmt(p)} KX</div></div>`}
+function avHTML(av,s){let ic=av,bg="var(--panel)";if(typeof av==="object"){ic=CARDS[av.c].i;bg=BGS[av.g].css}return `<div class="avt" style="width:${s}px;height:${s}px;font-size:${s*.55}px;background:${bg}">${ic}</div>`}
+function toast(t){const el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>el.classList.remove("show"),2800)}
+function save(){S.ts=Date.now();try{localStorage.setItem("kx2_save",JSON.stringify(S))}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem("kx2_save")||"null");if(d&&typeof d.bal==="number"&&Array.isArray(d.inv)&&d.prof)S=Object.assign(def(),d)}catch(e){}}
+function upd(){$("bal").textContent=fmt(S.bal);rHead();rCases();save()}
+function rHead(){$("head").innerHTML=avHTML(S.prof.av,36)+`<span>${esc(S.prof.nick||"Игрок")}</span>`}
+
+/* Кейсы */
+function rCases(){$("caseList").innerHTML=CASES.map(c=>`<div class="case"><div class="big">${c.i}</div><b>${c.n}</b><small>${c.cards.slice(-6).map(k=>CARDS[k].i).join(" ")}</small><button class="btn" data-a="case" data-v="${c.id}" ${busy||S.bal<c.price?"disabled":""}>Открыть · ${fmt(c.price)} KX</button></div>`).join("")}
+function openCase(cs){
+  if(busy||S.bal<cs.price)return;
+  busy=true;S.bal-=cs.price;upd();
+  const items=[];for(let i=0;i<45;i++)items.push(roll(cs));
+  const WIN=38,win=items[WIN],strip=$("strip");
+  strip.style.transition="none";strip.style.transform="translateX(0)";
+  strip.innerHTML=items.map(cardHTML).join("");$("res").innerHTML="";
+  void strip.offsetWidth;
+  const x=WIN*120+56+rnd(-40,40)-$("rw").clientWidth/2;
+  strip.style.transition="transform 5.5s cubic-bezier(.12,.7,.1,1)";
+  strip.style.transform=`translateX(${-x}px)`;
+  setTimeout(()=>{
+    const it={c:win.c,g:win.g,id:nid()};S.inv.push(it);busy=false;
+    $("res").innerHTML=`${cardHTML(win)}<div>Выпало: <b>${CARDS[win.c].n}</b> · фон «${BGS[win.g].n}»</div><button class="btn alt" id="sellNow" style="margin-top:8px">Продать за ${fmt(val(win)*SELL)} KX</button>`;
+    $("sellNow").onclick=()=>{sell(it.id);$("res").innerHTML="Продано ✅"};
+    upd();rInv();
+  },5700);
+}
+
+/* Инвентарь */
+function sell(id){const i=S.inv.findIndex(x=>x.id===id);if(i<0)return;const c=S.inv.splice(i,1)[0];S.bal+=Math.floor(val(c)*SELL);upd();rInv();rProf()}
+function rInv(){
+  const tot=S.inv.reduce((s,c)=>s+val(c),0);
+  $("invInfo").textContent=S.inv.length?`Карточек: ${S.inv.length} · общая стоимость ${fmt(tot)} KX · продажа системе за 85%, на рынке можно дороже`:"Пока пусто. Открой кейс или купи карточку на рынке.";
+  $("invGrid").innerHTML=S.inv.slice().sort((a,b)=>val(b)-val(a)).map(c=>`<div class="item">${cardHTML(c)}<div class="row"><button class="btn alt sm" data-a="sell" data-v="${c.id}">Продать</button><button class="btn sm" data-a="list" data-v="${c.id}">На рынок</button></div></div>`).join("")}
+
+/* Рынок */
+function rBots(){$("bots").innerHTML=BOTS.map(b=>`<span class="chip">${b.a} ${b.n} ${b.afk?"💤 AFK":"🟢"}</span>`).join("")}
+function genL(onlyOnline){const pool=onlyOnline?BOTS.filter(b=>!b.afk):BOTS;const s=pool[rn(pool.length)];const c=wpick(CARDS.map((_,i)=>i),i=>1/Math.sqrt(CARDS[i].p)),g=pickBg();return{id:nid(),c,g,price:Math.max(10,Math.round(val({c,g})*rnd(.85,1.6)/10)*10),seller:s}}
+function rMarket(){
+  $("mine").innerHTML=S.list.length?S.list.map(l=>`<div class="item">${cardHTML(l)}<div class="sub">Твоя цена: <b>${fmt(l.price)}</b></div><button class="btn alt sm" data-a="unlist" data-v="${l.id}">Снять</button></div>`).join(""):'<span class="hint">Пусто. Выставь карточку из инвентаря.</span>';
+  $("mlots").innerHTML=M.slice().sort((a,b)=>a.price/val(a)-b.price/val(b)).map(l=>{const r=l.price/val(l);return `<div class="item">${cardHTML(l)}<div class="sub">${l.seller.a} ${esc(l.seller.n)} ${l.seller.afk?"💤":""}</div><button class="btn sm" data-a="buy" data-v="${l.id}" ${S.bal<l.price?"disabled":""}>Купить ${fmt(l.price)} <span class="${r<1?"good":"bad"}">(${Math.round(r*100)}%)</span></button></div>`}).join("")}
+function buy(id){const i=M.findIndex(x=>x.id===id);if(i<0){toast("Лот уже купили");return}const l=M[i];if(S.bal<l.price){toast("Не хватает KX 😕");return}
+  S.bal-=l.price;S.inv.push({c:l.c,g:l.g,id:nid()});M.splice(i,1);toast(`Куплено: ${CARDS[l.c].n}`);upd();rMarket();rInv()}
+function openList(id){const c=S.inv.find(x=>x.id===id);if(!c)return;
+  $("modal").innerHTML=`<div class="mb">${cardHTML(c)}<div class="hint" style="margin:0">Рыночная цена ≈ ${fmt(val(c))} KX. Ты получишь 95%.</div><input id="pr" type="number" min="10" value="${val(c)}"><button class="btn" data-a="doList" data-v="${id}" style="width:100%">Выставить</button><button class="btn alt" data-a="close" style="width:100%">Отмена</button></div>`;
+  $("modal").classList.add("on")}
+function doList(id){const p=Math.round(+$("pr").value);if(!(p>=10)){toast("Укажи цену от 10 KX");return}
+  const i=S.inv.findIndex(x=>x.id===id);if(i<0)return;const c=S.inv.splice(i,1)[0];S.list.push({c:c.c,g:c.g,id:c.id,price:p});
+  closeM();toast("Карточка выставлена на рынок");save();rInv();rMarket();rProf()}
+function unlist(id){const i=S.list.findIndex(x=>x.id===id);if(i<0)return;const l=S.list.splice(i,1)[0];S.inv.push({c:l.c,g:l.g,id:l.id});save();rMarket();rInv()}
+function closeM(){$("modal").classList.remove("on")}
+const ch=r=>r<=.9?.03:r<=1.05?.012:r<=1.3?.004:r<=1.8?.001:.0002;
+const onl=()=>.5+BOTS.filter(b=>!b.afk).length/BOTS.length;
+function soldOwn(l,buyer){S.bal+=Math.round(l.price*FEE);toast(`${buyer.a} ${buyer.n} купил ${CARDS[l.c].n} за ${fmt(l.price)} KX`)}
+function tick(){
+  const keep=[];let sold=false;
+  for(const l of S.list){if(Math.random()<ch(l.price/val(l))*onl()){const on=BOTS.filter(b=>!b.afk);soldOwn(l,on[rn(on.length)]||BOTS[0]);sold=true}else keep.push(l)}
+  S.list=keep;
+  if(Math.random()<.12){const b=BOTS[rn(BOTS.length)];b.afk=!b.afk;rBots()}
+  if(M.length>10&&Math.random()<.25){M.splice(rn(M.length),1);dirty=true}
+  if(M.length<22&&Math.random()<.35){M.push(genL(true));dirty=true}
+  if(sold){upd();dirty=true}
+  if(dirty){rMarket();dirty=false}
+  if(++cnt%10===0)save();
+}
+
+/* Профиль */
+function rProf(){
+  S.prof.show=S.prof.show.filter(id=>S.inv.some(x=>x.id===id));
+  $("bigAv").innerHTML=avHTML(S.prof.av,72);$("nick").value=S.prof.nick;
+  const tot=S.inv.reduce((s,c)=>s+val(c),0)+S.list.reduce((s,c)=>s+val(c),0);
+  $("stats").textContent=`Карточек: ${S.inv.length+S.list.length} · капитал ${fmt(tot+S.bal)} KX`;
+  $("showc").innerHTML=S.prof.show.length?S.prof.show.map(id=>cardHTML(S.inv.find(x=>x.id===id))).join(""):'<span class="hint">Витрина пуста.</span>';
+  const seen={},own=S.inv.slice().sort((a,b)=>val(b)-val(a)).filter(c=>{const k=c.c+"-"+c.g;return seen[k]?false:seen[k]=true}).slice(0,40);
+  $("avs").innerHTML=DAV.map(e=>`<span data-a="av" data-v="e|${e}">${avHTML(e,48)}</span>`).join("")+own.map(c=>`<span data-a="av" data-v="c|${c.c}|${c.g}">${avHTML(c,48)}</span>`).join("");
+  $("pickGrid").innerHTML=S.inv.slice().sort((a,b)=>val(b)-val(a)).map(c=>`<div class="item ${S.prof.show.includes(c.id)?"pick":""}" data-a="show" data-v="${c.id}">${cardHTML(c)}</div>`).join("")||'<span class="hint">Нет карточек.</span>'}
+function setAv(v){const p=v.split("|");S.prof.av=p[0]==="e"?p[1]:{c:+p[1],g:+p[2]};save();rHead();rProf()}
+function toggleShow(id){const a=S.prof.show,i=a.indexOf(id);if(i>=0)a.splice(i,1);else if(a.length<5)a.push(id);else{toast("Максимум 5 карточек");return}save();rProf()}
+$("nick").oninput=e=>{S.prof.nick=e.target.value;rHead();save()};
+
+/* Навигация и события */
+function tab(v){
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
+  document.querySelectorAll(".sec").forEach(s=>s.classList.toggle("on",s.id===v));
+  if(v==="inv")rInv();if(v==="mk")rMarket();if(v==="prof")rProf()}
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-a]");if(!t)return;const a=t.dataset.a,v=t.dataset.v;
+  if(a==="tab")tab(v);else if(a==="case")openCase(CASES[+v]);else if(a==="sell")sell(+v);
+  else if(a==="list")openList(+v);else if(a==="doList")doList(+v);else if(a==="close")closeM();
+  else if(a==="unlist")unlist(+v);else if(a==="buy")buy(+v);else if(a==="av")setAv(v);else if(a==="show")toggleShow(+v)});
+$("reset").onclick=()=>{if(busy||!confirm("Сбросить весь прогресс?"))return;S=def();upd();rInv();rMarket();rProf();toast("Прогресс сброшен")};
+
+/* Старт */
+load();
+for(let i=0;i<16;i++)M.push(genL(false));
+const away=Math.min((Date.now()-S.ts)/1000,6*3600);let n=0,gain=0;
+if(away>5&&S.list.length){const keep=[];for(const l of S.list){if(Math.random()<1-Math.pow(1-ch(l.price/val(l))*onl(),away)){S.bal+=Math.round(l.price*FEE);gain+=Math.round(l.price*FEE);n++}else keep.push(l)}S.list=keep}
+upd();rBots();rInv();rMarket();rProf();
+if(n)setTimeout(()=>toast(`Пока тебя не было, продано лотов: ${n} (+${fmt(gain)} KX)`),500);
+setInterval(tick,1000);
+</script>
+</body>
+</html>
