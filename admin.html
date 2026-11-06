@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>KX Админ</title>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>$ Админ</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:dark;--bg:#0f1117;--panel:#1a1d27;--line:#2a2f3d;--text:#eef0f6;--muted:#8b92a8;--accent:#6c8cff;--ok:#3ecf8e}
 @media (prefers-color-scheme:light){:root{color-scheme:light;--bg:#f2f4fa;--panel:#fff;--line:#dde1ee;--text:#171a24;--muted:#6a7189;--accent:#4a68e8}}
@@ -12,21 +12,34 @@ select,input{background:var(--panel);color:var(--text);border:1px solid var(--li
 .t1{border-color:#9aa0b0}.t2{border-color:#4aa3ff}.t3{border-color:#a566ff}.t4{border-color:#ff5cc8}.t5{border-color:#ffc83d;box-shadow:0 0 12px #ffc83d88}
 .msg{text-align:center;color:var(--ok);min-height:20px;font-size:14px}
 #gate{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;padding:20px;z-index:99}#gate>*{max-width:300px}body.lock>*:not(#gate){display:none!important}
-</style></head><body class="lock"><div id="gate"><h2>🔒 Админка KX</h2><input id="gp" type="password" placeholder="Пароль"><button class="btn" id="gb" style="width:100%;max-width:300px">Войти</button><div class="msg" id="gm" style="color:#ff5c6c"></div></div>
-<h2>🛠 Админка KX</h2>
+
+:root{--bg:#0a0b14;--panel:#141627;--line:#262a45;--text:#f1f3ff;--muted:#8f95b8;--accent:#7c6cff;--ok:#34e0a1;--grad:linear-gradient(135deg,#7c6cff,#22d3ee)}
+@media (prefers-color-scheme:light){:root{--bg:#eef0fb;--panel:#fff;--line:#dcdff2;--text:#14172b;--muted:#68709a;--accent:#5b4bf0;--ok:#12a874}}
+body{font-family:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-weight:500;background:radial-gradient(700px 420px at 8% -8%,#7c6cff30,transparent 60%),radial-gradient(600px 420px at 100% 0,#22d3ee1f,transparent 55%),var(--bg);background-attachment:fixed;min-height:100vh}
+h2,h3{font-family:"Unbounded","Manrope",sans-serif;font-weight:600;letter-spacing:.04em}h2{font-size:15px}h3{font-size:13px}
+select,input{font-family:inherit;font-weight:600;border-radius:12px;transition:border-color .15s,box-shadow .15s}
+select:focus,input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px #7c6cff33}
+.btn{font-family:inherit;font-weight:800;border-radius:13px;background:var(--grad);box-shadow:0 6px 18px #7c6cff44;transition:transform .15s,filter .15s}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.1)}.btn:active{transform:scale(.97)}
+.card{position:relative;overflow:hidden;border-radius:16px;box-shadow:0 6px 16px #0006;font-weight:700}
+.card .nm,.card .pr{font-family:"Unbounded","Manrope",sans-serif;font-size:10px;font-weight:600}
+.t5{box-shadow:0 0 22px #ffc83d99}
+#gate{background:radial-gradient(700px 420px at 50% 0,#7c6cff33,transparent 60%),var(--bg)}
+</style></head><body class="lock"><div id="gate"><h2>🔒 Админка $</h2><input id="gp" type="password" placeholder="Пароль"><button class="btn" id="gb" style="width:100%;max-width:300px">Войти</button><div class="msg" id="gm" style="color:#ff5c6c"></div></div>
+<h2>🛠 Админка $</h2>
 <p class="hint">Выдача карточек в игру. Открывать на том же сайте, что и игра. Если игра открыта, карточки придут за секунду, иначе при следующем запуске.</p>
 <input id="aq" placeholder="Поиск карточки"><select id="ac"></select><select id="ab"></select>
 <input id="an" type="number" min="1" max="100" value="1"><div id="apv"></div>
 <button class="btn" id="give">Выдать себе</button><div class="msg" id="msg"></div>
 <hr style="width:100%;border:0;border-top:1px solid var(--line)"><h2>🎟 Промокоды</h2>
 <p class="hint">Игрок вводит код в «Магазине». Каждый игрок может активировать код один раз.</p>
-<input id="pc" placeholder="КОД (например SUMMER)"><input id="pk" type="number" min="0" placeholder="+ KX"><input id="pg" type="number" min="0" placeholder="+ гемы 💎"><select id="pcs"></select><input id="pcn" type="number" min="1" value="1" placeholder="Кол-во кейсов"><input id="pm" type="number" min="0" placeholder="Макс. активаций (пусто = без лимита)"><input id="ph" type="number" min="0" placeholder="Срок действия в часах (пусто = бессрочно)"><input id="pb" type="number" min="0" placeholder="Условие: баланс игрока не больше X KX (пусто = любой)">
+<input id="pc" placeholder="КОД (например SUMMER)"><input id="pk" type="number" min="0" placeholder="+ $"><input id="pg" type="number" min="0" placeholder="+ гемы 💎"><select id="pcs"></select><input id="pcn" type="number" min="1" value="1" placeholder="Кол-во кейсов"><input id="pm" type="number" min="0" placeholder="Макс. активаций (пусто = без лимита)"><input id="ph" type="number" min="0" placeholder="Срок действия в часах (пусто = бессрочно)"><input id="pb" type="number" min="0" placeholder="Условие: баланс игрока не больше X $ (пусто = любой)">
 <button class="btn" id="mkp">Создать промокод</button><div class="msg" id="pmsg"></div><div id="plist"></div>
 <div id="stsec" style="display:contents"><hr style="width:100%;border:0;border-top:1px solid var(--line)"><h2>📈 Акции</h2>
-<p class="hint">Тренд %: к какой цене тянется курс (±% от базовой, 0 = обычно). Волатильность ×: размах колебаний (1 = обычная). Фонд: деньги в акции игрока; чем меньше фонд, тем хуже динамика (полная динамика от 1 000 000 KX).</p>
-<select id="sk"></select><input id="str" type="text" autocomplete="off" placeholder="Тренд % (например -40 или 50)"><input id="svm" type="number" step="0.1" placeholder="Волатильность × (0.2…5)"><input id="scap" type="number" placeholder="Фонд KX (акция игрока)"><input id="sb" type="number" placeholder="Базовая цена (акция игрока)">
+<p class="hint">Тренд %: к какой цене тянется курс (±% от базовой, 0 = обычно). Волатильность ×: размах колебаний (1 = обычная). Фонд: деньги в акции игрока; чем меньше фонд, тем хуже динамика (полная динамика от 1 000 000 $).</p>
+<select id="sk"></select><input id="str" type="text" autocomplete="off" placeholder="Тренд % (например -40 или 50)"><input id="svm" type="number" step="0.1" placeholder="Волатильность × (0.2…5)"><input id="scap" type="number" placeholder="Фонд $ (акция игрока)"><input id="sb" type="number" placeholder="Базовая цена (акция игрока)">
 <button class="btn" id="ssave">Сохранить акцию</button><button class="btn" id="sdel" style="background:#ff5c6c">Удалить акцию игрока</button><div class="msg" id="smsg"></div>
-<h3 style="margin:6px 0">Создать акцию</h3><input id="ny" maxlength="8" placeholder="Тикер"><input id="nn2" maxlength="20" placeholder="Название"><input id="ne" maxlength="4" placeholder="Эмодзи"><input id="np" type="number" placeholder="Цена"><input id="nc" type="number" placeholder="Фонд KX (например 1000000)"><button class="btn" id="smk">Создать</button></div>
+<h3 style="margin:6px 0">Создать акцию</h3><input id="ny" maxlength="8" placeholder="Тикер"><input id="nn2" maxlength="20" placeholder="Название"><input id="ne" maxlength="4" placeholder="Эмодзи"><input id="np" type="number" placeholder="Цена"><input id="nc" type="number" placeholder="Фонд $ (например 1000000)"><button class="btn" id="smk">Создать</button></div>
 <script>
 (async()=>{const H="d22870271e663b75cd703e31b6efb4fc5b006c5143358cb6c4df961d2a06ac4b",g=i=>document.getElementById(i),sha=async t=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)))].map(x=>x.toString(16).padStart(2,"0")).join("");
 const open=()=>{document.body.classList.remove("lock");g("gate").remove()};
@@ -41,7 +54,7 @@ const CARDS=RAW.split(",").map(s=>{const i=s.indexOf(" "),j=s.lastIndexOf(":");r
 const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString("ru-RU");
 const val=c=>CARDS[c.c].p+BGS[c.g].b;
 const tier=p=>p<1500?1:p<4000?2:p<9000?3:p<20000?4:5;
-function cardHTML(c){const k=CARDS[c.c],b=BGS[c.g],p=val(c);return `<div class="card t${tier(p)}" style="background:${b.css}"><div class="ic">${k.i}</div><div class="nm">${k.n}</div><div class="bgn">${b.n}</div><div class="pr">${fmt(p)} KX</div></div>`}
+function cardHTML(c){const k=CARDS[c.c],b=BGS[c.g],p=val(c);return `<div class="card t${tier(p)}" style="background:${b.css}"><div class="ic">${k.i}</div><div class="nm">${k.n}</div><div class="bgn">${b.n}</div><div class="pr">${fmt(p)} $</div></div>`}
 function prev(){$("apv").innerHTML=$("ac").value===""?"":cardHTML({c:+$("ac").value,g:+$("ab").value})}
 function fill(q){const f=(q||"").toLowerCase();$("ac").innerHTML=CARDS.map((k,i)=>(k.n+" "+k.i).toLowerCase().includes(f)?`<option value="${i}">${k.i} ${k.n} · ${fmt(k.p)}</option>`:"").join("");prev()}
 $("ab").innerHTML=BGS.map((b,i)=>`<option value="${i}">${b.n} · +${fmt(b.b)}</option>`).join("");
@@ -55,14 +68,14 @@ $("pcs").innerHTML='<option value="">— без кейса —</option>'+CNM.map
 let DB="";const db=async(p,m,b)=>{const r=await fetch(`${DB}/${p}.json`,{method:m||"GET",body:b===undefined?undefined:JSON.stringify(b)});if(!r.ok)throw 0;return r.json()};
 async function init(){const c=["https://kxgame-default-rtdb.firebaseio.com","https://kxgame-default-rtdb.europe-west1.firebasedatabase.app","https://kxgame-default-rtdb.asia-southeast1.firebasedatabase.app"];
   const r=await Promise.all(c.map(u=>fetch(u+"/.json?shallow=true").then(x=>x.status).catch(()=>0)));const i=r.findIndex(x=>x&&x!==404);if(i>=0){DB=c[i];plist()}else $("pmsg").textContent="База не найдена"}
-async function plist(){try{const d=await db("promos")||{};$("plist").innerHTML=Object.entries(d).map(([k,v])=>`<div class="hint" style="display:flex;justify-content:space-between;gap:6px"><span>${k}: ${v.kx?fmt(v.kx)+" KX ":""}${v.gem?v.gem+"💎 ":""}${v.cs?Object.entries(v.cs).map(([i,n])=>n+"×"+CNM[i]).join(","):""} · исп. ${Object.keys(v.used||{}).length}${v.max?"/"+v.max:""}${v.maxbal?" · баланс≤"+fmt(v.maxbal):""}${v.exp&&Date.now()>v.exp?" · истёк":""}</span><b data-d="${k}" style="cursor:pointer">✕</b></div>`).join("")}catch(e){}}
+async function plist(){try{const d=await db("promos")||{};$("plist").innerHTML=Object.entries(d).map(([k,v])=>`<div class="hint" style="display:flex;justify-content:space-between;gap:6px"><span>${k}: ${v.kx?fmt(v.kx)+" $ ":""}${v.gem?v.gem+"💎 ":""}${v.cs?Object.entries(v.cs).map(([i,n])=>n+"×"+CNM[i]).join(","):""} · исп. ${Object.keys(v.used||{}).length}${v.max?"/"+v.max:""}${v.maxbal?" · баланс≤"+fmt(v.maxbal):""}${v.exp&&Date.now()>v.exp?" · истёк":""}</span><b data-d="${k}" style="cursor:pointer">✕</b></div>`).join("")}catch(e){}}
 $("plist").onclick=async e=>{const k=e.target.dataset.d;if(k&&confirm("Удалить "+k+"?")){await db("promos/"+k,"DELETE");plist()}};
 $("mkp").onclick=async()=>{const code=$("pc").value.toUpperCase().replace(/[^A-Z0-9А-ЯЁ_-]/g,""),kx=Math.round(+$("pk").value)||0,gem=Math.round(+$("pg").value)||0,cid=$("pcs").value,cn=Math.round(+$("pcn").value)||0,mx=Math.round(+$("pm").value)||0,h=+$("ph").value||0,mb=Math.round(+$("pb").value)||0;
   if(!code||!DB||!(kx||gem||(cid!==""&&cn>0))){$("pmsg").textContent="Укажи код и награду";return}
   const o={ts:Date.now()};if(kx)o.kx=kx;if(gem)o.gem=gem;if(cid!==""&&cn>0)o.cs={[cid]:cn};if(mx)o.max=mx;if(h)o.exp=Date.now()+h*36e5;if(mb)o.maxbal=mb;
   try{await db("promos/"+code,"PUT",o);$("pmsg").textContent="Создан: "+code+" ✅";plist()}catch(e){$("pmsg").textContent="Ошибка записи (проверь правила базы)"}};
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const BI="AAPL Apple,MSFT Microsoft,GOOG Google,AMZN Amazon,META Meta,NFLX Netflix,TSLA Tesla,NVDA Nvidia,GOLD Золото,OIL Нефть,BTC Bitcoin,ETH Ethereum,KXC KX Coin,DOGE Dogecoin,GME GameStop".split(",").map(x=>x.split(" "));
+const BI="AAPL Apple,MSFT Microsoft,GOOG Google,AMZN Amazon,META Meta,NFLX Netflix,TSLA Tesla,NVDA Nvidia,GOLD Золото,OIL Нефть,BTC Bitcoin,ETH Ethereum,KXC $Coin,DOGE Dogecoin,GME GameStop".split(",").map(x=>x.split(" "));
 let SOV={},SCU={};
 async function sload(){try{SOV=await db("sov")||{};SCU=await db("stocks")||{}}catch(e){}const cur=$("sk").value;
   $("sk").innerHTML=BI.map(([k,n])=>`<option value="${k}">${n} (${k})</option>`).join("")+Object.entries(SCU).map(([k,v])=>`<option value="c:${k}">★ ${esc(v.n)} (${k}) · ${esc(v.on||"админ")} · фонд ${fmt(v.cap||0)}</option>`).join("");
