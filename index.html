@@ -89,7 +89,7 @@ h3{margin:16px 0 8px;font-size:16px}
 
 <section id="st" class="sec">
   <p class="hint" id="stInfo"></p>
-  <div id="stList"></div>
+  <div id="stNew"></div><div id="stList"></div>
 </section>
 
 <section id="ch" class="sec"><p class="hint" id="chInfo"></p><div id="offers"></div><div class="chbox" id="chBox"></div><div class="chrow"><input id="chIn" maxlength="200" placeholder="Сообщение..."><button class="btn" data-a="send">➤</button></div></section>
@@ -133,7 +133,7 @@ const DAV=["😎","🤠","🥷","🧑‍🚀","🦸","🧙","👾","🐱","🐺"
 /* Онлайн-режим: вставь сюда URL Firebase Realtime Database, например "https://kx-game-default-rtdb.firebaseio.com" */
 let DB_URL="";
 const START=5000,SELL=.8,FEE=.95;
-const def=()=>({bal:START,gem:0,daily:{d:"",s:0},taxTs:Date.now(),taxPaid:0,snd:true,cases:{},codes:[],inv:[],list:[],nid:1,ts:Date.now(),st:{},out:[],seen:[],uid:Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4),prof:{nick:"Игрок"+(100+Math.floor(Math.random()*900)),av:"😎",show:[]}});
+const def=()=>({bal:START,gem:0,lp:{},daily:{d:"",s:0},taxTs:Date.now(),taxPaid:0,snd:true,cases:{},codes:[],inv:[],list:[],nid:1,ts:Date.now(),st:{},out:[],seen:[],uid:Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4),prof:{nick:"Игрок"+(100+Math.floor(Math.random()*900)),av:"😎",show:[]}});
 let invTab="c",S=def(),M=[],busy=false,dirty=false,cnt=0,cur="cases",LB=[],LBR=[],lbErr=false;
 const $=id=>document.getElementById(id);
 const fmt=n=>Math.round(n).toLocaleString("ru-RU");
@@ -292,7 +292,7 @@ function tick(){
   if(mkSync()){save();if(cur==="st")rSt()}
   if(cur==="st")$("stInfo").textContent=`Комиссия биржи 3% · цены общие для всех игроков, обновление каждые 3 сек · через ${Math.max(0,Math.ceil(((MK.step+1)*STEP-Date.now())/1000))} с · портфель ≈ ${fmt(STK.reduce((t,a)=>t+(S.st[a.k]||0)*MK.p[a.k],0))} KX`;
   if(cnt%3===0){moveBots();if(cur==="lb")rLb()}
-  if(DB_URL){if(cnt%3===0)pollIn();if(cnt%(cur==="ch"?2:8)===0)pollChat();if(cur==="ch"&&cnt%15===0)pull()}
+  if(DB_URL){if(cnt%20===3)pullStocks();if(cnt%3===0)pollIn();if(cnt%(cur==="ch"?2:8)===0)pollChat();if(cur==="ch"&&cnt%15===0)pull()}
   if(cnt%20===0)push();if(cur==="lb"&&cnt%10===0)pull();
   const keep=[];let sold=false;
   for(const l of S.list){if(Math.random()<ch(l.price/val(l))*onl()){const on=BOTS.filter(b=>!b.afk);soldOwn(l,on[rn(on.length)]||BOTS[0]);sold=true}else keep.push(l)}
@@ -321,19 +321,20 @@ function toggleShow(id){const a=S.prof.show,i=a.indexOf(id);if(i>=0)a.splice(i,1
 $("nick").oninput=e=>{S.prof.nick=e.target.value;rHead();save()};
 
 /* Акции */
-const STK=[["AAPL","Apple","🍎",1200,.015],["MSFT","Microsoft","🪟",2800,.014],["GOOG","Google","🔍",2400,.018],["AMZN","Amazon","📦",2100,.02],["META","Meta","♾️",1700,.025],["NFLX","Netflix","🎬",1500,.026],["TSLA","Tesla","🚗",3000,.028],["NVDA","Nvidia","🟢",4500,.03],["GOLD","Золото","🥇",2000,.008],["OIL","Нефть","🛢️",900,.02],["BTC","Bitcoin","₿",18000,.04],["ETH","Ethereum","💠",9000,.035],["KXC","KX Coin","🪙",500,.05],["DOGE","Dogecoin","🐕",150,.06],["GME","GameStop","🕹️",600,.07]].map(a=>({k:a[0],n:a[1],i:a[2],b:a[3],v:a[4]}));
+const STK0=[["AAPL","Apple","🍎",1200,.015],["MSFT","Microsoft","🪟",2800,.014],["GOOG","Google","🔍",2400,.018],["AMZN","Amazon","📦",2100,.02],["META","Meta","♾️",1700,.025],["NFLX","Netflix","🎬",1500,.026],["TSLA","Tesla","🚗",3000,.028],["NVDA","Nvidia","🟢",4500,.03],["GOLD","Золото","🥇",2000,.008],["OIL","Нефть","🛢️",900,.02],["BTC","Bitcoin","₿",18000,.04],["ETH","Ethereum","💠",9000,.035],["KXC","KX Coin","🪙",500,.05],["DOGE","Dogecoin","🐕",150,.06],["GME","GameStop","🕹️",600,.07]].map(a=>({k:a[0],n:a[1],i:a[2],b:a[3],v:a[4]}));
+let STK=STK0.slice(),stSig="";const STK_COST=4e5,CAPFULL=1e6,hk=t=>{let h=7;for(const c of t)h=Math.imul(h,31)+c.charCodeAt(0)|0;return h&0x3fffffff};
 const h32=a=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
 const gaussAt=(ki,t)=>{const u1=h32(Math.imul(t,0x9E3779B1)^Math.imul(ki+1,0x85EBCA6B)^1),u2=h32(Math.imul(t,0x9E3779B1)^Math.imul(ki+1,0x85EBCA6B)^2);return Math.sqrt(-2*Math.log(1-u1))*Math.cos(2*Math.PI*u2)};
-const stepP=(a,p,g)=>Math.min(a.b*3,Math.max(a.b*.3,Math.round(p*Math.exp(a.v*.6*g-.03*Math.log(p/a.b)))));
+const stepP=(a,p,g)=>Math.min(a.b*3,Math.max(a.b*.3,Math.round(p*Math.exp(a.v*(a.vm||1)*.6*g+(a.dr||0)-.03*Math.log(p/a.b)))));
 /* Цены считаются из времени, поэтому у всех игроков одинаковые */
 const STEP=3e3;let MK={step:-1,p:{},h:{}};
 function mkSync(){const st=Math.floor(Date.now()/STEP);if(st===MK.step)return false;const from=Math.floor(st/1000)*1000-1000;
-  STK.forEach((a,ki)=>{let p=a.b;const h=[];for(let t=from;t<=st;t++){p=stepP(a,p,gaussAt(ki,t));if(t>st-80)h.push(p)}MK.p[a.k]=p;MK.h[a.k]=h});MK.step=st;return true}
+  STK.forEach((a,ki)=>{let p=a.b;const h=[];for(let t=from;t<=st;t++){p=stepP(a,p,gaussAt(a.ki??ki,t));if(t>st-80)h.push(p)}MK.p[a.k]=p;MK.h[a.k]=h;if(a.cus)S.lp[a.k]=p});MK.step=st;return true}
 function chart(h,up){const mn=Math.min(...h),mx=Math.max(...h),r=mx-mn||1;
   const pts=h.map((v,i)=>`${(i/(h.length-1||1)*300).toFixed(1)},${(84-(v-mn)/r*78).toFixed(1)}`).join(" ");
   return `<svg viewBox="0 0 300 90" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--${up?"ok":"bad"})" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>`}
 function rSt(){const L=$("stList");
-  if(L.children.length!==STK.length)L.innerHTML=STK.map(a=>`<div class="stk" id="s-${a.k}"><div class="top"><b>${a.i} ${a.n} <span class="hint">${a.k}</span></b><span><b class="pp"></b> <span class="dd"></span></span></div><div class="cc"></div><div class="hint hh" style="margin-bottom:8px"></div><div class="row">${[["buy",1,"Купить 1"],["buy",10,"Купить 10"],["sell",1,"Продать 1"],["sell","all","Всё"]].map(([x,n,t])=>`<button class="btn ${x==="sell"?"alt":""}" data-a="trade" data-v="${a.k}|${x}|${n}">${t}</button>`).join("")}</div></div>`).join("");
+  rNewSt();const sg=STK.map(a=>a.k+(a.cap||"")).join();if(L.dataset.sig!==sg){L.dataset.sig=sg;L.innerHTML=STK.map(a=>`<div class="stk" id="s-${a.k}"><div class="top"><b>${a.i} ${a.n} <span class="hint">${a.k}</span></b><span><b class="pp"></b> <span class="dd"></span></span></div>${ci(a)}<div class="cc"></div><div class="hint hh" style="margin-bottom:8px"></div><div class="row">${[["buy",1,"Купить 1"],["buy",10,"Купить 10"],["sell",1,"Продать 1"],["sell","all","Всё"]].map(([x,n,t])=>`<button class="btn ${x==="sell"?"alt":""}" data-a="trade" data-v="${a.k}|${x}|${n}">${t}</button>`).join("")}</div></div>`).join("");}
   STK.forEach(a=>{const h=MK.h[a.k],p=MK.p[a.k],pr=h[h.length-2]||p,d=(p-pr)/pr*100,q=S.st[a.k]||0,e=$("s-"+a.k);
     e.querySelector(".pp").textContent=fmt(p)+" KX";const dd=e.querySelector(".dd");dd.className="dd "+(d>=0?"good":"bad");dd.textContent=(d>=0?"▲ ":"▼ ")+Math.abs(d).toFixed(2)+"%";
     e.querySelector(".cc").innerHTML=chart(h,h[h.length-1]>=h[0]);e.querySelector(".hh").textContent=`В портфеле: ${fmt(q)} шт · ≈ ${fmt(q*p)} KX`;
@@ -342,6 +343,36 @@ function trade(v){const [k,side,n]=v.split("|"),p=MK.p[k],have=S.st[k]||0;
   if(side==="buy"){const q=+n;if(S.bal<Math.ceil(p*q*1.03)){toast("Не хватает KX 😕");return}S.bal-=Math.ceil(p*q*1.03);S.st[k]=have+q}
   else{const q=n==="all"?have:Math.min(+n,have);if(!q){toast("Нечего продавать");return}S.bal+=Math.floor(p*q*.97);S.st[k]=have-q}
   upd();rSt()}
+
+
+/* Акции игроков и управление из админки */
+const dynTxt=q=>q<.25?"плохая 📉":q<.6?"средняя":q<1?"хорошая":"отличная 📈";
+function ci(a){return a.cus?`<div class="hint" style="margin-top:4px">${esc(a.i)} 👤 ${esc(a.on||"игрок")} · фонд ${fmt(a.cap)} KX · динамика: ${dynTxt(a.q)}</div>${a.own===S.uid?`<button class="btn alt sm" style="margin-top:6px;padding:6px 10px" data-a="topup" data-v="${a.k}">+100 000 KX в фонд</button>`:""}`:""}
+function rNewSt(){const el=$("stNew"),mine=STK.find(a=>a.own===S.uid),h=DB_URL?(mine?"m"+mine.k:"n"):"o";if(el.dataset.h===h)return;el.dataset.h=h;
+  el.innerHTML=!DB_URL?"":mine?`<p class="hint">Твоя акция: <b>${mine.k}</b>. Пополняй фонд, чтобы динамика росла.</p>`:`<button class="btn" style="width:100%;margin-bottom:10px" data-a="newst">➕ Открыть свою акцию · ${fmt(STK_COST)} KX</button>`}
+function openNewSt(){$("modal").innerHTML=`<div class="mb"><b>Своя акция</b><div class="hint" style="margin:0">Все ${fmt(STK_COST)} KX уходят в фонд акции. Чем больше фонд (полная динамика от ${fmt(CAPFULL)} KX), тем стабильнее и выгоднее курс. При малом фонде курс скачет и сползает вниз. Фонд можно пополнять.</div><input id="nsy" maxlength="6" placeholder="Тикер (2–6 букв/цифр)"><input id="nsn" maxlength="16" placeholder="Название"><input id="nse" maxlength="4" placeholder="Эмодзи (📈)"><input id="nsp" type="number" min="50" max="5000" placeholder="Начальная цена 50–5000"><button class="btn" data-a="mkst" style="width:100%">Открыть за ${fmt(STK_COST)} KX</button><button class="btn alt" data-a="close" style="width:100%">Отмена</button></div>`;$("modal").classList.add("on")}
+async function createStock(){const sym=$("nsy").value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6),nm=$("nsn").value.trim().slice(0,16),em=[...($("nse").value.trim()||"📈")].slice(0,2).join(""),pr=Math.round(+$("nsp").value||0);
+  if(sym.length<2||!nm||!(pr>=50&&pr<=5000)){toast("Проверь тикер, название и цену 50–5000");return}
+  if(S.bal<STK_COST){toast("Не хватает KX 😕");return}if(STK.some(a=>a.own===S.uid)){toast("У тебя уже есть акция");return}
+  try{if(STK0.some(a=>a.k===sym)||await db("stocks/"+sym)){toast("Тикер занят");return}
+    S.bal-=STK_COST;upd();
+    try{await db("stocks/"+sym,"PUT",{n:nm,i:em,b:pr,v:.03,cap:STK_COST,own:S.uid,on:String(S.prof.nick||"Игрок").slice(0,16),ts:Date.now()})}catch(e){S.bal+=STK_COST;upd();toast("Не удалось создать акцию");return}
+    closeM();toast(`Акция ${sym} создана 🚀`);sfx("win",4);fx(["📈","🚀","✨"],40);pullStocks()}catch(e){toast("Нет связи 😕")}}
+async function topup(k){const a=STK.find(x=>x.k===k),amt=1e5;if(!a||a.own!==S.uid)return;if(S.bal<amt){toast("Не хватает KX 😕");return}
+  try{const c=+(await db(`stocks/${k}/cap`))||0;S.bal-=amt;upd();
+    try{await db(`stocks/${k}/cap`,"PUT",c+amt)}catch(e){S.bal+=amt;upd();toast("Не удалось пополнить");return}
+    sfx("coin");toast(`Фонд ${k}: +${fmt(amt)} KX`);pullStocks()}catch(e){toast("Нет связи 😕")}}
+async function pullStocks(){if(!DB_URL)return;
+  try{const[c,o]=await Promise.all([db("stocks"),db("sov")]),cu=c||{},ov=o||{},lim=(x,a,b)=>Math.min(b,Math.max(a,+x||0));
+    STK0.forEach(a=>{const x=ov[a.k]||{};a.dr=Math.log(1+lim(x.tr,-70,200)/100)*.03;a.vm=lim(x.vm||1,.2,5)});
+    const list=[];for(const[k,v]of Object.entries(cu)){if(!/^[A-Z0-9]{2,8}$/.test(k)||!v||typeof v!=="object")continue;
+      const cap=lim(v.cap,0,1e12),q=Math.min(1,cap/CAPFULL);
+      list.push({k,n:String(v.n||k).slice(0,20),i:String(v.i||"📈").slice(0,4),b:lim(v.b||100,10,1e6),v:lim(v.v||.03,.005,.15)*(1+(1-q)*1.5),vm:lim(v.vm||1,.2,5),dr:(q-.5)*.006+Math.log(1+lim(v.tr,-70,200)/100)*.03,ki:hk(k),cus:1,own:String(v.own||""),on:String(v.on||"").slice(0,16),cap,q})}
+    list.sort((a,b)=>a.k<b.k?-1:1);
+    const sig=JSON.stringify([STK0.map(a=>[a.dr,a.vm]),list.map(a=>[a.k,a.b,a.v,a.vm,a.dr,a.cap,a.own])]);
+    if(sig===stSig)return;stSig=sig;
+    for(const k of Object.keys(S.st))if(S.st[k]>0&&!STK0.some(a=>a.k===k)&&!list.some(a=>a.k===k)){S.bal+=Math.floor(S.st[k]*(S.lp[k]||0)*.97);toast(`Акция ${k} снята с биржи, позиция продана`);delete S.st[k]}
+    STK=STK0.concat(list);MK.step=-1;mkSync();upd();if(cur==="st")rSt()}catch(e){}}
 
 /* Лидерборд */
 const safeAv=av=>typeof av==="string"?(DAV.includes(av)?av:"😎"):(av&&CARDS[+av.c]&&BGS[+av.g]?{c:+av.c,g:+av.g}:"😎");
@@ -376,7 +407,7 @@ function tab(v){
   cur=v;
   document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
   document.querySelectorAll(".sec").forEach(s=>s.classList.toggle("on",s.id===v));
-  if(v==="inv"){rInv();rOwn();itab(invTab)}if(v==="mk")rMarket();if(v==="prof")rProf();if(v==="lb"){rLb();push();pull()};if(v==="st")rSt();if(v==="ch"){unread=0;rBdg();rChat(1);pull();pollChat()}}
+  if(v==="inv"){rInv();rOwn();itab(invTab)}if(v==="mk")rMarket();if(v==="prof")rProf();if(v==="lb"){rLb();push();pull()};if(v==="st"){rSt();pullStocks()}if(v==="ch"){unread=0;rBdg();rChat(1);pull();pollChat()}}
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-a]");if(!t)return;const a=t.dataset.a,v=t.dataset.v;
   if(a==="tab")tab(v);else if(a==="case")openCase(CASES[+v]);else if(a==="sell")sell(+v);
@@ -384,7 +415,7 @@ document.addEventListener("click",e=>{
   else if(a==="unlist")unlist(+v);else if(a==="buy")buy(+v);else if(a==="av")setAv(v);else if(a==="show")toggleShow(+v);else if(a==="trade")trade(v);else if(a==="pl")openPl(+v);
   else if(a==="send")sendChat();else if(a==="cu"){const m=CH.find(x=>x.k===v);if(m&&m.u!==S.uid)openTrade(m.u,m.n)}
   else if(a==="trd"){const r=LBR[+v];openTrade(r.id,r.n)}else if(a==="tsend")sendOffer();else if(a==="tacc")accOffer(v);else if(a==="tdec")decOffer(v);else if(a==="tcan")cancelOut(v);
-  else if(a==="bc"){const[i,n]=v.split("|");buyCase(+i,+n)}else if(a==="gx")gx(+v);else if(a==="promo")promo();else if(a==="itab")itab(v)});
+  else if(a==="bc"){const[i,n]=v.split("|");buyCase(+i,+n)}else if(a==="gx")gx(+v);else if(a==="promo")promo();else if(a==="itab")itab(v);else if(a==="newst")openNewSt();else if(a==="mkst")createStock();else if(a==="topup")topup(v)});
 $("reset").onclick=()=>{if(busy||!confirm("Сбросить весь прогресс?"))return;const k=S.codes,u=S.uid;S=def();S.codes=k;S.uid=u;mkSync();upd();rInv();rMarket();rProf();toast("Прогресс сброшен")};
 
 /* Старт */
@@ -448,7 +479,7 @@ async function decOffer(k){const o=IN[k];if(!o)return;
 async function cancelOut(k){const o=S.out.find(x=>x.k===k);if(!o)return;
   try{if(!await db(`inbox/${o.to}/${k}`)){toast("Уже обработано, жди ответ");return}await db(`inbox/${o.to}/${k}`,"DELETE");
     S.out=S.out.filter(x=>x!==o);S.inv.push({c:o.c.c,g:o.c.g,id:nid()});upd();rInv();rProf();rOffers()}catch(e){toast("Нет связи 😕")}}
-detectDb().then(()=>{push();pollIn();pollChat();pull()});
+detectDb().then(()=>{push();pollIn();pollChat();pull();pullStocks()});
 setInterval(tick,1000);push();addEventListener("pagehide",push);
 </script>
 </body>
