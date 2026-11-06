@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>KX Админ</title>
+<style>
+:root{color-scheme:dark;--bg:#0f1117;--panel:#1a1d27;--line:#2a2f3d;--text:#eef0f6;--muted:#8b92a8;--accent:#6c8cff;--ok:#3ecf8e}
+@media (prefers-color-scheme:light){:root{color-scheme:light;--bg:#f2f4fa;--panel:#fff;--line:#dde1ee;--text:#171a24;--muted:#6a7189;--accent:#4a68e8}}
+*{box-sizing:border-box}body{margin:0 auto;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:380px;padding:16px;display:flex;flex-direction:column;gap:10px}
+h2{margin:4px 0}.hint{color:var(--muted);font-size:13px;margin:0}
+select,input{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:16px;width:100%}
+.btn{padding:12px;border:0;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;cursor:pointer;font-weight:600}
+.card{width:140px;margin:0 auto;border-radius:12px;padding:10px 6px;text-align:center;color:#fff;border:2px solid #888;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.card .ic{font-size:36px}.card .nm{font-weight:700;font-size:13px}.card .bgn{font-size:11px;opacity:.9;min-height:14px}.card .pr{font-size:12px;font-weight:700;margin-top:4px}
+.t1{border-color:#9aa0b0}.t2{border-color:#4aa3ff}.t3{border-color:#a566ff}.t4{border-color:#ff5cc8}.t5{border-color:#ffc83d;box-shadow:0 0 12px #ffc83d88}
+.msg{text-align:center;color:var(--ok);min-height:20px;font-size:14px}
+</style></head><body>
+<h2>🛠 Админка KX</h2>
+<p class="hint">Выдача карточек в игру. Открывать на том же сайте, что и игра. Если игра открыта, карточки придут за секунду, иначе при следующем запуске.</p>
+<input id="aq" placeholder="Поиск карточки"><select id="ac"></select><select id="ab"></select>
+<input id="an" type="number" min="1" max="100" value="1"><div id="apv"></div>
+<button class="btn" id="give">Выдать себе</button><div class="msg" id="msg"></div>
+<script>
+const RAW="🍦 Ice Cream:300,🍪 Cookie:320,🍎 Apple:350,🍌 Banana:380,🍕 Pizza:420,🍔 Burger:450,🍩 Donut:480,🥑 Avocado:500,🌮 Taco:520,🍉 Melon:550,🌵 Cactus:600,🐱 Cat:620,🐶 Dog:650,🐸 Frog:680,🐧 Penguin:700,❤️ Heart:720,🍀 Clover:750,🌻 Sunflower:780,🌴 Palm:800,🐝 Bee:850,🦆 Duck:880,🐙 Octopus:900,🐢 Turtle:950,🦋 Butterfly:1000,❄️ Snowflake:1050,☀️ Sun:1100,☁️ Cloud:1150,🌈 Rainbow:1200,🍄 Mushroom:1250,🐼 Panda:1300,🦊 Fox:1400,🐨 Koala:1450,🦉 Owl:1500,🐬 Dolphin:1600,🎧 Headphones:1650,🎮 Gamepad:1700,🎸 Guitar:1800,🎩 Top Hat:1850,👻 Ghost:1900,⭐ Star:2000,🌙 Moon:2100,🐺 Wolf:2200,🦅 Eagle:2300,🐯 Tiger:2400,🦁 Lion:2500,🐻 Bear:2600,🦈 Shark:2700,⚽ Ball:2800,🏆 Trophy:3000,🔔 Bell:3100,🗝️ Key:3200,💣 Bomb:3300,💀 Skull:3400,👽 Alien:3500,🤖 Robot:3600,🎭 Masks:3800,🧿 Evil Eye:3900,🪐 Saturn:4000,🚀 Rocket:4200,🛸 UFO:4400,⚡ Lightning:4600,🔥 Flame:4800,🌊 Wave:5000,🌋 Volcano:5300,🦄 Unicorn:5600,🧙 Wizard:5900,🧛 Vampire:6200,🧜 Mermaid:6500,🧞 Genie:6800,🥷 Ninja:7000,💎 Diamond:7200,👑 Crown:7500,🔮 Crystal Ball:7800,📿 Beads:8000,🗡️ Dagger:8300,🛡️ Shield:8600,🌹 Rose:9000,🦚 Peacock:9400,🐲 Dragon Head:9800,🐉 Dragon:10000,🦂 Scorpion:10500,🕷️ Spider:11000,🦇 Bat:11500,🐍 Serpent:12000,🦖 T-Rex:12500,🦕 Brachio:13000,🐘 Elephant:13500,🦏 Rhino:14000,🦬 Bison:14500,🐎 Stallion:15000,🦢 Swan:15500,🦜 Parrot:16000,🦩 Flamingo:16500,🦥 Sloth:17000,🦔 Hedgehog:17500,🪬 Hamsa:18000,🪄 Magic Wand:18500,⚜️ Fleur:19000,🔱 Trident:19500,☄️ Comet:20000,🌌 Galaxy:21000,🌠 Meteor:22000,🌀 Cyclone:23000,🌪️ Tornado:24000,🧊 Ice Cube:25000,🏰 Castle:26000,🗿 Moai:27000,🛕 Temple:28000,🎆 Fireworks:29000,🎇 Sparkler:30000,🪙 Coin:32000,💰 Money Bag:34000,🏺 Amphora:36000,🪆 Matryoshka:38000,🕊️ Dove:40000,🦾 Mech Arm:43000,🧬 DNA:46000,⚛️ Atom:50000,☯️ Yin Yang:55000,👁️ Eye of Time:60000";
+const BGS=("Серый мел,#555a66,#3c404a,0,28;Песочный,#d2b27a,#8f6f3c,300,20;Небесный,#5db2ff,#2a5db0,800,13;Мята,#6fe3c1,#1f8f77,1200,11;Нефрит,#2fbf8f,#0f6b50,1800,9;Лаванда,#b79cff,#6a4fc4,2300,8;Закат,#ff9a5c,#c2406a,2700,7;Gold Rose,#f7c873,#b8505e,3000,6;Янтарь,#ffc14d,#b36a00,3500,5;Рубин,#ff4d6d,#7a0f2b,4200,4.2;Сапфир,#3d7bff,#0a1f66,5000,3.6;Изумруд,#20e08a,#02593a,6000,3;Океан,#00d0ff,#003a6b,7000,2.4;Black Nephrite,#1c1c1c,#050505,8000,2;Космос,#7b4dff,#0a0630,9500,1.6;Неон,#ff2bd6,#00a5c4,11000,1.2;Огонь,#ffb800,#ff2d2d,13000,.9;Платина,#c9cde0,#7b8099,15000,.6;Aurora,#4dffb8,#b84dff,18000,.35;Бриллиант,#9fe8ff,#5a9fff,20000,.2").split(";").map(s=>{const a=s.split(",");return{n:a[0],css:`linear-gradient(135deg,${a[1]},${a[2]})`,b:+a[3],w:+a[4]}});
+const CARDS=RAW.split(",").map(s=>{const i=s.indexOf(" "),j=s.lastIndexOf(":");return{i:s.slice(0,i),n:s.slice(i+1,j),p:+s.slice(j+1)}}).sort((a,b)=>a.p-b.p);
+const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString("ru-RU");
+const val=c=>CARDS[c.c].p+BGS[c.g].b;
+const tier=p=>p<1500?1:p<4000?2:p<9000?3:p<20000?4:5;
+function cardHTML(c){const k=CARDS[c.c],b=BGS[c.g],p=val(c);return `<div class="card t${tier(p)}" style="background:${b.css}"><div class="ic">${k.i}</div><div class="nm">${k.n}</div><div class="bgn">${b.n}</div><div class="pr">${fmt(p)} KX</div></div>`}
+function prev(){$("apv").innerHTML=$("ac").value===""?"":cardHTML({c:+$("ac").value,g:+$("ab").value})}
+function fill(q){const f=(q||"").toLowerCase();$("ac").innerHTML=CARDS.map((k,i)=>(k.n+" "+k.i).toLowerCase().includes(f)?`<option value="${i}">${k.i} ${k.n} · ${fmt(k.p)}</option>`:"").join("");prev()}
+$("ab").innerHTML=BGS.map((b,i)=>`<option value="${i}">${b.n} · +${fmt(b.b)}</option>`).join("");
+$("aq").oninput=e=>fill(e.target.value);$("ac").onchange=prev;$("ab").onchange=prev;fill();
+$("give").onclick=()=>{if($("ac").value==="")return;const c=+$("ac").value,g=+$("ab").value,n=Math.min(100,Math.max(1,Math.round(+$("an").value)||1));
+  try{let q=[];try{q=JSON.parse(localStorage.getItem("kx2_gifts")||"[]")}catch(e){}for(let i=0;i<n;i++)q.push({c,g});localStorage.setItem("kx2_gifts",JSON.stringify(q));
+  $("msg").textContent=`Выдано: ${n} × ${CARDS[c].n} · ${BGS[g].n} ✅`}catch(e){$("msg").textContent="Не удалось записать (localStorage недоступен)"}};
+</script></body></html>
