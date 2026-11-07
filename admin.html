@@ -39,7 +39,7 @@ select:focus,input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
 <button class="btn" id="mkp">Создать промокод</button><div class="msg" id="pmsg"></div><div id="plist"></div>
 <div id="stsec" style="display:contents"><hr style="width:100%;border:0;border-top:1px solid var(--line)"><h2>📈 Акции</h2>
 <p class="hint">Тренд %: к какой цене тянется курс (±% от базовой, 0 = обычно). Волатильность ×: размах колебаний (1 = обычная). Фонд: деньги в акции игрока; чем меньше фонд, тем хуже динамика (полная динамика от 1 000 000 $).</p>
-<select id="sk"></select><input id="str" type="text" autocomplete="off" placeholder="Тренд % от −70 до 200, действует с этого момента"><input id="svm" type="number" step="0.1" placeholder="Волатильность × (0.2…5)"><input id="scap" type="number" placeholder="Фонд $ (акция игрока)"><input id="sb" type="number" placeholder="Базовая цена (акция игрока)">
+<select id="sk"></select><input id="str" type="text" autocomplete="off" placeholder="Тренд % (любой, от −99.9), действует с этого момента"><input id="svm" type="number" step="0.1" placeholder="Волатильность × (любая, 0 = без колебаний)"><input id="scap" type="number" placeholder="Фонд $ (акция игрока)"><input id="sb" type="number" placeholder="Базовая цена (акция игрока)">
 <button class="btn" id="ssave">Сохранить акцию</button><button class="btn" id="sdel" style="background:#ff5c6c">Удалить акцию игрока</button><div class="msg" id="smsg"></div>
 <h3 style="margin:6px 0">Создать акцию</h3><input id="ny" maxlength="8" placeholder="Тикер"><input id="nn2" maxlength="20" placeholder="Название"><input id="ne" maxlength="4" placeholder="Эмодзи"><input id="np" type="number" placeholder="Цена"><input id="nc" type="number" placeholder="Фонд $ (например 1000000)"><button class="btn" id="smk">Создать</button></div>
 <script>
@@ -86,7 +86,7 @@ async function sload(){try{SOV=await db("sov")||{};SCU=await db("stocks")||{}}ca
   if(cur&&[...$("sk").options].some(o=>o.value===cur))$("sk").value=cur;sfill()}
 function sfill(){const v=$("sk").value,c=v.startsWith("c:"),k=c?v.slice(2):v,o=(c?SCU[k]:SOV[k])||{};$("str").value=o.tr||"";$("svm").value=o.vm||"";$("scap").value=c?o.cap||"":"";$("sb").value=c?o.b||"":"";$("scap").disabled=$("sb").disabled=$("sdel").disabled=!c}
 $("sk").onchange=sfill;
-$("ssave").onclick=async()=>{const v=$("sk").value,c=v.startsWith("c:"),k=c?v.slice(2):v,tr=Math.min(200,Math.max(-70,+$("str").value.replace(/[−–—]/g,"-").replace(",",".").replace(/\s/g,"")||0)),vm=Math.min(5,Math.max(.2,+$("svm").value||1));
+$("ssave").onclick=async()=>{const v=$("sk").value,c=v.startsWith("c:"),k=c?v.slice(2):v,tr=Math.min(1e9,Math.max(-99.9,+$("str").value.replace(/[−–—]/g,"-").replace(",",".").replace(/\s/g,"")||0)),vm=Math.min(1e6,Math.max(0,+$("svm").value||1));
   const pv=(c?SCU[k]:SOV[k])||{};let lg=pv.log?(Array.isArray(pv.log)?pv.log:Object.values(pv.log)):((pv.tr||pv.vm)?[{t:0,r:pv.tr||0,m:pv.vm||1}]:[]);lg=lg.slice(-40).concat({t:Date.now(),r:tr,m:vm});
   try{if(c){const o={tr,vm,log:lg};if($("scap").value!=="")o.cap=Math.max(0,Math.round(+$("scap").value));if(+$("sb").value>0)o.b=Math.round(+$("sb").value);await db("stocks/"+k,"PATCH",o)}else await db("sov/"+k,"PUT",{tr,vm,log:lg});
     $("smsg").textContent="Сохранено ✅ (игроки увидят за ~20 сек)";sload()}catch(e){$("smsg").textContent="Ошибка записи"}};
