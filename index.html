@@ -72,14 +72,14 @@ h3{margin:16px 0 8px;font-size:16px}
 #mapSel select{margin-bottom:8px}#bizList .r2{margin-top:5px}#bizList .r2 .btn{padding:7px 2px;font-size:12px}
 
 /* ===== Тема: неон + стекло ===== */
-:root{--bg:#0a0b14;--panel:#141627;--line:#262a45;--text:#f1f3ff;--muted:#8f95b8;--accent:#7c6cff;--accent2:#22d3ee;--ok:#34e0a1;--bad:#ff5d7a;--grad:linear-gradient(135deg,#7c6cff,#22d3ee);--r:18px;--sh:0 10px 30px #0007;--sea:#0d1128;--land:#232a52;--lands:#4b55a0;--fd:"Unbounded","Manrope",system-ui,sans-serif;--fb:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+:root{--bg:#0a0b14;--panel:#141627;--line:#262a45;--text:#f1f3ff;--muted:#8f95b8;--accent:#7c6cff;--accent2:#22d3ee;--ok:#34e0a1;--bad:#ff5d7a;--grad:linear-gradient(135deg,#7c6cff,#22d3ee);--r:18px;--sh:0 10px 30px #0007;--sea:#080b1d;--land:#2c3568;--lands:#5a66b8;--fd:"Unbounded","Manrope",system-ui,sans-serif;--fb:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#eef0fb;--panel:#ffffff;--line:#dcdff2;--text:#14172b;--muted:#68709a;--accent:#5b4bf0;--accent2:#0ea5c6;--ok:#12a874;--bad:#e5385a;--sh:0 10px 28px #3a3f7a22;--sea:#e3eaff;--land:#ffffff;--lands:#9aa6e0}}
 body{font-family:var(--fb);font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:.005em;background:radial-gradient(900px 520px at 8% -8%,#7c6cff30,transparent 60%),radial-gradient(800px 520px at 100% 0,#22d3ee1f,transparent 55%),var(--bg);background-attachment:fixed;min-height:100vh}
 header{position:sticky;top:0;z-index:8;margin:-12px -12px 12px;padding:10px 12px;background:color-mix(in srgb,var(--bg) 72%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
 .me span{font-family:var(--fd);font-size:13px;font-weight:600}
 .avt{border:2px solid transparent;background-clip:padding-box;box-shadow:0 0 0 2px var(--accent),0 4px 14px #0005}
 .bal{font-family:var(--fd);font-size:11px;font-weight:600;padding:8px 12px;border-radius:999px;background:linear-gradient(var(--panel),var(--panel)) padding-box,var(--grad) border-box;border:1px solid transparent}
-nav{scrollbar-width:none;padding:2px 0 6px}nav::-webkit-scrollbar{display:none}
+nav{scrollbar-width:none;padding:6px 4px 14px;margin:-6px -4px 0}nav::-webkit-scrollbar{display:none}
 nav button{font-family:var(--fb);font-weight:700;font-size:13px;padding:9px 15px;border-radius:999px;background:color-mix(in srgb,var(--panel) 85%,transparent);color:var(--muted);transition:.2s}
 nav button:hover{color:var(--text);border-color:var(--accent)}
 nav button.on{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 6px 18px #7c6cff55}
@@ -87,7 +87,7 @@ h3{font-family:var(--fd);font-size:12px;font-weight:600;letter-spacing:.08em;tex
 h3::before{content:"";width:4px;height:14px;border-radius:2px;background:var(--grad)}
 .hint{line-height:1.45}
 .case,.stk,.pf,.rw,.lr,.chbox,.ev,.mb{border-radius:var(--r);background:linear-gradient(180deg,color-mix(in srgb,var(--panel) 90%,#fff 10%),var(--panel));box-shadow:var(--sh)}
-.ev{border:1px solid transparent;background:linear-gradient(135deg,#7c6cff24,#22d3ee1a) padding-box,var(--grad) border-box;background-color:var(--panel)}
+.ev{border:1px solid transparent;background:linear-gradient(135deg,#7c6cff24,#22d3ee1a) padding-box,linear-gradient(var(--panel),var(--panel)) padding-box,var(--grad) border-box}
 .case{transition:.2s;padding:16px 12px}.case:hover{transform:translateY(-3px);border-color:var(--accent)}
 .case .big{font-size:46px;filter:drop-shadow(0 6px 14px #7c6cff66)}
 .case b{font-family:var(--fd);font-size:12px;font-weight:600}
@@ -123,12 +123,27 @@ input:focus,select:focus{outline:none;border-color:var(--accent)!important;box-s
 .toast{border-radius:999px;background:color-mix(in srgb,var(--panel) 88%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--accent);box-shadow:0 10px 30px #0008;font-weight:700;font-size:14px}
 .mapw{background:var(--sea);box-shadow:var(--sh)}.mapw svg{background:var(--sea)}
 .foot{padding:10px 0 24px}
+
+.upbox{background:linear-gradient(180deg,color-mix(in srgb,var(--panel) 90%,#fff 10%),var(--panel));border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:16px;display:flex;flex-direction:column;gap:10px;align-items:stretch}
+.upwheel{--p:70;position:relative;width:170px;height:170px;margin:4px auto;border-radius:50%;background:conic-gradient(var(--ok) 0 calc(var(--p)*1%),var(--bad) calc(var(--p)*1%) 100%);box-shadow:0 0 28px #7c6cff44,inset 0 0 0 3px #0003}
+.upwheel::before{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--panel)}
+.upneedle{position:absolute;left:50%;top:0;width:4px;height:50%;margin-left:-2px;transform-origin:50% 100%;z-index:2}
+.upneedle::before{content:"";position:absolute;left:-5px;top:-4px;border:7px solid transparent;border-top:0;border-bottom:16px solid var(--text);filter:drop-shadow(0 2px 4px #0008)}
+.upneedle::after{content:"";position:absolute;left:0;top:10px;width:4px;height:calc(100% - 10px);border-radius:2px;background:var(--text);opacity:.85}
+.upmid{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3;font-family:var(--fd);font-size:22px;font-weight:700}
+.uppair{display:flex;align-items:center;justify-content:center;gap:8px}.uparr{font-size:22px;color:var(--muted)}
+.upslot{flex:1;min-width:0;text-align:center;font-size:12px;color:var(--muted);padding:6px 0}.upslot .card{width:110px;padding:8px 4px}.upslot .card .ic{font-size:30px}
+.uprange{display:flex;gap:12px;align-items:center}.uprange input{padding:0;accent-color:var(--accent)}.uprange b{font-family:var(--fd);font-size:14px;min-width:52px;text-align:right}
+.item.pick2 .card{outline:3px solid var(--accent2,#22d3ee);outline-offset:2px}.item{cursor:pointer}
+.mres{display:flex;flex-direction:column;gap:10px;align-items:stretch}.mres .grid .card{width:auto}.mres .sum{text-align:center;line-height:1.5}
+.mres .grid{max-height:420px;overflow:auto;padding:2px}
+.case .r2{margin-top:8px}.case .r2:empty{display:none}.case .r2 .btn{padding:9px 4px;font-size:13px}
 @media(prefers-reduced-motion:reduce){.t4::after,.t5::after{animation:none}.case,.btn{transition:none}}
 </style>
 </head>
 <body>
 <header><div class="me" data-a="tab" data-v="prof" id="head"></div><div class="bal">💰 <span id="bal">0</span> $ · 💎 <span id="gem">0</span></div></header>
-<nav><button data-a="tab" data-v="cases" class="on">Магазин</button><button data-a="tab" data-v="mk">Рынок</button><button data-a="tab" data-v="map">🌍 Карта</button><button data-a="tab" data-v="st">Акции</button><button data-a="tab" data-v="ch">Чат <span class="bdg" id="bdg" hidden></span></button><button data-a="tab" data-v="inv">Инвентарь</button><button data-a="tab" data-v="lb">Топ</button><button data-a="tab" data-v="prof">Профиль</button></nav>
+<nav><button data-a="tab" data-v="cases" class="on">Магазин</button><button data-a="tab" data-v="mk">Рынок</button><button data-a="tab" data-v="map">🌍 Карта</button><button data-a="tab" data-v="st">Акции</button><button data-a="tab" data-v="ch">Чат <span class="bdg" id="bdg" hidden></span></button><button data-a="tab" data-v="inv">Инвентарь</button><button data-a="tab" data-v="up">⚡ Апгрейд</button><button data-a="tab" data-v="lb">Топ</button><button data-a="tab" data-v="prof">Профиль</button></nav>
 
 <section id="cases" class="sec on">
   <div class="ev" id="evBox"></div>
@@ -172,6 +187,19 @@ input:focus,select:focus{outline:none;border-color:var(--accent)!important;box-s
     <div class="rw" id="rw"><div class="strip" id="strip"></div></div>
     <div class="res" id="res"><span style="color:var(--muted)">Выбери кейс и нажми «Открыть»</span></div></div>
   <div id="invK" hidden><p class="hint" id="invInfo"></p><div class="grid" id="invGrid"></div></div>
+</section>
+
+<section id="up" class="sec">
+  <p class="hint">Выбери карту и шанс успеха. Выиграешь, получишь карту дороже: цена × (1 + (100% − шанс)). Например, карта за 2 000 $ при шансе 70% превратится в карту за ≈ 2 600 $. Проиграешь, карта сгорает. Чем ниже шанс, тем больше прирост.</p>
+  <div class="upbox">
+    <div class="upwheel" id="upWheel"><div class="upneedle" id="upNeedle"></div><div class="upmid" id="upMid">?</div></div>
+    <div class="uppair"><div id="upFrom" class="upslot">Выбери карту ниже</div><div class="uparr">➜</div><div id="upTo" class="upslot">—</div></div>
+    <div class="uprange"><input type="range" id="upCh" min="5" max="95" value="70" step="1"><b id="upChv">70%</b></div>
+    <div class="hint" id="upInfo" style="text-align:center;margin:4px 0 10px"></div>
+    <button class="btn" id="upGo" style="width:100%" data-a="upgo" data-v="0" disabled>Апгрейд</button>
+    <div class="res" id="upRes"></div>
+  </div>
+  <h3>Твои карты</h3><div class="grid" id="upGrid"></div>
 </section>
 
 <section id="prof" class="sec">
@@ -305,12 +333,12 @@ function rTax(){$("taxInfo").textContent=`🏛 Налог на богатств�
 
 /* Инвентарь: кейсы */
 function rOwn(){const L=CASES.filter(c=>S.cases[c.id]>0),tot=L.reduce((t,c)=>t+S.cases[c.id],0);
-  $("ownCases").innerHTML=L.map(c=>`<div class="case"><div class="big">${c.i}</div><b>${c.n}</b> <span class="chip">×${S.cases[c.id]}</span><small>${c.cards.slice(-6).map(k=>CARDS[k].i).join(" ")}</small><button class="btn" data-a="case" data-v="${c.id}" ${busy?"disabled":""}>Открыть</button></div>`).join("")||'<span class="hint">Нет кейсов. Купи их в Магазине или активируй промокод.</span>';
+  $("ownCases").innerHTML=L.map(c=>`<div class="case"><div class="big">${c.i}</div><b>${c.n}</b> <span class="chip">×${S.cases[c.id]}</span><small>${c.cards.slice(-6).map(k=>CARDS[k].i).join(" ")}</small><button class="btn" data-a="case" data-v="${c.id}" ${busy?"disabled":""}>Открыть</button><div class="r2">${S.cases[c.id]>10?`<button class="btn alt" data-a="mopen" data-v="${c.id}|10" ${busy?"disabled":""}>×10</button>`:""}${S.cases[c.id]>1?`<button class="btn alt" data-a="mopen" data-v="${c.id}|100" ${busy?"disabled":""}>Все (${Math.min(100,S.cases[c.id])})</button>`:""}</div></div>`).join("")||'<span class="hint">Нет кейсов. Купи их в Магазине или активируй промокод.</span>';
   $("itc").textContent=`Кейсы (${tot})`;$("itk").textContent=`Карты (${S.inv.length})`}
 function itab(v){invTab=v;$("invC").hidden=v!=="c";$("invK").hidden=v!=="k";$("itc").classList.toggle("alt",v!=="c");$("itk").classList.toggle("alt",v!=="k")}
 function openCase(cs){
   if(busy||!(S.cases[cs.id]>0))return;
-  busy=true;S.cases[cs.id]--;sfx("init");upd();
+  busy=true;S.cases[cs.id]--;sfx("init");$("rw").style.display="";upd();
   const items=[];for(let i=0;i<45;i++)items.push(roll(cs));
   const WIN=38,win=items[WIN],strip=$("strip");
   strip.style.transition="none";strip.style.transform="translateX(0)";
@@ -526,10 +554,10 @@ function bizTick(){const now=Date.now(),m=[];let ch=0;
     for(let k=1;k<=n;k++)bizMin(b,b.ts+k*6e4,m);
     b.ts=now-b.ts>36e6?now:b.ts+n*6e4;ch=1}
   if(ch){save();if(m.length)toast(m[m.length-1]+(m.length>1?` (+ещё ${m.length-1})`:""))}return ch}
-function rMapSvg(){const[,,w]=VW,fs=w/48;let s=`<rect x="0" y="0" width="360" height="180" fill="var(--panel)"/>`;
+function rMapSvg(){const[,,w]=VW,fs=w/48;let s=`<rect x="0" y="0" width="360" height="180" fill="var(--sea)"/>`;
   for(let i=-150;i<=150;i+=30)s+=`<line x1="${i+180}" y1="0" x2="${i+180}" y2="180" stroke="var(--line)" stroke-width=".3"/>`;
   for(let i=-60;i<=60;i+=30)s+=`<line x1="0" y1="${90-i}" x2="360" y2="${90-i}" stroke="var(--line)" stroke-width=".3"/>`;
-  s+=LAND.map(p=>`<polygon points="${p.map(([a,b])=>(a+180)+","+(90-b)).join(" ")}" fill="var(--line)" stroke="var(--muted)" stroke-width=".4" stroke-linejoin="round"/>`).join("");
+  s+=LAND.map(p=>`<polygon points="${p.map(([a,b])=>(a+180)+","+(90-b)).join(" ")}" fill="var(--land)" stroke="var(--lands)" stroke-width=".4" stroke-linejoin="round"/>`).join("");
   for(const c of CITIES){s+=`<circle cx="${c[1]+180}" cy="${90-c[2]}" r="${fs*.12}" fill="var(--muted)"/>`;if(w<=130)s+=`<text x="${c[1]+180}" y="${90-c[2]-fs*.3}" font-size="${fs*.55}" text-anchor="middle" fill="var(--muted)" style="pointer-events:none">${c[0]}</text>`}
   for(const b of S.biz)s+=`<text x="${b.lon+180}" y="${90-b.lat}" font-size="${fs}" text-anchor="middle" dominant-baseline="central" opacity="${b.br?.45:1}" style="pointer-events:none">${BT[b.t].i}</text>`;
   if(MP)s+=`<circle cx="${MP.lon+180}" cy="${90-MP.lat}" r="${fs*.7}" fill="none" stroke="var(--accent)" stroke-width="${fs*.18}"/>`;
@@ -578,18 +606,71 @@ const BA={
 $("mReg").innerHTML=VIEWS.map((v,i)=>`<option value="${i}">${v[0]}</option>`).join("")+'<option value="c">Вокруг города</option>';
 $("mCity").innerHTML='<option value="">Выбрать город…</option>'+CITIES.map((c,i)=>`<option value="${i}">${c[0]}</option>`).join("");
 $("mReg").onchange=e=>{const v=VIEWS[+e.target.value];if(v){VW=v.slice(1);rMapSvg()}};
-$("mCity").onchange=e=>{const c=CITIES[+e.target.value];if(!c)return;const x=Math.max(0,Math.min(300,c[1]+150)),y=Math.max(0,Math.min(140,50-c[2]));
+$("mCity").onchange=e=>{const c=CITIES[+e.target.value];if(!c)return;const x=Math.max(0,Math.min(300,c[1]+150)),y=Math.max(0,Math.min(140,70-c[2]));
   VW=[x,y,60,40];$("mReg").value="c";setPt(c[1],c[2])};
 $("mapSvg").onclick=e=>{const sv=$("mapSvg"),p=sv.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const q=p.matrixTransform(sv.getScreenCTM().inverse());setPt(q.x-180,90-q.y)};
 document.addEventListener("change",e=>{if(e.target.id==="mType"){MT=e.target.value;rMapSel()}});
 function rMap(){rMapSvg();rMapSel();rBiz()}
+
+/* Массовое открытие кейсов */
+function openMany(cs,n){
+  if(busy||!cs)return;n=Math.min(n,100,S.cases[cs.id]||0);if(n<1)return;
+  S.cases[cs.id]-=n;sfx("init");$("rw").style.display="none";
+  const got=[];let gems=0;
+  for(let i=0;i<n;i++){const w=roll(cs),it={c:w.c,g:w.g,id:nid()};S.inv.push(it);got.push(it);if(Math.random()<.2)gems+=1+rn(2)}
+  S.gem+=gems;
+  const tot=got.reduce((s,c)=>s+val(c),0),cost=cprice(cs)*n,best=got.reduce((m,c)=>val(c)>val(m)?c:m),bt=tier(val(best));
+  const sorted=got.slice().sort((a,b)=>val(b)-val(a));
+  sfx("win",bt);winFx(bt);
+  $("res").innerHTML=`<div class="mres"><div class="sum">Открыто: <b>${n} × ${esc(cs.n)}</b><br>Выпало на <b>${fmt(tot)} $</b>${cs.gem?"":` · цена кейсов ${fmt(cost)} $ · <span class="${tot>=cost?"good":"bad"}">${tot>=cost?"+":""}${fmt(tot-cost)} $</span>`}${gems?`<br><span class="good">+${gems} 💎</span>`:""}</div>
+<div>Лучшая: <b>${esc(CARDS[best.c].n)}</b> · ${fmt(val(best))} $</div>
+<div class="grid">${sorted.map(cardHTML).join("")}</div>
+<button class="btn alt" id="sellAll">Продать всё за ${fmt(got.reduce((s,c)=>s+Math.floor(val(c)*sellRate()),0))} $</button></div>`;
+  $("sellAll").onclick=()=>{let t=0;for(const it of got){const i=S.inv.findIndex(x=>x.id===it.id);if(i>=0){S.inv.splice(i,1);t+=Math.floor(val(it)*sellRate())}}
+    S.bal+=t;sfx("coin");$("res").innerHTML=`Продано ${got.length} карт за ${fmt(t)} $ ✅`;upd();rInv();rProf()};
+  upd();rInv();
+}
+
+/* Апгрейдер */
+const ALLV=(()=>{const a=[];CARDS.forEach((k,c)=>BGS.forEach((b,g)=>a.push({c,g,v:k.p+b.b})));return a.sort((x,y)=>x.v-y.v)})();
+let UPSEL=0,UPCH=70,upBusy=false;
+const upMult=ch=>1+(100-ch)/100,upTarget=(P,ch)=>Math.round(P*upMult(ch));
+function upResult(P,ch){const t=upTarget(P,ch);let lo=0,hi=ALLV.length-1;while(lo<hi){const m=(lo+hi)>>1;if(ALLV[m].v<t)lo=m+1;else hi=m}
+  let i=lo;if(i>0&&Math.abs(ALLV[i-1].v-t)<Math.abs(ALLV[i].v-t))i--;
+  while(i<ALLV.length-1&&ALLV[i].v<=P)i++;
+  const c=ALLV[i].v,ok=[];for(let j=Math.max(0,i-60);j<Math.min(ALLV.length,i+60);j++){const v=ALLV[j].v;if(v>P&&Math.abs(v-c)<=Math.max(30,c*.03))ok.push(ALLV[j])}
+  return ok.length?ok[rn(ok.length)]:ALLV[i]}
+const upCard=()=>S.inv.find(x=>x.id===UPSEL);
+function rUp(){if(!upCard())UPSEL=0;
+  $("upGrid").innerHTML=S.inv.slice().sort((a,b)=>val(b)-val(a)).map(c=>`<div class="item ${c.id===UPSEL?"pick2":""}" data-a="upsel" data-v="${c.id}">${cardHTML(c)}</div>`).join("")||'<span class="hint">Нет карточек. Открой кейс или купи на рынке.</span>';
+  rUpInfo()}
+function rUpInfo(){const c=upCard(),ch=UPCH;$("upWheel").style.setProperty("--p",ch);$("upChv").textContent=ch+"%";$("upMid").textContent=ch+"%";
+  if(!c){$("upFrom").innerHTML="Выбери карту ниже";$("upTo").textContent="—";$("upInfo").textContent="";$("upGo").disabled=true;return}
+  const P=val(c),t=upTarget(P,ch),ev=Math.round(ch*upMult(ch));
+  $("upFrom").innerHTML=cardHTML(c);$("upTo").innerHTML=`<div style="font-size:12px;color:var(--muted)">цель ≈</div><div style="font-family:var(--fd);font-size:15px;color:var(--text)">${fmt(t)} $</div><div style="font-size:12px;color:var(--ok)">×${upMult(ch).toFixed(2)}</div>`;
+  $("upInfo").innerHTML=`Шанс <b>${ch}%</b> · прирост <b>+${100-ch}%</b> · ожидаемая отдача ${ev}% от цены карты`;$("upGo").disabled=upBusy}
+BA.upsel=id=>{if(upBusy)return;UPSEL=id;$("upRes").innerHTML="";rUp()};
+document.addEventListener("input",e=>{if(e.target.id==="upCh"){UPCH=+e.target.value;rUpInfo()}});
+BA.upgo=()=>{const c=upCard();if(!c||upBusy)return;upBusy=true;$("upGo").disabled=true;
+  const P=val(c),ch=UPCH,win=Math.random()*100<ch,res=win?upResult(P,ch):null,ang=ch*3.6,m=6;
+  const a=win?m+rnd(ang*.08,ang*.92):ang+m+rnd(0,360-ang-2*m);
+  S.inv=S.inv.filter(x=>x.id!==c.id);S.prof.show=S.prof.show.filter(id=>id!==c.id);
+  let nit=null;if(win){nit={c:res.c,g:res.g,id:nid()};S.inv.push(nit);UPSEL=nit.id}else UPSEL=0;
+  save();
+  const nd=$("upNeedle");nd.style.transition="none";nd.style.transform="rotate(0deg)";void nd.offsetWidth;
+  nd.style.transition="transform 3.2s cubic-bezier(.15,.7,.1,1)";nd.style.transform=`rotate(${360*4+a}deg)`;
+  sfx("init");for(let i=1;i<=24;i++)setTimeout(()=>sfx("tick"),3200*(1-Math.pow(1-i/24,1/3)));
+  setTimeout(()=>{upBusy=false;
+    if(win){const tr=tier(val(nit));sfx("win",tr);winFx(tr);$("upRes").innerHTML=`<div class="good" style="font-size:18px;font-weight:800">Успех! ${fmt(P)} → ${fmt(val(nit))} $</div>${cardHTML(nit)}`}
+    else{sfx("coin");$("upRes").innerHTML=`<div class="bad" style="font-size:18px;font-weight:800">Неудача 💥 карта сгорела</div>${cardHTML(c)}`}
+    upd();rInv();rProf();rUp()},3300)};
 
 /* Навигация и события */
 function tab(v){
   cur=v;
   document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
   document.querySelectorAll(".sec").forEach(s=>s.classList.toggle("on",s.id===v));
-  if(v==="inv"){rInv();rOwn();itab(invTab)}if(v==="mk")rMarket();if(v==="map")rMap();if(v==="prof")rProf();if(v==="lb"){rLb();push();pull()};if(v==="st"){rSt();pullStocks()}if(v==="ch"){unread=0;rBdg();rChat(1);pull();pollChat()}}
+  if(v==="inv"){rInv();rOwn();itab(invTab)}if(v==="mk")rMarket();if(v==="map")rMap();if(v==="up")rUp();if(v==="prof")rProf();if(v==="lb"){rLb();push();pull()};if(v==="st"){rSt();pullStocks()}if(v==="ch"){unread=0;rBdg();rChat(1);pull();pollChat()}}
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-a]");if(!t)return;const a=t.dataset.a,v=t.dataset.v;
   if(a==="tab")tab(v);else if(a==="case")openCase(CASES[+v]);else if(a==="sell")sell(+v);
@@ -597,7 +678,7 @@ document.addEventListener("click",e=>{
   else if(a==="unlist")unlist(+v);else if(a==="buy")buy(+v);else if(a==="av")setAv(v);else if(a==="show")toggleShow(+v);else if(a==="trade")trade(v);else if(a==="pl")openPl(+v);
   else if(a==="send")sendChat();else if(a==="cu"){const m=CH.find(x=>x.k===v);if(m&&m.u!==S.uid)openTrade(m.u,m.n)}
   else if(a==="trd"){const r=LBR[+v];openTrade(r.id,r.n)}else if(a==="tsend")sendOffer();else if(a==="tacc")accOffer(v);else if(a==="tdec")decOffer(v);else if(a==="tcan")cancelOut(v);
-  else if(a==="bc"){const[i,n]=v.split("|");buyCase(+i,+n)}else if(a==="gx")gx(+v);else if(a==="promo")promo();else if(a==="itab")itab(v);else if(a==="newst")openNewSt();else if(a==="mkst")createStock();else if(a==="topup")topup(v);else if(BA[a])BA[a](+v)});
+  else if(a==="bc"){const[i,n]=v.split("|");buyCase(+i,+n)}else if(a==="gx")gx(+v);else if(a==="promo")promo();else if(a==="itab")itab(v);else if(a==="newst")openNewSt();else if(a==="mkst")createStock();else if(a==="topup")topup(v);else if(a==='mopen'){const[i,n]=v.split('|');openMany(CASES[+i],+n)}else if(BA[a])BA[a](+v)});
 $("reset").onclick=()=>{if(busy||!confirm("Сбросить весь прогресс?"))return;const k=S.codes,u=S.uid;S=def();S.codes=k;S.uid=u;mkSync();upd();rInv();rMarket();rProf();toast("Прогресс сброшен")};
 
 /* Старт */
