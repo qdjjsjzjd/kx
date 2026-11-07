@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>$ Кейсы</title>
+<title>CardRush</title>
+<meta name="application-name" content="CardRush"><meta name="apple-mobile-web-app-title" content="CardRush"><meta name="theme-color" content="#0b0b12">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -228,9 +229,79 @@ try{applyAccent(localStorage.getItem("kx_acc")||"#c6ff00");applyTheme(localStora
 .dp .tb{transition:background .2s,transform .15s}.dp .tb:active{transform:scale(.95)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<style>
+/* ===== Новый визуал: Aurora Glass ===== */
+@keyframes drift{0%{transform:translate(-6%,-4%) scale(1)}50%{transform:translate(8%,6%) scale(1.25)}100%{transform:translate(-6%,-4%) scale(1)}}
+@keyframes drift2{0%{transform:translate(6%,8%) scale(1.2)}50%{transform:translate(-8%,-6%) scale(1)}100%{transform:translate(6%,8%) scale(1.2)}}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7px) rotate(3deg)}}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+body{animation:pageIn .7s ease both;font-weight:500}
+body::after{content:"";position:fixed;inset:-20%;z-index:-2;pointer-events:none;background:radial-gradient(40% 35% at 20% 25%,color-mix(in srgb,var(--accent) 38%,transparent),transparent 70%),radial-gradient(35% 30% at 80% 70%,color-mix(in srgb,var(--accent2) 34%,transparent),transparent 70%);filter:blur(40px);animation:drift 18s ease-in-out infinite}
+.stk,.case,.bal,.chbox,.mb,.rw{background:color-mix(in srgb,var(--panel) 66%,transparent)!important;-webkit-backdrop-filter:blur(14px) saturate(1.35);backdrop-filter:blur(14px) saturate(1.35);border:1px solid color-mix(in srgb,#fff 11%,var(--line))!important;box-shadow:0 10px 30px #0004,inset 0 1px 0 #ffffff16}
+.case,.stk{border-radius:20px!important}
+.case{transition:transform .25s cubic-bezier(.2,.9,.25,1),box-shadow .25s,border-color .25s}
+.case:hover{transform:translateY(-6px) scale(1.02);border-color:var(--accent)!important;box-shadow:0 18px 40px color-mix(in srgb,var(--accent) 35%,transparent),inset 0 1px 0 #ffffff22}
+.case .big{display:inline-block;filter:drop-shadow(0 6px 10px #0006);animation:floaty 4s ease-in-out infinite}
+.case:nth-child(2n) .big{animation-delay:-1.2s}.case:nth-child(3n) .big{animation-delay:-2.4s}
+.btn{border-radius:14px;background:var(--grad);box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 38%,transparent);letter-spacing:.01em}
+.btn:hover:not(:disabled){box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 55%,transparent);transform:translateY(-1px)}
+.btn.alt{background:color-mix(in srgb,var(--panel) 70%,transparent);box-shadow:none;border:1px solid var(--line)}
+.bal{border-radius:999px!important;border:1.5px solid transparent!important;background:linear-gradient(var(--panel),var(--panel)) padding-box,var(--grad) border-box!important;box-shadow:0 0 22px color-mix(in srgb,var(--accent) 30%,transparent)}
+h3{letter-spacing:.04em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--accent) 45%,transparent);border-radius:8px}
+::selection{background:var(--accent);color:#fff}
+.fld,.chrow input{border-radius:14px!important;background:color-mix(in srgb,var(--bg) 70%,transparent)!important;transition:border-color .2s,box-shadow .2s}
+.fld:focus,.chrow input:focus{outline:0;border-color:var(--accent)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 28%,transparent)}
+/* Меню-бургер: три полоски → крестик, панель выезжает, пункты появляются по очереди */
+.menu{flex-direction:column;gap:5px;border-radius:14px;transition:transform .2s,box-shadow .3s}
+.menu:active{transform:scale(.9)}.menu.open{box-shadow:0 0 18px color-mix(in srgb,var(--accent) 55%,transparent)}
+.menu .hl{display:block;width:20px;height:2.5px;border-radius:2px;background:currentColor;transition:transform .4s cubic-bezier(.2,.9,.25,1),opacity .2s,width .3s}
+.menu .hl:nth-of-type(2){width:13px;align-self:flex-start;margin-left:11px}
+.menu.open .hl:nth-of-type(1){transform:translateY(7.5px) rotate(45deg)}
+.menu.open .hl:nth-of-type(2){opacity:0;transform:scaleX(0)}
+.menu.open .hl:nth-of-type(3){transform:translateY(-7.5px) rotate(-45deg)}
+.drawer{display:block!important;visibility:hidden;pointer-events:none;opacity:0;transition:opacity .3s,visibility 0s .45s}
+.drawer.on{visibility:visible;pointer-events:auto;opacity:1;transition:opacity .3s}
+.dp{transform:translateX(-105%);transition:transform .45s cubic-bezier(.2,.9,.25,1);background:color-mix(in srgb,var(--panel) 78%,transparent);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);border-radius:0 26px 26px 0}
+.drawer.on .dp{transform:none}
+.dp>*{opacity:0;transform:translateX(-22px) scale(.96);transition:opacity .2s,transform .2s}
+.drawer.on .dp>*{opacity:1;transform:none;transition:opacity .4s,transform .45s cubic-bezier(.2,.9,.25,1);transition-delay:calc(var(--i,0)*45ms + 140ms)}
+.dp .tb{border-radius:16px;transition:background .2s,border-color .2s}.dp .tb:hover{border-color:var(--accent)}
+.dp .tb.on{box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 40%,transparent)}
+</style>
+<style>
+/* ===== Оптимизация ===== */
+body{background-attachment:scroll!important}
+body::after{inset:0!important;filter:none!important;animation:none!important}
+.stk,.case,.bal,.chbox,.mb,.rw,.dp,.drawer,header{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.stk,.case,.chbox,.mb,.rw{background:color-mix(in srgb,var(--panel) 92%,transparent)!important;box-shadow:0 4px 14px #0003!important}
+header{background:color-mix(in srgb,var(--bg) 94%,transparent)!important}
+.drawer{background:#05060fcc!important}.dp{background:var(--panel)!important}
+.case .big,.set.rdy{animation:none!important}.case:hover .big{animation:floaty 1.6s ease-in-out infinite}
+.card.t5::after,.card.t6::after{animation:none!important;display:none}
+.item:hover .card.t5::after,.item:hover .card.t6::after{display:block;animation:shine 1.2s 1!important}
+.grid .item{animation:none!important;content-visibility:auto;contain-intrinsic-size:auto 170px}
+.grid .item:hover .card{transform:none!important}
+.case:hover{box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 30%,transparent)!important}
+.btn{box-shadow:none!important}
+.sec.on{animation-duration:.2s}
+@media (hover:none){.case:hover,.stk:hover{transform:none}}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+/* ===== Заставка CardRush ===== */
+#splash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:radial-gradient(60% 50% at 50% 50%,color-mix(in srgb,var(--accent) 22%,var(--bg)),var(--bg) 75%);transition:opacity .9s ease,visibility 0s .9s;overflow:hidden}
+#splash.out{opacity:0;visibility:hidden;pointer-events:none}
+#splash .sp-t{font-family:"Dancing Script","Segoe Script","Brush Script MT",cursive;font-weight:700;font-size:clamp(34px,10vw,92px);white-space:nowrap;color:var(--text);text-align:center;
+  text-shadow:0 0 10px var(--accent),0 0 28px var(--accent),0 0 60px var(--accent2);animation:spIn 1s .2s ease-out backwards;will-change:opacity}
+#splash .sp-g{position:absolute;left:50%;top:50%;width:140vmax;height:140vmax;margin:-70vmax 0 0 -70vmax;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 55%,transparent),transparent 55%);transform:scale(0);opacity:0;pointer-events:none}
+@keyframes spIn{from{opacity:0}to{opacity:1}}
+</style>
 </head>
 <body>
-<header><button class="menu" id="mbtn" aria-label="Menu">☰<span class="bdg" id="bdg" hidden></span></button><div class="me" data-a="tab" data-v="prof" id="head"></div><div class="bal">💰 <span id="bal">0</span> $ · 💎 <span id="gem">0</span></div></header>
+<div id="splash"><div class="sp-g"></div><div class="sp-t">CardRush - Welcome</div></div>
+<script>setTimeout(function(){var e=document.getElementById("splash");if(e){e.classList.add("out");setTimeout(function(){e.remove()},1000)}},2600)</script>
+<header><button class="menu" id="mbtn" aria-label="Menu"><i class="hl"></i><i class="hl"></i><i class="hl"></i><span class="bdg" id="bdg" hidden></span></button><div class="me" data-a="tab" data-v="prof" id="head"></div><div class="bal">💰 <span id="bal">0</span> $ · 💎 <span id="gem">0</span></div></header>
 <div class="drawer" id="drawer"><div class="dp" id="dp">
 <button class="tb on" data-a="tab" data-v="cases"><span data-t="Магазин"></span></button>
 <button class="tb" data-a="tab" data-v="mk"><span data-t="Рынок"></span></button>
@@ -547,7 +618,7 @@ async function unlist(k){const i=S.list.findIndex(x=>x.id===k);if(i<0||!DB_URL||
 function closeM(){$("modal").classList.remove("on")}
 function tick(){
   checkGifts();rEv();if(Date.now()-S.taxTs>=6e4){if(taxTick()>0)upd();else save()}if(cnt%30===0&&cur==="cases")rDaily();
-  if(mkSync()){save();if(cur==="st")rSt()}
+  if(mkSync()&&cur==="st")rSt();
   
   if(cur==="st")$("stInfo").textContent=tt("Обновление через {0} с · портфель ≈ {1} $",Math.max(0,Math.ceil(((MK.step+1)*STEP-Date.now())/1000)),fmt(STK.reduce((t,a)=>t+(S.st[a.k]||0)*MK.p[a.k],0)));
   if(DB_URL){if(cnt%20===3)pullStocks();if(cnt%3===0)pollIn();if(cnt%(cur==="mk"?3:12)===0)pollMarket()}
@@ -577,9 +648,12 @@ const gaussAt=(ki,t)=>{const u1=h32(Math.imul(t,0x9E3779B1)^Math.imul(ki+1,0x85E
 const stepP=(a,p,g,vm,dr)=>Math.max(1,Math.round(p*Math.exp(a.v*vm*.5*g+dr-.03*Math.log(p/a.b))));
 /* Цены считаются из времени, поэтому у всех игроков одинаковые */
 const STEP=2e3;let MK={step:-1,p:{},h:{}};
-function mkSync(){const st=Math.floor(Date.now()/STEP);if(st===MK.step)return false;const from=Math.floor(st/1000)*1000-1000;
-  STK.forEach((a,ki)=>{let p=a.b,j=0;const lg=a.lg||[],h=[],K=a.ki??ki,d0=a.dr0||0;let dr=d0,vm=1;
-    for(let t=from;t<=st;t++){while(j<lg.length&&lg[j][0]<=t){dr=d0+lg[j][1];vm=lg[j][2];j++}p=stepP(a,p,gaussAt(K,t),vm,dr);if(t>st-1000)h.push(p)}
+function mkSync(){const st=Math.floor(Date.now()/STEP);if(st===MK.step)return false;const from=Math.floor(st/1000)*1000-1000,C=MK.c||(MK.c={});
+  STK.forEach((a,ki)=>{const lg=a.lg||[],K=a.ki??ki,d0=a.dr0||0;let c=C[a.k];
+    if(!c||c.a!==a||c.n!==lg.length||c.from!==from||c.t>st)c=C[a.k]={a,n:lg.length,from,t:from-1,p:a.b,j:0,dr:d0,vm:1,h:[]};
+    let{p,j,dr,vm}=c;const h=c.h;
+    for(let t=c.t+1;t<=st;t++){while(j<lg.length&&lg[j][0]<=t){dr=d0+lg[j][1];vm=lg[j][2];j++}p=stepP(a,p,gaussAt(K,t),vm,dr);h.push(p)}
+    c.t=st;c.p=p;c.j=j;c.dr=dr;c.vm=vm;if(h.length>1000)h.splice(0,h.length-1000);
     MK.p[a.k]=p;MK.h[a.k]=h;if(a.cus)S.lp[a.k]=p});MK.step=st;return true}
 /* Настройки админа действуют только с момента изменения (log), история не перерисовывается */
 const toLg=(x,lim)=>{let l=x.log;l=Array.isArray(l)?l:l&&typeof l==="object"?Object.values(l):[];if(!l.length&&(+x.tr||+x.vm))l=[{t:0,r:x.tr,m:x.vm}];
@@ -704,11 +778,14 @@ BA.pkmore=()=>{PKL+=60;rPick()};
 BA.pkset=i=>{const c=upCard(),g=+$("pkb").value;if(!c)return;if(tChance(val(c),CARDS[i].p+BGS[g].b)<MINCH){toast(tt("Шанс слишком мал (< 0.1%)"));return}UPT={c:i,g};$("pk").classList.remove("on");rUpInfo()};
 document.addEventListener("input",e=>{if(e.target.id==="upCh"){UPCH=+e.target.value;rUpInfo()}else if(e.target.id==="pkq"){PKL=60;rPick()}});
 document.addEventListener("change",e=>{if(e.target.id==="pkb"||e.target.id==="pkr"){PKL=60;rPick()}});
+function rigHit(ch){let r=null;try{r=JSON.parse(localStorage.getItem("kx2_rig")||"null")}catch(e){}
+  if(!r||!(r.n>0)||!(ch<=+r.ch))return false;
+  r.n--;try{r.n>0?localStorage.setItem("kx2_rig",JSON.stringify(r)):localStorage.removeItem("kx2_rig")}catch(e){}return true}
 BA.upgo=()=>{const c=upCard(),tm=UPMODE===1;if(!c||upBusy)return;
   const P=val(c);let ch=UPCH;
   if(tm){if(!UPT||val(UPT)<=P)return;ch=tChance(P,val(UPT));if(ch<MINCH)return}
   upBusy=true;$("upGo").disabled=true;
-  const win=Math.random()*100<ch,res=win?(tm?UPT:upResult(P,ch)):null;
+  const win=rigHit(ch)||Math.random()*100<ch,res=win?(tm?UPT:upResult(P,ch)):null;
   /* зелёная зона: от середины низа круга в обе стороны */
   const dp=Math.max(ch,.8),ang=dp*3.6,m=Math.min(6,ang*.1),lo=180-ang/2,hi=180+ang/2;
   const a=win?rnd(lo+m,hi-m):hi+m+rnd(0,360-ang-2*m);
@@ -912,6 +989,13 @@ function mkSet(id){const x=SETL().find(q=>q.id===id);if(!x)return;const use=[];
   new MutationObserver(ms=>{for(const m of ms){const t=m.target.nodeType===3?m.target.parentElement:m.target;if(!t||!t.classList||!t.classList.contains("pp"))continue;
     const v=parseInt(t.textContent.replace(/\D/g,""))||0,o=pv.get(t);pv.set(t,v);if(o!=null&&o!==v){t.classList.remove("fu","fd");void t.offsetWidth;t.classList.add(v>o?"fu":"fd")}}}).observe($("stList"),{childList:true,subtree:true,characterData:true});
   let ob=null;new MutationObserver(()=>{const e=$("bal"),v=e.textContent;if(ob!=null&&ob!==v){e.classList.remove("bump");void e.offsetWidth;e.classList.add("bump")}ob=v}).observe($("bal"),{childList:true,characterData:true,subtree:true})})();
+
+/* Меню: индексы для каскадного появления и состояние бургера */
+document.querySelectorAll(".dp>*").forEach((e,i)=>e.style.setProperty("--i",i));
+new MutationObserver(()=>$("mbtn").classList.toggle("open",$("drawer").classList.contains("on"))).observe($("drawer"),{attributes:true,attributeFilter:["class"]});
+
+/* Заставка: показать ~2.6 с и плавно перейти в игру */
+setTimeout(()=>{const e=$("splash");if(e){e.classList.add("out");setTimeout(()=>e.remove(),1000)}},2600);
 </script>
 </body>
 </html>

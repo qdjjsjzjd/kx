@@ -42,6 +42,15 @@ select:focus,input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
 <select id="sk"></select><input id="str" type="text" autocomplete="off" placeholder="Тренд % (любой, от −99.9), действует с этого момента"><input id="svm" type="number" step="0.1" placeholder="Волатильность × (любая, 0 = без колебаний)"><input id="scap" type="number" placeholder="Фонд $ (акция игрока)"><input id="sb" type="number" placeholder="Базовая цена (акция игрока)">
 <button class="btn" id="ssave">Сохранить акцию</button><button class="btn" id="sdel" style="background:#ff5c6c">Удалить акцию игрока</button><div class="msg" id="smsg"></div>
 <h3 style="margin:6px 0">Создать акцию</h3><input id="ny" maxlength="8" placeholder="Тикер"><input id="nn2" maxlength="20" placeholder="Название"><input id="ne" maxlength="4" placeholder="Эмодзи"><input id="np" type="number" placeholder="Цена"><input id="nc" type="number" placeholder="Фонд $ (например 1000000)"><button class="btn" id="smk">Создать</button></div>
+<div id="rigsec" style="display:contents"><hr style="width:100%;border:0;border-top:1px solid var(--line)"><h2>🎯 Подкрут апгрейдера</h2>
+<p class="hint">Следующие апгрейды с шансом не выше указанного будут выигрышными. Например, поставь 3: апгрейд с шансом 3% (и меньше) пройдёт гарантированно. Работает на том устройстве и в том браузере, где открыта админка.</p>
+<input id="rgc" type="text" inputmode="decimal" autocomplete="off" placeholder="Шанс % (например 3)"><input id="rgn" type="number" min="1" placeholder="Сколько раз (по умолчанию 1)"><button class="btn" id="rgs">Включить подкрут</button><button class="btn" id="rgx" style="background:#ff5c6c">Выключить</button><div class="msg" id="rgm"></div></div>
+<script>(()=>{const g=i=>document.getElementById(i),K="kx2_rig";
+function show(){let r=null;try{r=JSON.parse(localStorage.getItem(K)||"null")}catch(e){}g("rgm").textContent=r&&r.n>0?`Подкрут включён: шанс ≤ ${r.ch}%, осталось раз: ${r.n}`:"Подкрут выключен"}
+g("rgs").onclick=()=>{const ch=+String(g("rgc").value).replace(",",".").replace(/\s/g,""),n=Math.max(1,Math.round(+g("rgn").value)||1);
+  if(!(ch>0&&ch<=95)){g("rgm").textContent="Укажи шанс от 0.1 до 95";return}
+  try{localStorage.setItem(K,JSON.stringify({ch,n}));show()}catch(e){g("rgm").textContent="Не удалось записать (localStorage недоступен)"}};
+g("rgx").onclick=()=>{try{localStorage.removeItem(K)}catch(e){}show()};show()})();</script>
 <script>
 (async()=>{const H="d22870271e663b75cd703e31b6efb4fc5b006c5143358cb6c4df961d2a06ac4b",g=i=>document.getElementById(i),sha=async t=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)))].map(x=>x.toString(16).padStart(2,"0")).join("");
 const open=()=>{document.body.classList.remove("lock");g("gate").remove()};
