@@ -71,14 +71,14 @@ const val=c=>CARDS[c.c].p+BGS[c.g].b;
 const tier=p=>p<1500?1:p<4000?2:p<9000?3:p<20000?4:5;
 function cardHTML(c){const k=CARDS[c.c],b=BGS[c.g],p=val(c);return `<div class="card t${k.rare?6:tier(p)}" style="background:${b.css}">${k.rare?'<div class="rtag">★ Раритет</div>':""}<div class="ic">${k.i}</div><div class="nm">${k.n}</div><div class="bgn">${b.n}</div><div class="pr">${fmt(p)} $</div></div>`}
 function prev(){$("apv").innerHTML=$("ac").value===""?"":cardHTML({c:+$("ac").value,g:+$("ab").value})}
-function fill(q){const f=(q||"").toLowerCase();$("ac").innerHTML=CARDS.map((k,i)=>(k.n+" "+k.i).toLowerCase().includes(f)?`<option value="${i}">${k.i} ${k.n} · ${fmt(k.p)}</option>`:"").join("");prev()}
+function fill(q){const f=(q||"").toLowerCase();$("ac").innerHTML=CARDS.map((k,i)=>[k,i]).sort((x,y)=>x[0].p-y[0].p).map(([k,i])=>(k.n+" "+k.i).toLowerCase().includes(f)?`<option value="${i}">${k.i} ${k.n} · ${fmt(k.p)}</option>`:"").join("");prev()}
 $("ab").innerHTML=BGS.map((b,i)=>`<option value="${i}">${b.n} · +${fmt(b.b)}</option>`).join("");
 $("aq").oninput=e=>fill(e.target.value);$("ac").onchange=prev;$("ab").onchange=prev;fill();
 $("give").onclick=()=>{if($("ac").value==="")return;const c=+$("ac").value,g=+$("ab").value,n=Math.min(100,Math.max(1,Math.round(+$("an").value)||1));
   try{let q=[];try{q=JSON.parse(localStorage.getItem("kx2_gifts")||"[]")}catch(e){}for(let i=0;i<n;i++)q.push({c,g,cn:$("acn").value===""?100:Math.min(100,Math.max(0,+$("acn").value||0))});localStorage.setItem("kx2_gifts",JSON.stringify(q));
   $("msg").textContent=`Выдано: ${n} × ${CARDS[c].n} · ${BGS[g].n} ✅`}catch(e){$("msg").textContent="Не удалось записать (localStorage недоступен)"}};
 
-const CNM="Летний,Зимний,Лесной,Пиратский,Неоновый,Космический,Королевский,Огненный,Мифический,Легендарный,Элитный,Абсолютный,Кристальный,Гемовый,Смайловый,Мемный,Вайбовый,Шальной,Хайповый,Звёздный,Ультра,Эпичный".split(",");
+const CNM="Летний,Зимний,Лесной,Пиратский,Неоновый,Космический,Королевский,Огненный,Мифический,Легендарный,Элитный,Абсолютный,Кристальный,Гемовый,Смайловый,Мемный,Вайбовый,Шальной,Хайповый,Звёздный,Ультра,Эпичный,Стартовый,Бронзовый,Серебряный,Золотой,Платиновый,Алмазный,Джекпот,Редкий".split(",");
 $("pcs").innerHTML='<option value="">— без кейса —</option>'+CNM.map((n,i)=>`<option value="${i}">${n} кейс</option>`).join("");
 let DB="";const db=async(p,m,b)=>{const r=await fetch(`${DB}/${p}.json`,{method:m||"GET",body:b===undefined?undefined:JSON.stringify(b)});if(!r.ok)throw 0;return r.json()};
 async function init(){const c=["https://kxgame-default-rtdb.firebaseio.com","https://kxgame-default-rtdb.europe-west1.firebasedatabase.app","https://kxgame-default-rtdb.asia-southeast1.firebasedatabase.app"];
