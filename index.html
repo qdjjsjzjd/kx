@@ -1187,8 +1187,8 @@ let lastSend=0;
 const okId=x=>/^[a-z0-9]{6,20}$/i.test(x);
 async function db(p,m,b){const[a,q]=p.split("?");const r=await fetch(`${DB_URL}/${a}.json${q?"?"+q:""}`,{method:m||"GET",body:b===undefined?undefined:JSON.stringify(b)});if(!r.ok)throw 0;return r.json()}
 async function detectDb(){const c=["https://kxgame-default-rtdb.firebaseio.com","https://kxgame-default-rtdb.europe-west1.firebasedatabase.app","https://kxgame-default-rtdb.asia-southeast1.firebasedatabase.app"];
-  const res=await Promise.all(c.map(u=>fetch(u+"/.json?shallow=true",{signal:AbortSignal.timeout(5000)}).then(r=>r.status).catch(()=>0)));
-  const i=res.findIndex(x=>x&&x!==404);if(i>=0)DB_URL=c[i];else toast(tt("Онлайн недоступен: проверь URL базы"))}
+  const res=await Promise.all(c.map(u=>fetch(u+"/.json?shallow=true",{signal:AbortSignal.timeout(12000)}).then(r=>r.status).catch(()=>0)));
+  const i=res.findIndex(x=>x===200||x===401||x===403);if(i>=0)DB_URL=c[i];else toast(tt("Онлайн недоступен: проверь URL базы"))}
 function rBdg(){const n=Object.keys(IN).length;for(const id of["bdg","bdg2"]){const b=$(id);b.hidden=!n;b.textContent=n}}
 function rTrade(){const sel=$("tsel"),v=sel.value;
   sel.innerHTML=S.inv.length?S.inv.slice().sort((a,b)=>val(b)-val(a)).map(c=>`<option value="${c.id}">${CARDS[c.c].i} ${CARDS[c.c].n} · ${BGS[c.g].n} · ${fmt(val(c))}</option>`).join(""):`<option value="">${tt("Нет карточек")}</option>`;
