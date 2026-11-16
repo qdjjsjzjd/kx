@@ -430,36 +430,33 @@ body::before{animation:bgDrift 22s ease-in-out infinite;will-change:transform}
 @media (prefers-reduced-motion:reduce){body::before,.modal.on,.drawer.on,.dk.on,.toast.err.show{animation:none!important}.toast{transition:opacity .2s}}
 </style>
 <style>
-/* ===== v2.3: лёгкое жидкое стекло (Liquid Glass) с блюром, поярче ===== */
-:root,:root[data-theme="dark"]{--lq:linear-gradient(135deg,rgba(255,255,255,.2),rgba(255,255,255,.05) 48%,rgba(255,255,255,.12));--lqb:rgba(255,255,255,.24);--lqs:inset 1px 1px 0 rgba(255,255,255,.45),inset -1px -1px 0 rgba(255,255,255,.1),inset 0 0 20px rgba(255,255,255,.05);--lqsh:0 10px 30px rgba(0,0,0,.26);--hl:.18;--bl:blur(16px) saturate(1.7);--glow:48%;--glow2:30%;--orb:38%;--orb2:26%}
-@media (prefers-color-scheme:light){:root:not([data-theme]){--lq:linear-gradient(135deg,rgba(255,255,255,.8),rgba(255,255,255,.42) 50%,rgba(255,255,255,.62));--lqb:rgba(255,255,255,.95);--lqs:inset 1px 1px 0 #fff,inset -1px -1px 0 rgba(255,255,255,.5),inset 0 0 20px rgba(255,255,255,.4);--lqsh:0 10px 28px rgba(50,60,130,.15);--hl:.55;--glow:42%;--glow2:26%;--orb:30%;--orb2:20%}}
-:root[data-theme="light"]{--lq:linear-gradient(135deg,rgba(255,255,255,.8),rgba(255,255,255,.42) 50%,rgba(255,255,255,.62));--lqb:rgba(255,255,255,.95);--lqs:inset 1px 1px 0 #fff,inset -1px -1px 0 rgba(255,255,255,.5),inset 0 0 20px rgba(255,255,255,.4);--lqsh:0 10px 28px rgba(50,60,130,.15);--hl:.55;--glow:42%;--glow2:26%;--orb:30%;--orb2:20%}
-html::before{content:"";position:fixed;inset:-12%;z-index:-2;pointer-events:none;background:radial-gradient(34vmax 34vmax at 14% 18%,color-mix(in srgb,var(--accent) var(--orb),transparent),transparent 70%),radial-gradient(30vmax 30vmax at 88% 28%,color-mix(in srgb,var(--accent2) var(--orb),transparent),transparent 70%),radial-gradient(36vmax 36vmax at 62% 92%,color-mix(in srgb,var(--accent) var(--orb2),transparent),transparent 70%);animation:orbs 24s ease-in-out infinite alternate;will-change:transform}
-@keyframes orbs{to{transform:translate3d(5%,-4%,0) scale(1.12) rotate(8deg)}}
-.stk,.case,.pf,.upbox,.rw,.lr,.chbox,.ev,.rst,.sdw,.mb,.chip,.sdg div{background:radial-gradient(170px circle at var(--mx,22%) var(--my,0%),rgba(255,255,255,var(--hl)),transparent 70%),var(--lq);border:1px solid var(--lqb);box-shadow:var(--lqsh),var(--lqs)}
-.chip,.sdg div{box-shadow:var(--lqs)}
-.ev{border-color:color-mix(in srgb,var(--accent) 60%,var(--lqb))}
-.case,.pf,.upbox,.chbox,.ev,.mb,.dp,.dock,.toast,header{-webkit-backdrop-filter:var(--bl);backdrop-filter:var(--bl)}
-.mb{background:radial-gradient(170px circle at var(--mx,22%) var(--my,0%),rgba(255,255,255,var(--hl)),transparent 70%),var(--lq),color-mix(in srgb,var(--panel) 58%,transparent)}
-header{background:color-mix(in srgb,var(--bg) 38%,transparent);border-bottom:1px solid var(--lqb)}
-.dock{background:var(--lq),color-mix(in srgb,var(--bg) 30%,transparent);border:1px solid var(--lqb);box-shadow:var(--lqsh),var(--lqs)}
-.dp{background:var(--lq),color-mix(in srgb,var(--bg) 40%,transparent)}
-.toast,.menu,.bal,.dp .tb{background:var(--lq);box-shadow:var(--lqs)}
-.menu,.bal,.dp .tb{border:1px solid var(--lqb)}
-.bal{box-shadow:var(--lqs),0 0 22px color-mix(in srgb,var(--accent) 30%,transparent)}
-.btn{position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -10px 16px rgba(255,255,255,.1),0 6px 18px color-mix(in srgb,var(--accent) 34%,transparent)}
-.btn.alt{background:var(--lq);border:1px solid var(--lqb);box-shadow:var(--lqs)}
-.btn:active:not(:disabled){transform:scale(.95,.92)}
+/* ===== v2.4: плоский матовый дизайн: сплошные панели, без блюра, бликов и свечения ===== */
+:root{--grad:var(--accent)}
+html::before,body::after{display:none}
+:root:not([data-bg]) body::before{display:none}
+body::before{animation:none!important}
+*,*::before,*::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.stk,.case,.pf,.upbox,.rw,.lr,.chbox,.ev,.rst,.sdw,.mb,.chip,.sdg div,.menu,.bal,.dp .tb,.btn.alt,.fbtn,.bbtn,.toast{background:var(--panel);border:1px solid var(--line);box-shadow:none}
+.ev{border-color:var(--accent)}
+.case:hover,.stk:hover,.lr:hover{box-shadow:none;border-color:var(--accent)}
+header{background:var(--bg);border-bottom:1px solid var(--line)}
+.dock{background:var(--panel);border:1px solid var(--line);box-shadow:0 6px 18px rgba(0,0,0,.22)}
+.dp{background:var(--panel)}
+.pk{background:var(--bg)}
+.modal,.drawer{background:rgba(5,6,15,.62)}
+.btn{background:var(--accent);box-shadow:none}
+.btn:disabled{filter:grayscale(.6)}
+.btn:active:not(:disabled){transform:scale(.97)}
+.dk.on,.dp .tb.on,nav button.on{background:var(--accent);border-color:transparent;box-shadow:none}
 .case,.dk,.dp .tb{position:relative;overflow:hidden}
-.case .big{filter:drop-shadow(0 8px 18px color-mix(in srgb,var(--accent) 55%,transparent))}
-.dp .tb.on,.dk.on{background:var(--grad);border-color:transparent}
-.modal.on .mb{animation:lqPop .45s cubic-bezier(.2,.9,.25,1) both}
-@keyframes lqPop{0%{transform:scale(.86) translateY(16px);opacity:0}60%{transform:scale(1.03);opacity:1}100%{transform:none;opacity:1}}
-.rip{position:absolute;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.7),rgba(255,255,255,0) 70%);transform:scale(0);animation:rip .6s ease-out forwards}
+.case .big{filter:drop-shadow(0 6px 10px #0006)}
+.modal.on .mb{animation:lqPop .4s cubic-bezier(.2,.9,.25,1) both}
+@keyframes lqPop{0%{transform:scale(.88) translateY(14px);opacity:0}60%{transform:scale(1.02);opacity:1}100%{transform:none;opacity:1}}
+.rip{position:absolute;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.45),rgba(255,255,255,0) 70%);transform:scale(0);animation:rip .6s ease-out forwards}
 @keyframes rip{to{transform:scale(1);opacity:0}}
 .bub{position:fixed;bottom:-40px;border-radius:50%;pointer-events:none;z-index:31;background:radial-gradient(circle at 30% 28%,rgba(255,255,255,.9),rgba(255,255,255,.14) 45%,rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.55);animation:bubUp var(--t,3s) ease-in forwards}
 @keyframes bubUp{to{transform:translate(var(--dx,0),-112vh) scale(1.15);opacity:0}}
-@media (prefers-reduced-motion:reduce){html::before,.modal.on .mb{animation:none!important}.rip,.bub{display:none}}
+@media (prefers-reduced-motion:reduce){.modal.on .mb{animation:none!important}.rip,.bub{display:none}}
 </style>
 </head>
 <body>
@@ -1298,13 +1295,15 @@ setTimeout(()=>{const e=$("splash");if(e){e.classList.add("out");setTimeout(()=>
 /* Список изменений: новые записи добавляй в начало массива CHANGELOG */
 Object.assign(EN,{"Что нового":"What's new","Обновления":"Updates","Список изменений":"Changelog"});
 const CHANGELOG=[
-  {v:"2.3",d:"16.11.2026",t:["Лёгкое жидкое стекло, новые звуки и анимации","Light liquid glass, new sounds and animations"],it:[
-   ["Вернулось жидкое стекло, но лёгкое: прозрачные панели с мягким блюром, яркой светлой кромкой и бликом, который следует за курсором","Liquid glass is back, but light: translucent panels with soft blur, a bright edge and a highlight that follows your cursor"],
-   ["Фон стал ярче: по экрану медленно плывут размытые цветные огни в цвете акцента","Brighter background: blurred colored lights slowly drift across the screen in your accent color"],
-   ["Новые анимации: волна от нажатия на кнопки и карточки, «желейное» нажатие, пружинистое появление окон, пузыри при крупных выигрышах","New animations: a ripple on buttons and cards, jelly press, springy windows, bubbles on big wins"],
+  {v:"2.4",d:"16.11.2026",t:["Плоский матовый дизайн вернулся","The flat matte design is back"],it:[
+   ["Вернули плоский матовый вид: сплошные панели без блюра, бликов и свечения","Back to the flat matte look: solid panels with no blur, highlights or glow"],
+   ["Фон снова спокойный: без плывущих огней и подсветки (выбранные в настройках фоны работают как раньше)","The background is calm again: no drifting lights or glow (backgrounds picked in settings work as before)"],
+   ["Кнопки и активные вкладки залиты цветом акцента без градиента","Buttons and active tabs are filled with the plain accent color, no gradient"],
+   ["Админка в том же плоском стиле, вход и защита обновлены, а об ошибках записи в базу маскот говорит понятнее","The admin panel got the same flat style, an updated login and clearer messages about database write errors"]]},
+  {v:"2.3",d:"16.11.2026",t:["Новые звуки и анимации","New sounds and animations"],it:[
+   ["Новые анимации: волна от нажатия на кнопки и карточки, пружинистое появление окон, пузыри при крупных выигрышах","New animations: a ripple on buttons and cards, springy windows, bubbles on big wins"],
    ["Новые звуки: водяные «блюп» вместо кликов, стеклянные колокольчики для монет, звуки открытия и закрытия окон, искры для гемов, заряд перед прокруткой и новая мелодия выигрыша","New sounds: watery bloops instead of clicks, glass bells for coins, window open/close sounds, sparkles for gems, a charge-up before spins and a new win tune"],
-   ["Админка получила тот же стиль стекла, свои звуки, анимации и конфетти за успешные действия","The admin panel got the same glass style, its own sounds, animations and confetti for successful actions"],
-   ["В админке появились приколы: маскот с шутками, шутки при неверном пароле, подсказка на каждой вкладке, реакция на огромные суммы, сонный режим и секретный диско-режим","Admin extras: a joking mascot, jokes on a wrong password, a tagline on every tab, a reaction to huge amounts, a sleepy mode and a secret disco mode"]]},
+   ["В админке появились свои звуки, анимации, конфетти за успешные действия и приколы: маскот с шутками, шутки при неверном пароле, подсказка на каждой вкладке, сонный режим и секретный диско-режим","The admin panel got its own sounds, animations, confetti for successes and extras: a joking mascot, jokes on a wrong password, a tagline on every tab, a sleepy mode and a secret disco mode"]]},
  {v:"2.2",d:"16.11.2026",t:["Матовое стекло, новый фон, звуки и одинаковые курсы","Frosted glass, new background, sounds and shared prices"],it:[
   ["Новый дизайн «матовое стекло» (Frosted Glass) вместо жидкого: ровные полупрозрачные панели с размытием и мягким зерном","New “frosted glass” design instead of liquid glass: even translucent panels with blur and soft grain"],
   ["Новый фон: вместо трёх разноцветных бликов один мягкий свет сверху и тихая подсветка снизу в цвете акцента. Он стал ярче и аккуратнее, а ещё медленно «дышит»","New background: instead of three multicolored glows there is one soft light on top and a quiet glow below in the accent color. It is brighter, tidier and slowly “breathes”"],
@@ -1333,7 +1332,6 @@ if(ls("kx_logv","")!==CHANGELOG[0].v){$("nwd").hidden=false;setTimeout(()=>{if(!
 /* v2.3: волна, блик под курсором, пузыри, звуки окон */
 (()=>{const R=matchMedia("(prefers-reduced-motion:reduce)").matches;
 document.addEventListener("pointerdown",e=>{if(R)return;const t=e.target.closest&&e.target.closest(".btn,.dk,.dp .tb,.case");if(!t||t.disabled)return;const r=t.getBoundingClientRect(),s=Math.max(r.width,r.height)*2.2,i=document.createElement("span");i.className="rip";i.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;t.appendChild(i);setTimeout(()=>i.remove(),650)},true);
-let q=0;document.addEventListener("pointermove",e=>{if(q||e.pointerType==="touch")return;q=requestAnimationFrame(()=>{q=0;const t=e.target.closest&&e.target.closest(".stk,.case,.pf,.upbox,.chbox,.ev,.mb,.lr,.rst");if(!t)return;const r=t.getBoundingClientRect();t.style.setProperty("--mx",(e.clientX-r.left)+"px");t.style.setProperty("--my",(e.clientY-r.top)+"px")})},{passive:true});
 const sw=(el,fn)=>{if(!el)return;let on=el.classList.contains("on");new MutationObserver(()=>{const n=el.classList.contains("on");if(n!==on){on=n;fn(n)}}).observe(el,{attributes:true,attributeFilter:["class"]})};
 sw($("modal"),n=>sfx(n?"open":"close"));sw($("drawer"),n=>sfx(n?"open":"close"));
 function bubbles(n){if(R)return;for(let i=0;i<n;i++){const b=document.createElement("i"),s=10+Math.random()*34;b.className="bub";b.style.cssText=`left:${Math.random()*100}%;width:${s}px;height:${s}px;--dx:${(Math.random()-.5)*120}px;--t:${2.4+Math.random()*1.8}s;animation-delay:${Math.random()*.7}s`;document.body.appendChild(b);setTimeout(()=>b.remove(),4800)}}
