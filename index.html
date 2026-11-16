@@ -454,9 +454,9 @@ header{background:var(--bg);border-bottom:1px solid var(--line)}
 @keyframes lqPop{0%{transform:scale(.88) translateY(14px);opacity:0}60%{transform:scale(1.02);opacity:1}100%{transform:none;opacity:1}}
 .rip{position:absolute;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.45),rgba(255,255,255,0) 70%);transform:scale(0);animation:rip .6s ease-out forwards}
 @keyframes rip{to{transform:scale(1);opacity:0}}
-.bub{position:fixed;bottom:-40px;border-radius:50%;pointer-events:none;z-index:31;background:radial-gradient(circle at 30% 28%,rgba(255,255,255,.9),rgba(255,255,255,.14) 45%,rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.55);animation:bubUp var(--t,3s) ease-in forwards}
-@keyframes bubUp{to{transform:translate(var(--dx,0),-112vh) scale(1.15);opacity:0}}
-@media (prefers-reduced-motion:reduce){.modal.on .mb{animation:none!important}.rip,.bub{display:none}}
+.fxf{position:fixed;inset:0;z-index:30;pointer-events:none;background:radial-gradient(85% 62% at 50% 45%,color-mix(in srgb,var(--accent) calc(var(--k)*1%),transparent),transparent 72%);-webkit-backdrop-filter:blur(var(--b))!important;backdrop-filter:blur(var(--b))!important;animation:fxf 1s ease-out forwards}
+@keyframes fxf{0%{opacity:0}22%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.modal.on .mb{animation:none!important}.rip{display:none}}
 </style>
 </head>
 <body>
@@ -1299,9 +1299,10 @@ const CHANGELOG=[
    ["Вернули плоский матовый вид: сплошные панели без блюра, бликов и свечения","Back to the flat matte look: solid panels with no blur, highlights or glow"],
    ["Фон снова спокойный: без плывущих огней и подсветки (выбранные в настройках фоны работают как раньше)","The background is calm again: no drifting lights or glow (backgrounds picked in settings work as before)"],
    ["Кнопки и активные вкладки залиты цветом акцента без градиента","Buttons and active tabs are filled with the plain accent color, no gradient"],
+   ["Вместо сыплющихся смайлов при выигрышах и наградах теперь мягкая вспышка с лёгким размытием в цвете акцента, пузыри убраны","Instead of falling emoji, wins and rewards now trigger a soft flash with a light blur in your accent color; bubbles are gone"],
    ["Админка в том же плоском стиле, вход и защита обновлены, а об ошибках записи в базу маскот говорит понятнее","The admin panel got the same flat style, an updated login and clearer messages about database write errors"]]},
   {v:"2.3",d:"16.11.2026",t:["Новые звуки и анимации","New sounds and animations"],it:[
-   ["Новые анимации: волна от нажатия на кнопки и карточки, пружинистое появление окон, пузыри при крупных выигрышах","New animations: a ripple on buttons and cards, springy windows, bubbles on big wins"],
+   ["Новые анимации: волна от нажатия на кнопки и карточки и пружинистое появление окон","New animations: a ripple on buttons and cards and springy windows"],
    ["Новые звуки: водяные «блюп» вместо кликов, стеклянные колокольчики для монет, звуки открытия и закрытия окон, искры для гемов, заряд перед прокруткой и новая мелодия выигрыша","New sounds: watery bloops instead of clicks, glass bells for coins, window open/close sounds, sparkles for gems, a charge-up before spins and a new win tune"],
    ["В админке появились свои звуки, анимации, конфетти за успешные действия и приколы: маскот с шутками, шутки при неверном пароле, подсказка на каждой вкладке, сонный режим и секретный диско-режим","The admin panel got its own sounds, animations, confetti for successes and extras: a joking mascot, jokes on a wrong password, a tagline on every tab, a sleepy mode and a secret disco mode"]]},
  {v:"2.2",d:"16.11.2026",t:["Матовое стекло, новый фон, звуки и одинаковые курсы","Frosted glass, new background, sounds and shared prices"],it:[
@@ -1329,13 +1330,15 @@ function openLog(){const en=LANG==="en",i=en?1:0;
  $("modal").classList.add("on");lset("kx_logv",CHANGELOG[0].v);$("nwd").hidden=true}
 const _SDA=SDA;SDA=function(a,v){if(a==="log"){$("drawer").classList.remove("on");openLog();return 1}return _SDA(a,v)};
 if(ls("kx_logv","")!==CHANGELOG[0].v){$("nwd").hidden=false;setTimeout(()=>{if(!$("modal").classList.contains("on"))openLog()},3600)}
-/* v2.3: волна, блик под курсором, пузыри, звуки окон */
+/* v2.3: волна, вспышка, звуки окон */
 (()=>{const R=matchMedia("(prefers-reduced-motion:reduce)").matches;
 document.addEventListener("pointerdown",e=>{if(R)return;const t=e.target.closest&&e.target.closest(".btn,.dk,.dp .tb,.case");if(!t||t.disabled)return;const r=t.getBoundingClientRect(),s=Math.max(r.width,r.height)*2.2,i=document.createElement("span");i.className="rip";i.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;t.appendChild(i);setTimeout(()=>i.remove(),650)},true);
 const sw=(el,fn)=>{if(!el)return;let on=el.classList.contains("on");new MutationObserver(()=>{const n=el.classList.contains("on");if(n!==on){on=n;fn(n)}}).observe(el,{attributes:true,attributeFilter:["class"]})};
 sw($("modal"),n=>sfx(n?"open":"close"));sw($("drawer"),n=>sfx(n?"open":"close"));
-function bubbles(n){if(R)return;for(let i=0;i<n;i++){const b=document.createElement("i"),s=10+Math.random()*34;b.className="bub";b.style.cssText=`left:${Math.random()*100}%;width:${s}px;height:${s}px;--dx:${(Math.random()-.5)*120}px;--t:${2.4+Math.random()*1.8}s;animation-delay:${Math.random()*.7}s`;document.body.appendChild(b);setTimeout(()=>b.remove(),4800)}}
-const _w=winFx;winFx=function(t){_w(t);if(t>=3)bubbles(t>=5?26:14)};
+/* вспышка цвета акцента вместо смайлопада */
+function flash(n){if(R)return;const d=document.createElement("div");d.className="fxf";d.style.cssText=`--k:${Math.min(46,16+n*.35)};--b:${n>=40?10:6}px`;document.body.appendChild(d);setTimeout(()=>d.remove(),1100)}
+fx=function(em,n){flash(n||10)};
+winFx=function(t){if(t>=3)flash(t>=5?90:t===4?40:14)};
 })();
 </script>
 </body>
