@@ -131,7 +131,7 @@ try{applyAccent(localStorage.getItem("kx_acc")||"#c6ff00");applyTheme(localStora
 <div class="box"><h3>📢 Объявление для всех</h3><textarea id="ant" maxlength="300" rows="3" placeholder="Текст объявления (до 300 символов)"></textarea><div class="seg" id="adur"><button data-v="1">1 ч</button><button data-v="6">6 ч</button><button data-v="24" class="on">24 ч</button><button data-v="0">Без срока</button></div><button class="btn" id="asend">Показать всем</button><button class="btn alt" id="aoff">Снять объявление</button><div class="msg" id="amsg"></div><div class="hint" id="acur"></div></div></section>
 <section class="pg" id="p-set"><h2>Настройки</h2><p class="hint">Внешний вид общий с игрой: цвет, тема, шрифт и фон сохраняются на этом сайте и для игры, и для админки.</p>
 <div class="box"><h3>Цвет акцента</h3><div class="sw" id="sw"></div><div style="display:flex;gap:8px;align-items:center"><input type="color" id="acPick" style="width:56px;height:46px;padding:0;flex:none"><button class="btn alt" id="acReset" style="flex:1">Сбросить цвет</button></div></div>
-<div class="box"><h3>🔑 Database secret</h3><p class="hint">Нужен для банов, промокодов, акций, объявлений и вайпа. Firebase Console → Project settings → Service accounts → Database secrets. Хранится только до закрытия вкладки.</p><input id="sec" type="password" placeholder="Database secret" autocomplete="off"><button class="btn" id="secb">Сохранить на сессию</button><div class="msg" id="secm"></div></div>
+<div class="box"><h3>🔑 Админ-ключ</h3><p class="hint">Нужен для банов, подарков, промокодов, объявлений и вайпа. Тот же текст, что в базе в cfg/ak. Хранится только до закрытия вкладки.</p><input id="sec" type="password" placeholder="Админ-ключ" autocomplete="off"><button class="btn" id="secb">Сохранить на сессию</button><div class="msg" id="secm"></div></div>
 <div class="box"><h3>❄️ Вайп базы</h3><p class="hint">Чистит рынок, почту игроков, акции игроков и список активаций промокодов. Балансы и инвентари игроков сбрасывает сама игра 3.0.</p><button class="btn bad" id="wipe">Очистить базу</button><div class="msg" id="wm"></div></div>
 <div class="box"><h3>Тема</h3><div class="seg" id="thm"><button data-v="auto">Авто</button><button data-v="dark">Тёмная</button><button data-v="light">Светлая</button></div></div>
 <div class="box"><h3>Шрифт</h3><div class="fonts" id="fontBox"></div></div>
@@ -187,8 +187,9 @@ $("give").onclick=()=>{if($("ac").value==="")return;const c=+$("ac").value,g=+$(
 
 const CNM="Летний,Зимний,Лесной,Пиратский,Неоновый,Космический,Королевский,Огненный,Мифический,Легендарный,Элитный,Абсолютный,Кристальный,Гемовый,Смайловый,Мемный,Вайбовый,Шальной,Хайповый,Звёздный,Ультра,Эпичный,Стартовый,Бронзовый,Серебряный,Золотой,Платиновый,Алмазный,Джекпот,Редкий,Снежный,Новогодний,Морозный,Метельный,Сияющий,Рождественский,Квинтиллионный".split(",");
 $("pcs").innerHTML='<option value="">— без кейса —</option>'+CNM.map((n,i)=>`<option value="${i}">${n} кейс</option>`).join("");
-let SEC="";try{SEC=sessionStorage.getItem("kxs")||""}catch(e){}
-let DB="";const db=async(p,m,b)=>{const r=await fetch(`${DB}/${p}.json${SEC?"?auth="+encodeURIComponent(SEC):""}`,{method:m||"GET",body:b===undefined?undefined:JSON.stringify(b)});if(!r.ok)throw 0;return r.json()};
+let AK="";try{AK=sessionStorage.getItem("kxs")||""}catch(e){}
+let TK=0,OPN=null;const raw=async(p,m,b)=>{const r=await fetch(`${DB}/${p}.json`,{method:m||"GET",body:b===undefined?undefined:JSON.stringify(b)});if(!r.ok)throw 0;return r.json()};
+let DB="";const db=async(p,m,b)=>{if(!(AK&&((m&&m!=="GET")||p==="bans"||p==="promos")))return raw(p,m,b);if(TK++===0)OPN=raw("adm/"+AK,"PUT",true);try{await OPN;return await raw(p,m,b)}finally{if(--TK===0)OPN=raw("adm/"+AK,"DELETE").catch(()=>{})}};
 async function init(){const c=["https://kxgame-default-rtdb.firebaseio.com","https://kxgame-default-rtdb.europe-west1.firebasedatabase.app","https://kxgame-default-rtdb.asia-southeast1.firebasedatabase.app"];
   const r=await Promise.all(c.map(u=>fetch(u+"/.json?shallow=true").then(x=>x.status).catch(()=>0)));const i=r.findIndex(x=>x===200||x===401||x===403);if(i>=0){DB=c[i];plist()}else $("pmsg").textContent="База не найдена"}
 async function plist(){try{const d=await db("promos")||{};$("plist").innerHTML=Object.entries(d).map(([k,v])=>`<div class="hint" style="display:flex;justify-content:space-between;gap:6px"><span>${k}: ${v.kx?fmt(v.kx)+" $ ":""}${v.gem?v.gem+"💎 ":""}${v.cs?Object.entries(v.cs).map(([i,n])=>n+"×"+CNM[i]).join(","):""} · исп. ${Object.keys(v.used||{}).length}${v.max?"/"+v.max:""}${v.maxbal?" · баланс≤"+fmt(v.maxbal):""}${v.exp&&Date.now()>v.exp?" · истёк":""}</span><b data-d="${k}" style="cursor:pointer">✕</b></div>`).join("")}catch(e){}}
@@ -268,16 +269,16 @@ $("bkf").onchange=async e=>{const f=e.target.files[0],m=$("bkm");e.target.value=
 $("lo").onclick=()=>window.kxLock&&window.kxLock();
 init().then(()=>{if(DB){sload();acur();blist()}});
 /* ===== v3.0: баны, secret, вайп ===== */
-$("secb").onclick=()=>{SEC=$("sec").value.trim();try{sessionStorage.setItem("kxs",SEC)}catch(e){}$("sec").value="";$("secm").textContent=SEC?"Сохранено ✅":"Очищено";blist()};
-async function blist(){try{const d=await db("bans")||{},e=Object.entries(d);$("blist").innerHTML=e.length?e.map(([k,v])=>`<div>ID ${esc(k)}: ${esc((v&&v.r)||"")}</div>`).join(""):"Банов нет"}catch(x){$("blist").textContent=SEC?"Не удалось прочитать список":"Для списка и банов нужен Database secret (Настройки)"}}
+$("secb").onclick=()=>{AK=$("sec").value.trim();try{sessionStorage.setItem("kxs",AK)}catch(e){}$("sec").value="";$("secm").textContent=AK?"Сохранено ✅":"Очищено";blist()};
+async function blist(){try{const d=await db("bans")||{},e=Object.entries(d);$("blist").innerHTML=e.length?e.map(([k,v])=>`<div>ID ${esc(k)}: ${esc((v&&v.r)||"")}</div>`).join(""):"Банов нет"}catch(x){$("blist").textContent=AK?"Не удалось прочитать список":"Для списка и банов нужен админ-ключ (Настройки)"}}
 $("bban").onclick=async()=>{const id=$("bid").value.trim(),r=$("br").value.trim().slice(0,120)||"Нарушение правил",m=$("bmsg");
   if(!DB){m.textContent="База не найдена";return}if(!okId(id)){m.textContent="Введи числовой ID игрока";return}if(!confirm("Забанить ID "+id+"?\nПричина: "+r))return;
-  try{await db("bans/"+id,"PUT",{r,ts:Date.now()});m.textContent="Забанен: "+id+" ✅ (увидит за ~25 сек)";$("bid").value=$("br").value="";blist()}catch(e){m.textContent="Ошибка записи (нужен Database secret)"}};
+  try{await db("bans/"+id,"PUT",{r,ts:Date.now()});m.textContent="Забанен: "+id+" ✅ (увидит за ~25 сек)";$("bid").value=$("br").value="";blist()}catch(e){m.textContent="Ошибка записи (нужен админ-ключ)"}};
 $("bun").onclick=async()=>{const id=$("bid").value.trim(),m=$("bmsg");if(!okId(id)){m.textContent="Введи числовой ID игрока";return}
-  try{await db("bans/"+id,"DELETE");m.textContent="Разбанен: "+id+" ✅";blist()}catch(e){m.textContent="Ошибка записи (нужен Database secret)"}};
+  try{await db("bans/"+id,"DELETE");m.textContent="Разбанен: "+id+" ✅";blist()}catch(e){m.textContent="Ошибка записи (нужен админ-ключ)"}};
 $("wipe").onclick=async()=>{const m=$("wm");if(!DB){m.textContent="База не найдена";return}if(!confirm("Очистить рынок, почту, акции игроков и активации промокодов?"))return;m.textContent="Чищу…";
   try{await db("market","DELETE");await db("inbox","DELETE");const st=await db("stocks")||{};await Promise.all(Object.entries(st).filter(([k,v])=>v&&v.own!=="admin").map(([k])=>db("stocks/"+k,"DELETE")));
-    const pr=await db("promos")||{};await Promise.all(Object.keys(pr).map(k=>db(`promos/${k}/used`,"DELETE")));m.textContent="Вайп базы готов ✅";sload();plist()}catch(e){m.textContent="Ошибка записи (нужен Database secret)"}};
+    const pr=await db("promos")||{};await Promise.all(Object.keys(pr).map(k=>db(`promos/${k}/used`,"DELETE")));m.textContent="Вайп базы готов ✅";sload();plist()}catch(e){m.textContent="Ошибка записи (нужен админ-ключ)"}};
 
 </script>
 <script>(()=>{const $=i=>document.getElementById(i),ls=(k,d)=>{try{return localStorage.getItem(k)||d}catch(e){return d}},lset=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
