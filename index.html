@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CardRush</title>
-<meta name="application-name" content="CardRush"><meta name="apple-mobile-web-app-title" content="CardRush"><meta name="theme-color" content="#0b0b12">
+<title>Card Rush</title>
+<meta name="application-name" content="Card Rush"><meta name="apple-mobile-web-app-title" content="Card Rush"><meta name="theme-color" content="#0b0b12">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -318,7 +318,7 @@ header{position:sticky;top:0;z-index:8;margin:-12px -12px 12px;padding:10px 12px
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <style>
-/* ===== Заставка CardRush ===== */
+/* ===== Заставка Card Rush ===== */
 #splash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:radial-gradient(60% 50% at 50% 50%,color-mix(in srgb,var(--accent) 22%,var(--bg)),var(--bg) 75%);transition:opacity .9s ease,visibility 0s .9s;overflow:hidden}
 #splash.out{opacity:0;visibility:hidden;pointer-events:none}
 #splash .sp-t{font-family:"Dancing Script","Segoe Script","Brush Script MT",cursive;font-weight:700;font-size:clamp(34px,10vw,92px);white-space:nowrap;color:var(--text);text-align:center;
@@ -326,9 +326,49 @@ header{position:sticky;top:0;z-index:8;margin:-12px -12px 12px;padding:10px 12px
 #splash .sp-g{position:absolute;left:50%;top:50%;width:140vmax;height:140vmax;margin:-70vmax 0 0 -70vmax;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 55%,transparent),transparent 55%);transform:scale(0);opacity:0;pointer-events:none}
 @keyframes spIn{from{opacity:0}to{opacity:1}}
 </style>
+<style>
+/* без синих выделений Chrome при нажатии */
+*{-webkit-tap-highlight-color:transparent}
+button,.dock,.dk,.tb,.menu,.me,.case,.stk,[data-a]{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+button:focus,.dk:focus,.tb:focus{outline:none}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,select,textarea{user-select:text;-webkit-user-select:text}
+/* ===== Редизайн v2: поверх жидкого стекла ===== */
+:root{--r:22px;--rs:14px}
+body{font-family:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-weight:600;padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+h3{font-family:"Unbounded","Manrope",sans-serif;font-weight:600;font-size:12px;letter-spacing:.02em;color:var(--muted);margin:26px 2px 12px}
+.hint{line-height:1.45}
+.stk,.case,.pf,.upbox,.rw,.lr,.chbox,.ev,.rst,.sdw,.mb{position:relative;border-radius:var(--r);box-shadow:var(--gsh),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -18px 30px -24px color-mix(in srgb,var(--accent) 35%,transparent)}
+.stk::before,.case::before,.upbox::before,.ev::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(120% 70% at 12% -10%,rgba(255,255,255,.22),transparent 55%)}
+.case{padding:18px 12px 14px}.case .big{font-size:46px;margin-bottom:2px}.case b{font-family:"Unbounded","Manrope",sans-serif;font-size:11px;font-weight:600}
+.case small{margin:6px 0 12px}
+.btn{min-height:44px;border-radius:var(--rs);font-family:inherit;font-weight:800;letter-spacing:.01em}.btn.sm{min-height:36px}
+.bal{font-weight:800;padding:9px 16px}
+header{border-radius:0 0 var(--r) var(--r)}
+.card{border-radius:16px;border-width:1.5px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 6px 16px rgba(0,0,0,.28)}
+.card .nm{font-family:"Unbounded","Manrope",sans-serif;font-size:10px;font-weight:600}
+.dp .tb{font-weight:700;min-height:48px;display:flex;align-items:center;justify-content:space-between}
+/* нижний док (телефон) */
+.dock{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:12;display:flex;gap:2px;width:min(440px,calc(100% - 20px));padding:6px;border-radius:26px;background:color-mix(in srgb,var(--bg) 50%,transparent);-webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6);border:1px solid var(--glb);box-shadow:0 14px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.3)}
+.dk{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 7px;border:0;border-radius:20px;background:none;color:var(--muted);font:inherit;font-size:19px;line-height:1;cursor:pointer;transition:background .25s,color .25s,transform .15s}
+.dk span{font-size:10.5px;font-weight:800;white-space:nowrap}
+.dk:active{transform:scale(.92)}
+.dk.on{background:var(--grad);color:var(--on);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 4px 14px color-mix(in srgb,var(--accent) 35%,transparent)}
+.toast{bottom:calc(94px + env(safe-area-inset-bottom,0px))}
+@media (min-width:1024px){.dock{display:none}body{padding-bottom:36px}.toast{bottom:28px}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.dock{background:var(--bg)}}
+/* список изменений */
+.nwd{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);flex:none}.nwd[hidden]{display:none}
+.logb{max-width:420px!important;max-height:86vh;align-items:stretch!important;text-align:left!important}
+.logs{overflow:auto;display:flex;flex-direction:column;gap:14px;max-height:56vh;padding-right:2px}
+.logh{display:flex;align-items:center;gap:8px;justify-content:space-between}.logh b{font-family:"Unbounded","Manrope",sans-serif;font-size:13px}
+.logv{font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--grad);color:var(--on)}
+.logd{font-size:12px;color:var(--muted)}
+.logs ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.4}.logs li::marker{color:var(--accent)}
+</style>
 </head>
 <body>
-<div id="splash"><div class="sp-g"></div><div class="sp-t">CardRush - Welcome</div></div>
+<div id="splash"><div class="sp-g"></div><div class="sp-t">Card Rush - Welcome</div></div>
 <script>setTimeout(function(){var e=document.getElementById("splash");if(e){e.classList.add("out");setTimeout(function(){e.remove()},1000)}},2600)</script>
 <header><button class="menu" id="mbtn" aria-label="Menu"><i class="hl"></i><i class="hl"></i><i class="hl"></i><span class="bdg" id="bdg" hidden></span></button><div class="me" data-a="tab" data-v="prof" id="head"></div><div class="bal">💰 <span id="bal">0</span> $ · 💎 <span id="gem">0</span></div></header>
 <div class="drawer" id="drawer"><div class="dp" id="dp">
@@ -340,9 +380,17 @@ header{position:sticky;top:0;z-index:8;margin:-12px -12px 12px;padding:10px 12px
 <button class="tb" data-a="tab" data-v="up"><span>⚡ <span data-t="Апгрейд"></span></span></button>
 <button class="tb" data-a="tab" data-v="prof"><span data-t="Профиль"></span><span class="bdg" id="bdg2" hidden></span></button>
 <button class="tb" data-a="tab" data-v="set"><span>⚙️ <span data-t="Настройки"></span></span></button>
+<button class="tb" data-a="log"><span>📜 <span data-t="Что нового"></span></span><i class="nwd" id="nwd" hidden></i></button>
 <div class="sp"></div>
 </div></div>
 
+<div class="dock" id="dock">
+<button class="dk on" data-a="tab" data-v="cases">🛒<span data-t="Магазин"></span></button>
+<button class="dk" data-a="tab" data-v="inv">🎒<span data-t="Инвентарь"></span></button>
+<button class="dk" data-a="tab" data-v="st">📈<span data-t="Акции"></span></button>
+<button class="dk" data-a="tab" data-v="up">⚡<span data-t="Апгрейд"></span></button>
+<button class="dk" data-a="tab" data-v="prof">👤<span data-t="Профиль"></span></button>
+</div>
 <section id="cases" class="sec on">
   <div class="ev" id="evBox"></div>
   <h3 data-t="Модификаторы на 24 часа"></h3><div class="mods" id="modBox"></div>
@@ -402,6 +450,7 @@ header{position:sticky;top:0;z-index:8;margin:-12px -12px 12px;padding:10px 12px
 
 <div class="pk" id="pk"><div class="pkh"><input type="text" id="pkq" data-tp="Поиск карты" placeholder="Поиск карты"><select id="pkb"></select><label class="chk"><input type="checkbox" id="pkr"><span data-t="Только раритет"></span></label><button class="btn alt sm" data-a="pkx" data-v="0" data-t="Закрыть"></button></div><div class="hint" id="pkInfo"></div><div class="grid" id="pkGrid"></div><button class="btn alt" id="pkMore" data-a="pkmore" data-v="0" data-t="Показать ещё"></button></div>
 <section id="set" class="sec">
+  <h3 data-t="Обновления"></h3><button class="btn alt" data-a="log" style="width:100%">📜 <span data-t="Список изменений"></span></button>
   <h3 data-t="Цвет акцента"></h3><div class="sw" id="sw"></div>
   <div class="r2" style="margin-top:12px;align-items:center"><input type="color" id="acPick"><button class="btn alt" data-a="acset" data-v="#c6ff00" data-t="Сбросить цвет"></button></div>
   <h3 data-t="Язык"></h3><div class="r2"><button class="btn alt" data-a="lang" data-v="ru" id="lru">Русский</button><button class="btn alt" data-a="lang" data-v="en" id="len">English</button></div>
@@ -698,19 +747,19 @@ const h32=a=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>
 const gaussAt=(ki,t)=>{const u1=h32(Math.imul(t,0x9E3779B1)^Math.imul(ki+1,0x85EBCA6B)^1),u2=h32(Math.imul(t,0x9E3779B1)^Math.imul(ki+1,0x85EBCA6B)^2);return Math.sqrt(-2*Math.log(1-u1))*Math.cos(2*Math.PI*u2)};
 const wv=a=>a._w||(a._w={A:Math.min(.75,.32+a.v*6),P1:700+hk(a.k)%1100,P2:220+hk(a.k+"x")%330,F1:hk(a.k+"p")%6283/1e3,F2:hk(a.k+"q")%6283/1e3}),
 tgt=(a,t)=>{const w=wv(a);return a.b*Math.exp(w.A*(.65*Math.sin(t*6.2832/w.P1+w.F1)+.35*Math.sin(t*6.2832/w.P2+w.F2)))};
-const stepP=(a,p,g,vm,dr,t)=>Math.max(1,Math.round(p*Math.exp(a.v*vm*.5*g+dr-.004*Math.log(p/tgt(a,t)))));
+const stepP=(a,p,g,vm,dr,t,gl,k)=>Math.max(1,Math.round(gl>0?p*Math.exp(a.v*vm*.5*g-k*Math.log(p/gl)):p*Math.exp(a.v*vm*.5*g+dr-.004*Math.log(p/tgt(a,t)))));
 /* Цены считаются из времени, поэтому у всех игроков одинаковые */
 const STEP=2e3;let MK={step:-1,p:{},h:{}};
 function mkSync(){const st=Math.floor(Date.now()/STEP);if(st===MK.step)return false;const from=Math.floor(st/1000)*1000-1000,C=MK.c||(MK.c={});
   STK.forEach((a,ki)=>{const lg=a.lg||[],K=a.ki??ki,d0=a.dr0||0;let c=C[a.k];
     if(!c||c.a!==a||c.n!==lg.length||c.from!==from||c.t>st)c=C[a.k]={a,n:lg.length,from,t:from-1,p:Math.max(1,Math.round(tgt(a,from))),j:0,dr:d0,vm:1,h:[]};
-    let{p,j,dr,vm}=c;const h=c.h;
-    for(let t=c.t+1;t<=st;t++){while(j<lg.length&&lg[j][0]<=t){dr=d0+lg[j][1];vm=lg[j][2];j++}p=stepP(a,p,gaussAt(K,t),vm,dr,t);h.push(p)}
-    c.t=st;c.p=p;c.j=j;c.dr=dr;c.vm=vm;if(h.length>1000)h.splice(0,h.length-1000);
+    let{p,j,dr,vm}=c,gl=c.gl||0,kk=c.kk||.01;const h=c.h;
+    for(let t=c.t+1;t<=st;t++){while(j<lg.length&&lg[j][0]<=t){dr=d0+lg[j][1];vm=lg[j][2];gl=lg[j][3]||0;kk=lg[j][4]||.01;j++}p=stepP(a,p,gaussAt(K,t),vm,dr,t,gl,kk);h.push(p)}
+    c.t=st;c.p=p;c.j=j;c.dr=dr;c.vm=vm;c.gl=gl;c.kk=kk;if(h.length>1000)h.splice(0,h.length-1000);
     MK.p[a.k]=p;MK.h[a.k]=h;if(a.cus)S.lp[a.k]=p});MK.step=st;return true}
 /* Настройки админа действуют только с момента изменения (log), история не перерисовывается */
 const toLg=(x,lim)=>{let l=x.log;l=Array.isArray(l)?l:l&&typeof l==="object"?Object.values(l):[];if(!l.length&&(+x.tr||+x.vm))l=[{t:0,r:x.tr,m:x.vm}];
-  return l.filter(e=>e&&typeof e==="object").map(e=>[Math.floor((+e.t||0)/STEP),Math.log(1+lim(e.r,-99.9,1e9)/100)*.03,lim(e.m||1,0,1e6)]).sort((a,b)=>a[0]-b[0])};
+  return l.filter(e=>e&&typeof e==="object").map(e=>[Math.floor((+e.t||0)/STEP),Math.log(1+lim(e.r,-99.9,1e9)/100)*.03,lim(e.m||1,0,1e6),lim(e.g,0,1e9),lim(e.s,.0005,.2)||.01]).sort((a,b)=>a[0]-b[0])};
 function cndl(h,n){const g=Math.max(1,Math.ceil(h.length/n)),o=[];for(let e=h.length;e>0;e-=g){const s=h.slice(Math.max(0,e-g),e);o.unshift({o:s[0],c:s[s.length-1],h:Math.max(...s),l:Math.min(...s)})}return o}
 function cdraw(C,W,H,pt,pb,mn,mx,grid){const r=mx-mn||1,Y=v=>pt+(mx-v)/r*(H-pt-pb),w=W/C.length,bw=Math.max(1.2,w*.62);let o="";
   if(grid)for(let f=0;f<=4;f++){const y=(pt+f/4*(H-pt-pb)).toFixed(1);o+=`<line x1="0" x2="${W}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-width="1" vector-effect="non-scaling-stroke" opacity=".7"/>`}
@@ -864,7 +913,7 @@ BA.upgo=()=>{const c=upCard(),tm=UPMODE===1;if(!c||upBusy)return;
 /* Навигация и события */
 function tab(v){
   cur=v;
-  document.querySelectorAll(".dp .tb").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
+  document.querySelectorAll(".dp .tb,.dock .dk").forEach(x=>x.classList.toggle("on",x.dataset.v===v));
   document.querySelectorAll(".sec").forEach(x=>x.classList.toggle("on",x.id===v));
   $("drawer").classList.remove("on");window.scrollTo(0,0);
   if(v==="inv"){rInv();rOwn();itab(invTab)}if(v==="mk"){rMarket();pollMarket()}if(v==="up")rUp();if(v==="prof"){rProf();pollIn()}if(v==="st"){rSt();pullStocks()}if(v==="trd"){rTrade();pollIn()}}
@@ -1077,6 +1126,20 @@ new MutationObserver(()=>$("mbtn").classList.toggle("open",$("drawer").classList
 
 /* Заставка: показать ~2.6 с и плавно перейти в игру */
 setTimeout(()=>{const e=$("splash");if(e){e.classList.add("out");setTimeout(()=>e.remove(),1000)}},2600);
+/* Список изменений: новые записи добавляй в начало массива CHANGELOG */
+Object.assign(EN,{"Что нового":"What's new","Обновления":"Updates","Список изменений":"Changelog"});
+const CHANGELOG=[
+ {v:"2.0",d:"16.11.2026",t:["Новый дизайн","New design"],it:[
+  ["Обновлённый вид в стиле жидкого стекла: панели, кнопки, карточки и шрифты","Refreshed liquid-glass look: panels, buttons, cards and fonts"],
+  ["Нижняя панель навигации на телефоне: магазин, инвентарь, акции, апгрейд, профиль","Bottom navigation bar on phones: shop, inventory, stocks, upgrade, profile"],
+  ["Курс акций теперь можно вести к заданной цене: так проще управлять рынком","Stock prices can now be steered to a set target price"],
+  ["Добавлен список изменений: он откроется сам после обновления, а позже его можно найти в меню и настройках","Added this changelog: it opens after an update and lives in the menu and settings"]]}
+];
+function openLog(){const en=LANG==="en",i=en?1:0;
+ $("modal").innerHTML=`<div class="mb logb"><div class="logh"><b>${tt("Что нового")}</b><span class="logv">v${CHANGELOG[0].v}</span></div><div class="logs">${CHANGELOG.map(e=>`<div><div class="logh"><b>${e.t[i]}</b><span class="logd">v${e.v} · ${e.d}</span></div><ul>${e.it.map(x=>`<li>${x[i]}</li>`).join("")}</ul></div>`).join("")}</div><button class="btn" data-a="close" style="width:100%">${tt("Закрыть")}</button></div>`;
+ $("modal").classList.add("on");lset("kx_logv",CHANGELOG[0].v);$("nwd").hidden=true}
+const _SDA=SDA;SDA=function(a,v){if(a==="log"){$("drawer").classList.remove("on");openLog();return 1}return _SDA(a,v)};
+if(ls("kx_logv","")!==CHANGELOG[0].v){$("nwd").hidden=false;setTimeout(()=>{if(!$("modal").classList.contains("on"))openLog()},3600)}
 </script>
 </body>
 </html>
