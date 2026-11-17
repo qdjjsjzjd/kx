@@ -464,6 +464,21 @@ header{background:var(--bg);border-bottom:1px solid var(--line)}
 #banv .ab{text-align:center;border-color:var(--bad)}#banv .rs{background:var(--bg);border-radius:10px;padding:12px;word-break:break-word}
 @media (prefers-reduced-motion:reduce){.modal.on .mb{animation:none!important}.rip{display:none}.fxf{display:none}}
 </style>
+<style>
+/* v3.1 Бутик: коллекционные карты */
+.cc{position:relative;overflow:hidden;border-radius:16px;padding:12px 6px;text-align:center;color:#fff;text-shadow:0 1px 4px #000b;border:2px solid #fff9;aspect-ratio:3/4;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;background-size:300% 300%;animation:ccbg 8s ease infinite}
+.cc>*{position:relative}.ccs{position:absolute!important;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 30%,#fff6 48%,transparent 66%);background-size:250% 100%;animation:ccsh 3.5s linear infinite}
+@keyframes ccbg{0%,100%{background-position:0 0}50%{background-position:100% 100%}}@keyframes ccsh{from{background-position:150% 0}to{background-position:-100% 0}}
+.cci{font-size:46px}.cct{font-family:var(--fd);font-size:11px;font-weight:700}.ccn{font-weight:800;font-size:14px}.ccid{font-size:9px;opacity:.9;word-break:break-all;font-weight:700}
+.bg-holo{background-image:linear-gradient(135deg,#ff5cc8,#ffc83d,#5cffb0,#5cc8ff,#a566ff,#ff5cc8)}
+.bg-glit{background-image:repeating-linear-gradient(0deg,#00ffa633 0 2px,transparent 2px 4px),linear-gradient(135deg,#120028,#00ffa6,#ff00aa,#120028)}
+.bg-lava{background-image:radial-gradient(circle at 30% 100%,#ffd000,#ff4500 35%,#3b0a00 75%)}
+.bg-crys{background-image:conic-gradient(from 0deg,#99bbff,#fff,#66eeff,#cc99ff,#99bbff)}
+.bg-gala{background-image:radial-gradient(2px 2px at 20% 30%,#fff,transparent),radial-gradient(1.5px 1.5px at 70% 60%,#fff,transparent),radial-gradient(2px 2px at 40% 80%,#fff,transparent),linear-gradient(160deg,#0b0033,#4b1d9a,#ff3d81)}
+.bg-void{background-image:radial-gradient(circle at 50% 50%,#000 0 22%,#ff9a3d 30%,#3b1d6e 55%,#000 82%)}
+.bg-gold{color:#3a2600;text-shadow:0 1px 2px #fff8;background-image:linear-gradient(135deg,#7a5200,#ffd86b,#fff2b0,#d29a1b,#7a5200)}
+.insp .cc{width:210px;margin:0 auto}
+</style>
 </head>
 <body>
 <div id="splash"><div class="sp-g"></div><div class="sp-t">Card Rush - Welcome</div></div>
@@ -1351,6 +1366,59 @@ const CHANGELOG=[
   ["Курс акций теперь можно вести к заданной цене: так проще управлять рынком","Stock prices can now be steered to a set target price"],
   ["Добавлен список изменений: он откроется сам после обновления, а позже его можно найти в меню и настройках","Added this changelog: it opens after an update and lives in the menu and settings"]]}
 ];
+/* ===== v3.1: Бутик — коллекционные карты, престиж-активы, высокие ставки ===== */
+Object.assign(EN,{"Бутик":"Boutique"});
+const V=()=>{S.col=S.col||[];S.ast=S.ast||{};S.mint=S.mint||{};S.spent=S.spent||0;return S};
+const ED=[["holo","HOLO","🌈","Голограмма",5e6,500],["glit","GLCH","👾","Глитч",25e6,300],["lava","LAVA","🌋","Магма",12e7,200],["crys","CRYS","💠","Кристалл",6e8,100],["gala","GALX","🌌","Галактика",5e9,50],["void","VOID","🕳️","Чёрная дыра",8e10,20],["gold","GOLD","👑","Золото 24K",1e12,7]];
+const AS=[["isl","🏝️","Частный остров",2e6],["yac","🛥️","Мегаяхта",15e6],["jet","✈️","Частный джет",9e7],["twr","🏙️","Небоскрёб",6e8],["sat","🛰️","Свой спутник",8e9],["stn","🚀","Орбитальная станция",12e10],["moo","🌙","Участок на Луне",3e12],["mar","🪐","Колония на Марсе",9e13]];
+const RK=[[0,"Новичок"],[1e6,"Меценат"],[1e8,"Серебряный меценат"],[1e10,"Золотой меценат"],[1e12,"Платиновый меценат"],[1e14,"Легенда Card Rush"]];
+const rank=()=>RK.filter(r=>V().spent>=r[0]).pop(),edOf=id=>ED.find(x=>x[0]===id);
+const smul=(n,t)=>n===1?10:n<=9?4:(/^(\d)\1+$/.test(String(n))||n%100===0)?3:n<=t/10?1.5:1;
+const ccVal=c=>{const e=edOf(c.e);return Math.round(e[4]*smul(c.n,e[5]))};
+const cid=(e,n)=>{let h=2166136261;const s=e[1]+n+"CR";for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return`CR-${e[1]}-${String(n).padStart(4,"0")}-${(h>>>0).toString(36).slice(-3).toUpperCase()}`};
+const ccHTML=(c,plain)=>{const e=edOf(c.e);return`<div class="cc bg-${c.e}" ${plain?"":`data-a="vinsp" data-v="${c.id}"`}><i class="ccs"></i><div class="cct">${e[3]}</div><div class="cci">${e[2]}</div><div><div class="ccn">#${c.n}/${e[5]}</div><div class="ccid">${c.id}</div></div></div>`};
+let MINT={},VBR="",VB=0;
+/* серийный номер берётся из общего счётчика в базе (у всех игроков уникален); офлайн — локальный */
+async function mintSerial(e){const t=e[5],p="mint/"+e[0];
+  if(DB_URL&&!LOCK){for(let k=0;k<6;k++){try{const g=await fetch(`${DB_URL}/${p}.json`,{headers:{"X-Firebase-ETag":"true"}});if(!g.ok)break;const et=g.headers.get("ETag"),n=(+(await g.json())||0)+1;if(n>t)return 0;
+    const w=await fetch(`${DB_URL}/${p}.json`,{method:"PUT",headers:{"if-match":et},body:JSON.stringify(n)});if(w.ok)return n}catch(x){break}}}
+  const m=V().mint;m[e[0]]=(m[e[0]]||0)+1;return m[e[0]]>t?0:m[e[0]]}
+async function pullMint(){if(!DB_URL)return;try{MINT=(await db("mint"))||{}}catch(e){}if(cur==="vip")rVip()}
+async function vbuy(id){const e=edOf(id);if(!e||VB)return;if(S.bal<e[4]){toast(tt("Не хватает $ 😕"));return}
+  VB=1;toast("⏳ Чеканка…");const n=await mintSerial(e);VB=0;
+  if(!n){toast("Тираж «"+e[3]+"» распродан");pullMint();return}
+  if(S.bal<e[4]){toast(tt("Не хватает $ 😕"));return}
+  const V_=V(),c={e:id,n,id:cid(e,n),ts:Date.now()};S.bal-=e[4];V_.spent+=e[4];V_.col.push(c);MINT[id]=Math.max(MINT[id]||0,n);
+  sfx("win",5);winFx(5);toast("🎴 "+c.id+(smul(n,e[5])>1?" · ×"+smul(n,e[5])+" за номер!":""));upd();rVip();vinsp(c.id)}
+function vsell(id){const V_=V(),i=V_.col.findIndex(c=>c.id===id);if(i<0)return;const c=V_.col.splice(i,1)[0],p=Math.floor(ccVal(c)*.7);S.bal+=p;sfx("coin");closeM();toast("+"+fmtC(p)+" $");upd();rVip()}
+function vinsp(id){const c=V().col.find(x=>x.id===id);if(!c)return;const e=edOf(c.e);
+  $("modal").innerHTML=`<div class="mb insp">${ccHTML(c,1)}<div class="idesc"><div><span>ID</span><b>${c.id}</b></div><div><span>Издание</span><b>${e[2]} ${e[3]}</b></div><div><span>Номер</span><b>#${c.n} из ${e[5]}</b></div><div><span>Множитель номера</span><b>×${smul(c.n,e[5])}</b></div><div><span>Ценность</span><b>${fmtC(ccVal(c))} $</b></div><div><span>Отчеканена</span><b>${new Date(c.ts).toLocaleDateString(LOC)}</b></div></div><button class="btn alt" data-a="vsell" data-v="${c.id}">Продать за ${fmtC(Math.floor(ccVal(c)*.7))} $</button><button class="btn alt" data-a="close" style="width:100%">${tt("Закрыть")}</button></div>`;$("modal").classList.add("on")}
+const aInc=a=>{const t=V().ast[a[0]];return t?Math.floor(a[3]*.005*Math.min(Date.now()-t,6048e5)/864e5):0};
+function abuy(id){const a=AS.find(x=>x[0]===id),V_=V();if(!a||V_.ast[id])return;if(S.bal<a[3]){toast(tt("Не хватает $ 😕"));return}S.bal-=a[3];V_.spent+=a[3];V_.ast[id]=Date.now();sfx("win",4);winFx(4);toast(a[1]+" "+a[2]+" — твой!");upd();rVip()}
+function acol(id){const a=AS.find(x=>x[0]===id),p=a&&aInc(a);if(!p)return;S.bal+=p;V().ast[id]=Date.now();sfx("coin");toast("+"+fmtC(p)+" $");upd();rVip()}
+const BT=[[0,.55],[.5,.2],[1.5,.14],[3,.07],[10,.0395],[50,.0005],[500,.00005]];
+function bet(f){const amt=Math.floor(f==="all"?S.bal:S.bal*+f);if(amt<100){toast("Минимальная ставка 100 $");return}
+  const m=wpick(BT,x=>x[1])[0],win=Math.floor(amt*m),d=win-amt;S.bal+=d;if(d<0)V().spent+=-d;
+  const t=m>=50?6:m>=10?5:m>=3?4:m>1?3:0;if(m>1){sfx("win",t);winFx(t)}else sfx("err");
+  VBR=`<b class="${m>=1?"good":"bad"}" style="font-size:22px">×${m}</b> · ${d>=0?"+":"−"}${fmtC(Math.abs(d))} $`;upd();rVip()}
+function rVip(){const V_=V(),rk=rank();
+  $("vip").innerHTML=`<div class="stk"><div class="top"><b>🏅 ${rk[1]}</b><b>${fmtC(V_.spent)} $</b></div><p class="hint" style="margin:6px 0 0">Потрачено в Бутике. Чем больше — тем выше титул.</p></div>
+<h3>🎴 Коллекционные издания</h3><p class="hint">Ограниченные тиражи. У каждой карты свой ID и номер: #1 — ×10, #2–9 — ×4, красивые номера — ×3. Продажа — 70% ценности.</p>
+<div class="grid">${ED.map(e=>{const left=e[5]-(MINT[e[0]]||0);return`<div class="item" style="cursor:default"><div class="cc bg-${e[0]}"><i class="ccs"></i><div class="cct">${e[3]}</div><div class="cci">${e[2]}</div><div class="ccn">осталось ${left}/${e[5]}</div></div><button class="btn sm" data-a="vbuy" data-v="${e[0]}" ${S.bal<e[4]||left<=0?"disabled":""}>${left<=0?"Распродано":fmtC(e[4])+" $"}</button></div>`}).join("")}</div>
+<h3>🏝️ Престиж-активы</h3><p class="hint">Покупаются один раз и приносят 0,5% цены в сутки (копится до 7 дней).</p>
+${AS.map(a=>{const own=V_.ast[a[0]],inc=aInc(a);return`<div class="stk"><div class="top"><b>${a[1]} ${a[2]}</b>${own?`<button class="btn sm" data-a="acol" data-v="${a[0]}" ${inc?"":"disabled"}>Собрать ${fmtC(inc)} $</button>`:`<button class="btn sm" data-a="abuy" data-v="${a[0]}" ${S.bal<a[3]?"disabled":""}>${fmtC(a[3])} $</button>`}</div></div>`}).join("")}
+<h3>🎰 Высокие ставки</h3><p class="hint">Множители от ×0 до ×500. Ставка — доля твоего баланса.</p>
+<div class="stk"><div class="r2">${[["0.01","1%"],["0.1","10%"],["0.5","50%"],["all","ALL-IN"]].map(b=>`<button class="btn" data-a="bet" data-v="${b[0]}">${b[1]}</button>`).join("")}</div><div class="res">${VBR}</div></div>
+<h3>🗂️ Моя коллекция (${V_.col.length})</h3><div class="grid">${V_.col.slice().sort((a,b)=>ccVal(b)-ccVal(a)).map(c=>`<div class="item">${ccHTML(c)}</div>`).join("")||'<span class="hint">Пока пусто</span>'}</div>`}
+(()=>{const mk=(c,h,v)=>{const b=document.createElement("button");b.className=c;b.innerHTML=h;b.dataset.a="tab";b.dataset.v=v;return b};
+  const s=document.createElement("section");s.id="vip";s.className="sec";document.body.insertBefore(s,$("prof"));
+  $("dp").insertBefore(mk("tb",`<span>💸 ${tt("Бутик")}</span>`,"vip"),$("dp").querySelector(".sp"));$("dock").appendChild(mk("dk",`💸<span>${tt("Бутик")}</span>`,"vip"))})();
+{const _t=tab;tab=function(v){_t(v);if(v==="vip"){rVip();pullMint()}}}
+{const _s=SDA;SDA=function(a,v){switch(a){case"vbuy":vbuy(v);return 1;case"vsell":vsell(v);return 1;case"vinsp":vinsp(v);return 1;case"abuy":abuy(v);return 1;case"acol":acol(v);return 1;case"bet":bet(v);return 1}return _s(a,v)}}
+CHANGELOG.unshift({v:"3.1",d:"17.11.2026",t:["Бутик: большие траты 💸","Boutique: spend big 💸"],it:[
+ ["Коллекционные карты: 7 ограниченных изданий со своими анимированными фонами, уникальным ID и номером (#1 — ×10 к цене)","Collectible cards: 7 limited editions with animated backgrounds, a unique ID and a serial number (#1 is ×10 value)"],
+ ["Престиж-активы от острова до колонии на Марсе: покупаются раз и приносят доход","Prestige assets from an island to a Mars colony: buy once and earn income"],
+ ["Высокие ставки с множителями до ×500 и титулы меценатов за траты","High-stakes bets with up to ×500 multipliers and patron ranks for spending"]]});
 function openLog(){const en=LANG==="en",i=en?1:0;
  $("modal").innerHTML=`<div class="mb logb"><div class="logh"><b>${tt("Что нового")}</b><span class="logv">v${CHANGELOG[0].v}</span></div><div class="logs">${CHANGELOG.map(e=>`<div><div class="logh"><b>${e.t[i]}</b><span class="logd">v${e.v} · ${e.d}</span></div><ul>${e.it.map(x=>`<li>${x[i]}</li>`).join("")}</ul></div>`).join("")}</div><button class="btn" data-a="close" style="width:100%">${tt("Закрыть")}</button></div>`;
  $("modal").classList.add("on");lset("kx_logv",CHANGELOG[0].v);$("nwd").hidden=true}
