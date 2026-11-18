@@ -479,6 +479,21 @@ header{background:var(--bg);border-bottom:1px solid var(--line)}
 .bg-gold{color:#3a2600;text-shadow:0 1px 2px #fff8;background-image:linear-gradient(135deg,#7a5200,#ffd86b,#fff2b0,#d29a1b,#7a5200)}
 .insp .cc{width:210px;margin:0 auto}
 </style>
+<style>
+.bg-arca{background-image:linear-gradient(120deg,#00ffd5,#7a5cff,#ff4fd8,#00ffd5)}
+.bg-prim{background-image:conic-gradient(from 0deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);color:#fff;box-shadow:0 0 24px #fff8;border-color:#fff}
+</style>
+<style>
+.bg-sakura{background-image:linear-gradient(135deg,#ffd1e3,#ff8fb8,#ffe3ee,#ff8fb8)}
+.bg-ice{background-image:linear-gradient(160deg,#e6fbff,#7fd7ff,#fff,#4aa8ff)}
+.bg-toxic{background-image:repeating-linear-gradient(45deg,#111 0 10px,#b6ff00 10px 20px)}
+.bg-storm{background-image:linear-gradient(180deg,#1b1f3a,#3a4a8a,#fff6a0,#1b1f3a)}
+.bg-auro{background-image:linear-gradient(120deg,#021a2b,#00ff95,#6a5cff,#ff5ce1,#021a2b)}
+.bg-abys{background-image:radial-gradient(circle at 50% 120%,#00e0ff,#0b3d91 40%,#000814 80%)}
+.bg-dia{background-image:conic-gradient(from 45deg,#fff,#a8ecff,#fff,#d6c8ff,#fff,#a8ecff,#fff);color:#123;text-shadow:0 1px 2px #fff9}
+.bg-kings{background-image:linear-gradient(135deg,#3b0a5a,#b01fff,#ffd400,#3b0a5a)}
+.cres{text-align:center;font-size:20px;min-height:28px;margin-top:8px;font-weight:800}
+</style>
 </head>
 <body>
 <div id="splash"><div class="sp-g"></div><div class="sp-t">Card Rush - Welcome</div></div>
@@ -624,7 +639,7 @@ const BGS=("Серый мел|Gray Chalk,#555a66,#3c404a,0,28;Песочный|S
 const CN=[["Летний кейс","🌞"],["Зимний кейс","🧊"],["Лесной кейс","🌲"],["Пиратский кейс","🏴‍☠️"],["Неоновый кейс","🔮"],["Космический кейс","🪐"],["Королевский кейс","👑"],["Огненный кейс","🔥"],["Мифический кейс","🐉"],["Легендарный кейс","💠"]];
 const AB=BGS.reduce((s,b)=>s+b.w*b.o,0)/BGS.reduce((s,b)=>s+b.w,0);
 /* Редкость: шанс карты и фона по всей игре (в %) */
-let SWC=CARDS.reduce((s,k)=>s+1/k.p,0),SWB=BGS.reduce((s,b)=>s+b.w,0),chC=i=>100/CARDS[i].p/SWC,chB=g=>100*BGS[g].w/SWB;
+let SWC=CARDS.reduce((s,k)=>s+Math.pow(1/k.p,1.5),0),SWB=BGS.reduce((s,b)=>s+Math.pow(b.w,1.5),0),chC=i=>100*Math.pow(1/CARDS[i].p,1.5)/SWC,chB=g=>100*Math.pow(BGS[g].w,1.5)/SWB;
 const fmtPct=x=>{if(!(x>0))return"0%";if(x>=10)return x.toFixed(1)+"%";if(x>=1)return x.toFixed(2)+"%";if(x<1e-5){const q=x.toExponential(1).split("e");return q[0]+"·10"+q[1].replace("-","⁻").replace(/\d/g,d=>"⁰¹²³⁴⁵⁶⁷⁸⁹"[d])+"%"}const d=Math.min(15,3-Math.floor(Math.log10(x)));return x.toFixed(d).replace(/0+$/,"")+"%"};
 const RTI=[[.05,"Обычная","#9aa0ad"],[.005,"Необычная","#4aa3ff"],[.0005,"Редкая","#a566ff"],[.00005,"Эпическая","#ff5cc8"],[.000005,"Легендарная","#ffc83d"],[0,"Мифическая","#ff6a3d"]];
 const rarOf=c=>{const k=CARDS[c.c],a=chC(c.c),b=chB(c.g),x=a*b/100;let n,col;if(k.top){n="Абсолют";col="#f5b400"}else if(k.rare){n="Раритет";col="#ff5cc8"}else{const r=RTI.find(q=>x>=q[0])||RTI[5];n=r[1];col=r[2]}return{a,b,t:x,n,col}};
@@ -673,7 +688,7 @@ const bval=c=>CARDS[c.c].p+BGS[c.g].b;
 const val=c=>Math.round(bval(c)*cmult(cond(c)));
 const CST=[[30,"Хлам","#9aa0ad"],[60,"Покоцанный","#ff9a3d"],[90,"Поцарапанный","#ffd43b"],[101,"Прямиком с завода","#19f58f"]];
 const cinfo=x=>CST.find(t=>x<t[0])||CST[3],cname=x=>tt(cinfo(Math.floor(x))[1]);
-const rollCond=()=>{const t=wpick([[0,30,15],[30,60,30],[60,90,35],[90,100,20]],a=>a[2]);const x=Math.round(rnd(t[0],t[1])*10)/10;return evNow().t==="cond"?Math.min(100,x+15):x};
+const rollCond=()=>{const t=wpick([[0,30,28],[30,60,38],[60,90,26],[90,100,8]],a=>a[2]);const x=Math.round(rnd(t[0],t[1])*10)/10;return evNow().t==="cond"?Math.min(100,x+15):x};
 const newItem=o=>({c:o.c,g:o.g,cn:o.cn==null?100:clp(+o.cn||0,0,100),ct:Date.now(),id:nid()});
 const frz=c=>({c:c.c,g:c.g,cn:Math.round(cond(c)*10)/10});
 const cdp=c=>{const f=Math.floor(cond(c));return `<div class="cdt" style="background:${cinfo(f)[2]}">${f}%</div>`};
@@ -681,10 +696,10 @@ const tier=p=>p<1500?1:p<4000?2:p<9000?3:p<20000?4:5;
 const rnd=(a,b)=>a+Math.random()*(b-a),rn=n=>Math.floor(Math.random()*n);
 const nid=()=>S.nid++;
 function wpick(list,wf){let t=0;for(const x of list)t+=wf(x);let r=Math.random()*t;for(const x of list){r-=wf(x);if(r<=0)return x}return list[list.length-1]}
-const pickBg=()=>{const e=evNow().t==="bgl";return BGS.indexOf(wpick(BGS,b=>b.w*(e&&b.o>=8000?2.5:1)))};
+const pickBg=()=>{const e=evNow().t==="bgl";return BGS.indexOf(wpick(BGS,b=>Math.pow(b.w,1.5)*(e&&b.o>=8000?2.5:1)))};
 const gemDrop=()=>Math.random()<Math.min(.9,(modOn("gem2")?.4:.2)*(evNow().t==="gem"?2:1))?(1+rn(2))*(modOn("gem2")?2:1):0;
-const roll1=cs=>({c:wpick(cs.cards,k=>1/CARDS[k].p),g:pickBg(),cn:rollCond()});
-const roll=cs=>{const a=roll1(cs);if(!modOn("luck"))return a;const b=roll1(cs);return val(b)>val(a)?b:a};
+const roll1=cs=>({c:wpick(cs.cards,k=>Math.pow(1/CARDS[k].p,1.5)),g:pickBg(),cn:rollCond()});
+const roll=cs=>{const a=roll1(cs);if(!modOn("luck")||Math.random()<.6)return a;const b=roll1(cs);return val(b)>val(a)?b:a};
 function cardHTML(c){const k=CARDS[c.c],b=BGS[c.g],p=val(c);return `<div class="card t${k.top?7:k.rare?6:tier(p)}" style="background:${b.css}">${k.rare?`<div class="rtag${k.top?" top":""}">${k.top?"👑":"★"} ${tt(k.top?"Абсолют":"Раритет")}</div>`:""}${cdp(c)}<div class="ic">${k.i}</div><div class="nm">${k.n}</div><div class="bgn">${b.n}</div><div class="pr">${fmtC(p)} $</div></div>`}
 function avHTML(av,s){let ic=av,bg="var(--panel)";if(typeof av==="object"){ic=CARDS[av.c].i;bg=BGS[av.g].css}return `<div class="avt" style="width:${s}px;height:${s}px;font-size:${s*.55}px;background:${bg}">${ic}</div>`}
 function toast(t){const el=$("toast"),bad=/😕|Нет связи|Ошибка|Not enough|No connection|Error/i.test(t);el.textContent=t;el.classList.remove("err");if(bad){void el.offsetWidth;el.classList.add("err")}el.classList.add("show");try{sfx(bad?"err":"pop")}catch(e){}clearTimeout(toast.h);toast.h=setTimeout(()=>el.classList.remove("show"),2800)}
@@ -708,7 +723,8 @@ function evNow(){const k=Math.floor(nowS()/EVT),r=h32(k*7919+13),q=h32(k*104729+
   else e={t:"free",txt:tt("Подарок: бесплатный кейс — забери!")};
   e.end=(k+1)*EVT;return e}
 function disc(c){if(c.gem)return 0;const e=evNow();return e.t==="all"||(e.t==="c"&&e.k===c.id)?e.pct:0}
-const cprice=c=>Math.round(c.price*(1-disc(c)/100)*(modOn("cheap")&&!c.gem?.85:1)/10)*10;
+const wtax=()=>1+.35*Math.max(0,Math.log10(Math.max(1,S.bal)/1e7))*(1-.12*(S.vl||0));
+const cprice=c=>Math.round(c.price*wtax()*(1-disc(c)/100)*(modOn("cheap")&&!c.gem?.85:1)/10)*10;
 const gxRate=()=>GX*(evNow().t==="gx"?.7:1)*(modOn("gxd")?.7:1);
 const sellRate=()=>modOn("nofee")?1:SELL+(evNow().t==="sell"?.1:0)+nbBonus();
 function rEv(){const e=evNow(),k=e.end/EVT-1,ch=evS>=0&&k!==evS;evS=k;
@@ -1374,9 +1390,9 @@ const AS=[["isl","🏝️","Частный остров",2e6],["yac","🛥️","
 const RK=[[0,"Новичок"],[1e6,"Меценат"],[1e8,"Серебряный меценат"],[1e10,"Золотой меценат"],[1e12,"Платиновый меценат"],[1e14,"Легенда Card Rush"]];
 const rank=()=>RK.filter(r=>V().spent>=r[0]).pop(),edOf=id=>ED.find(x=>x[0]===id);
 const smul=(n,t)=>n===1?10:n<=9?4:(/^(\d)\1+$/.test(String(n))||n%100===0)?3:n<=t/10?1.5:1;
-const ccVal=c=>{const e=edOf(c.e);return Math.round(e[4]*smul(c.n,e[5]))};
+const ccVal=c=>{const e=edOf(c.e);return Math.round(e[4]*smul(c.n,e[5])*(c.gr?.5+c.gr*.1:1))};
 const cid=(e,n)=>{let h=2166136261;const s=e[1]+n+"CR";for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return`CR-${e[1]}-${String(n).padStart(4,"0")}-${(h>>>0).toString(36).slice(-3).toUpperCase()}`};
-const ccHTML=(c,plain)=>{const e=edOf(c.e);return`<div class="cc bg-${c.e}" ${plain?"":`data-a="vinsp" data-v="${c.id}"`}><i class="ccs"></i><div class="cct">${e[3]}</div><div class="cci">${e[2]}</div><div><div class="ccn">#${c.n}/${e[5]}</div><div class="ccid">${c.id}</div></div></div>`};
+const ccHTML=(c,plain)=>{const e=edOf(c.e);return`<div class="cc bg-${c.e}" ${plain?"":`data-a="vinsp" data-v="${c.id}"`}><i class="ccs"></i><div class="cct">${e[3]}</div><div class="cci">${e[2]}</div><div><div class="ccn">#${c.n}/${e[5]}${c.gr?` · 🔍${c.gr}/10`:""}</div><div class="ccid">${c.id}</div></div></div>`};
 let MINT={},VBR="",VB=0;
 /* серийный номер берётся из общего счётчика в базе (у всех игроков уникален); офлайн — локальный */
 async function mintSerial(e){const t=e[5],p="mint/"+e[0];
@@ -1393,7 +1409,7 @@ async function vbuy(id){const e=edOf(id);if(!e||VB)return;if(S.bal<e[4]){toast(t
 function vsell(id){const V_=V(),i=V_.col.findIndex(c=>c.id===id);if(i<0)return;const c=V_.col.splice(i,1)[0],p=Math.floor(ccVal(c)*.7);S.bal+=p;sfx("coin");closeM();toast("+"+fmtC(p)+" $");upd();rVip()}
 function vinsp(id){const c=V().col.find(x=>x.id===id);if(!c)return;const e=edOf(c.e);
   $("modal").innerHTML=`<div class="mb insp">${ccHTML(c,1)}<div class="idesc"><div><span>ID</span><b>${c.id}</b></div><div><span>Издание</span><b>${e[2]} ${e[3]}</b></div><div><span>Номер</span><b>#${c.n} из ${e[5]}</b></div><div><span>Множитель номера</span><b>×${smul(c.n,e[5])}</b></div><div><span>Ценность</span><b>${fmtC(ccVal(c))} $</b></div><div><span>Отчеканена</span><b>${new Date(c.ts).toLocaleDateString(LOC)}</b></div></div><button class="btn alt" data-a="vsell" data-v="${c.id}">Продать за ${fmtC(Math.floor(ccVal(c)*.7))} $</button><button class="btn alt" data-a="close" style="width:100%">${tt("Закрыть")}</button></div>`;$("modal").classList.add("on")}
-const aInc=a=>{const t=V().ast[a[0]];return t?Math.floor(a[3]*.005*Math.min(Date.now()-t,6048e5)/864e5):0};
+const aInc=a=>{const t=V().ast[a[0]];return t?Math.floor(a[3]*(.005+.001*((S.lvl||{})[a[0]]||0))*Math.min(Date.now()-t,6048e5)/864e5):0};
 function abuy(id){const a=AS.find(x=>x[0]===id),V_=V();if(!a||V_.ast[id])return;if(S.bal<a[3]){toast(tt("Не хватает $ 😕"));return}S.bal-=a[3];V_.spent+=a[3];V_.ast[id]=Date.now();sfx("win",4);winFx(4);toast(a[1]+" "+a[2]+" — твой!");upd();rVip()}
 function acol(id){const a=AS.find(x=>x[0]===id),p=a&&aInc(a);if(!p)return;S.bal+=p;V().ast[id]=Date.now();sfx("coin");toast("+"+fmtC(p)+" $");upd();rVip()}
 const BT=[[0,.55],[.5,.2],[1.5,.14],[3,.07],[10,.0395],[50,.0005],[500,.00005]];
@@ -1406,7 +1422,7 @@ function rVip(){const V_=V(),rk=rank();
 <h3>🎴 Коллекционные издания</h3><p class="hint">Ограниченные тиражи. У каждой карты свой ID и номер: #1 — ×10, #2–9 — ×4, красивые номера — ×3. Продажа — 70% ценности.</p>
 <div class="grid">${ED.map(e=>{const left=e[5]-(MINT[e[0]]||0);return`<div class="item" style="cursor:default"><div class="cc bg-${e[0]}"><i class="ccs"></i><div class="cct">${e[3]}</div><div class="cci">${e[2]}</div><div class="ccn">осталось ${left}/${e[5]}</div></div><button class="btn sm" data-a="vbuy" data-v="${e[0]}" ${S.bal<e[4]||left<=0?"disabled":""}>${left<=0?"Распродано":fmtC(e[4])+" $"}</button></div>`}).join("")}</div>
 <h3>🏝️ Престиж-активы</h3><p class="hint">Покупаются один раз и приносят 0,5% цены в сутки (копится до 7 дней).</p>
-${AS.map(a=>{const own=V_.ast[a[0]],inc=aInc(a);return`<div class="stk"><div class="top"><b>${a[1]} ${a[2]}</b>${own?`<button class="btn sm" data-a="acol" data-v="${a[0]}" ${inc?"":"disabled"}>Собрать ${fmtC(inc)} $</button>`:`<button class="btn sm" data-a="abuy" data-v="${a[0]}" ${S.bal<a[3]?"disabled":""}>${fmtC(a[3])} $</button>`}</div></div>`}).join("")}
+${AS.map(a=>{const own=V_.ast[a[0]],inc=aInc(a);return`<div class="stk"><div class="top"><b>${a[1]} ${a[2]}</b>${own?`<button class="btn sm" data-a="acol" data-v="${a[0]}" ${inc?"":"disabled"}>Собрать ${fmtC(inc)} $</button><button class="btn alt sm" data-a="aup" data-v="${a[0]}">⬆ ур.${(S.lvl||{})[a[0]]||0}/5</button>`:`<button class="btn sm" data-a="abuy" data-v="${a[0]}" ${S.bal<a[3]?"disabled":""}>${fmtC(a[3])} $</button>`}</div></div>`}).join("")}
 <h3>🎰 Высокие ставки</h3><p class="hint">Множители от ×0 до ×500. Ставка — доля твоего баланса.</p>
 <div class="stk"><div class="r2">${[["0.01","1%"],["0.1","10%"],["0.5","50%"],["all","ALL-IN"]].map(b=>`<button class="btn" data-a="bet" data-v="${b[0]}">${b[1]}</button>`).join("")}</div><div class="res">${VBR}</div></div>
 <h3>🗂️ Моя коллекция (${V_.col.length})</h3><div class="grid">${V_.col.slice().sort((a,b)=>ccVal(b)-ccVal(a)).map(c=>`<div class="item">${ccHTML(c)}</div>`).join("")||'<span class="hint">Пока пусто</span>'}</div>`}
@@ -1419,6 +1435,90 @@ CHANGELOG.unshift({v:"3.1",d:"17.11.2026",t:["Бутик: большие тра�
  ["Коллекционные карты: 7 ограниченных изданий со своими анимированными фонами, уникальным ID и номером (#1 — ×10 к цене)","Collectible cards: 7 limited editions with animated backgrounds, a unique ID and a serial number (#1 is ×10 value)"],
  ["Престиж-активы от острова до колонии на Марсе: покупаются раз и приносят доход","Prestige assets from an island to a Mars colony: buy once and earn income"],
  ["Высокие ставки с множителями до ×500 и титулы меценатов за траты","High-stakes bets with up to ×500 multipliers and patron ranks for spending"]]});
+/* ===== v3.2: оценка карт, прокачка активов, сверхредкие издания, сундук, фонд ===== */
+ED.push(["arca","ARCA","🔮","Аркана",5e13,3],["prim","PRIM","🧬","Первородная",1e15,1]);
+const GW=[[1,2],[2,4],[3,8],[4,14],[5,18],[6,20],[7,16],[8,10],[9,6],[10,2]];
+function vgrade(id){const c=V().col.find(x=>x.id===id);if(!c||c.gr)return;const fee=Math.floor(ccVal(c)*.03);if(S.bal<fee){toast(tt("Не хватает $ 😕"));return}
+  S.bal-=fee;V().spent+=fee;c.gr=wpick(GW,x=>x[1])[0];sfx("win",c.gr>=9?6:c.gr>=7?4:2);if(c.gr>=9)winFx(5);toast("🔍 Оценка: "+c.gr+"/10 · ценность ×"+(.5+c.gr*.1).toFixed(1));upd();rVip();vinsp(id)}
+function aup(id){const a=AS.find(x=>x[0]===id),L=S.lvl=S.lvl||{},l=L[id]||0;if(!a||!V().ast[id]||l>=5)return;
+  const inc=aInc(a),p=Math.floor(a[3]*(l+1)*.5);if(S.bal+inc<p){toast(tt("Не хватает $ 😕"));return}
+  S.bal+=inc-p;V().spent+=p;V().ast[id]=Date.now();L[id]=l+1;sfx("buy");toast(a[1]+" ур."+(l+1)+" · доход "+(0.5+.1*(l+1)).toFixed(1)+"%/сут");upd();rVip()}
+function dchest(){const d=S.dc||(S.dc={t:0,s:0}),n=Date.now();if(n-d.t<72e6)return;d.s=n-d.t>1728e5?1:d.s+1;d.t=n;
+  const r=Math.floor(Math.max(5000,S.bal*.01)*(1+Math.min(d.s,10)*.25)),g=1+rn(3);S.bal+=r;S.gem+=g;sfx("gem");winFx(4);toast("🎁 +"+fmtC(r)+" $ · +"+g+" 💎 · серия "+d.s);upd();rVip()}
+function don(f){const amt=Math.floor(S.bal*+f);if(amt<1000){toast("Слишком мало для пожертвования");return}S.bal-=amt;V().spent+=amt;const g=Math.min(50,Math.floor(amt/1e7));S.gem+=g;sfx("coin");toast("🙏 Спасибо! −"+fmtC(amt)+" $"+(g?" · +"+g+" 💎":""));upd();rVip()}
+{const _r=rVip;rVip=function(){_r();const d=S.dc||{t:0,s:0},w=72e6-(Date.now()-d.t),el=$("vip");
+  el.insertAdjacentHTML("afterbegin",`<div class="stk"><div class="top"><b>🎁 Ежедневный сундук</b><span class="hint">серия: ${d.s||0}</span></div><p class="hint" style="margin:6px 0">Деньги и гемы; чем длиннее серия (до 10), тем больше награда. Серия сгорает через 2 дня.</p><button class="btn" data-a="dchest" style="width:100%" ${w>0?"disabled":""}>${w>0?"Через "+fmtT(w):"Открыть"}</button></div>`);
+  el.insertAdjacentHTML("beforeend",`<h3>🔥 Благотворительный фонд</h3><p class="hint">Отдай долю баланса: растёт титул, а за каждые 10 млн приходит 💎 (до 50).</p><div class="stk"><div class="r2">${[["0.05","5%"],["0.25","25%"],["0.5","50%"]].map(b=>`<button class="btn alt" data-a="don" data-v="${b[0]}">${b[1]}</button>`).join("")}</div></div>`)}}
+{const _v=vinsp;vinsp=function(id){_v(id);const c=V().col.find(x=>x.id===id),b=c&&$("modal").querySelector('[data-a="vsell"]');if(b&&!c.gr)b.insertAdjacentHTML("beforebegin",`<button class="btn" data-a="vgrade" data-v="${c.id}">🔍 Оценить (3% = ${fmtC(Math.floor(ccVal(c)*.03))} $)</button>`)}}
+{const _p=rProf;rProf=function(){_p();const C=V().col;if(C.length)$("stats").textContent+=" · 🎴 "+C.length+" ("+fmtC(C.reduce((t,c)=>t+ccVal(c),0))+" $) · "+rank()[1]}}
+{const _s=SDA;SDA=function(a,v){switch(a){case"vgrade":vgrade(v);return 1;case"aup":aup(v);return 1;case"dchest":dchest();return 1;case"don":don(v);return 1}return _s(a,v)}}
+CHANGELOG.unshift({v:"3.2",d:"18.11.2026",t:["Бутик 2.0 ✨","Boutique 2.0 ✨"],it:[
+ ["Оценка коллекционных карт 1–10: меняет ценность от ×0,6 до ×1,5","Collectible grading 1–10: changes value from ×0.6 to ×1.5"],
+ ["Прокачка активов до 5 уровня: доход до 1%/сутки","Asset upgrades up to level 5: income up to 1%/day"],
+ ["Два новых издания: «Аркана» (3 шт.) и «Первородная» (всего одна во всём мире)","Two new editions: “Arcana” (3 copies) and “Primordial” (only one in the world)"],
+ ["Ежедневный сундук с серией, благотворительный фонд за гемы, коллекция в профиле","Daily chest with streaks, a charity fund for gems, collection shown in profile"]]});
+/* ===== v3.3: оптовая закупка, больше карт, казино, VIP-клубы ===== */
+ED.push(["sakura","SAKU","🌸","Сакура",15e5,800],["ice","ICE0","🧊","Вечная мерзлота",12e6,400],["toxic","TOXC","☣️","Токсик",6e7,250],["storm","STRM","⛈️","Буря",3e8,150],["auro","AURO","🌠","Северное сияние",2e9,75],["abys","ABYS","🐙","Бездна",15e9,40],["dia","DIAM","💎","Алмаз",25e10,12],["kings","KING","🤴","Корона",8e12,5]);
+ED.sort((a,b)=>a[4]-b[4]);
+const VT=[[5e7,"Бронзовый клуб"],[5e9,"Серебряный клуб"],[5e11,"Золотой клуб"],[5e13,"Платиновый клуб"],[5e15,"Чёрная карта"]];
+let WC=0,WQ=10,CAM=1e4,CRS="";
+function vipb(){const l=S.vl||0;if(l>=5)return;const p=VT[l][0];if(S.bal<p){toast(tt("Не хватает $ 😕"));return}S.bal-=p;V().spent+=p;S.vl=l+1;sfx("win",5);winFx(5);toast("👑 "+VT[l][1]+": налог на богатство −"+12*(l+1)+"%");upd();rVip()}
+const wmax=c=>Math.floor(c.gem?S.gem/c.gem:S.bal/cprice(c));
+function wq(v){WC=+$("wcase").value;WQ=v==="max"?Math.max(1,wmax(CASES[WC])):+v;rVip()}
+function wbuy(){WC=+$("wcase").value;WQ=Math.max(1,Math.min(1e5,Math.floor(+$("wqty").value)||1));buyCase(WC,WQ);rVip()}
+function camq(v){CAM=Math.floor(S.bal*+v);rVip()}
+function cas(v){const amt=Math.floor(+$("cam").value);CAM=amt;if(amt>S.bal){toast(tt("Не хватает $ 😕"));return}if(!(amt>=100)){toast("Минимальная ставка 100 $");return}
+  const[g,x]=v.split(":");let m=0,t="";
+  if(g==="coin"){const r=Math.random()<.5?"h":"t";m=r===x?1.95:0;t=r==="h"?"🦅 Орёл":"🪙 Решка"}
+  else if(g==="rou"){const n=rn(37),c=n===0?"g":[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n)?"r":"b";m=c===x?(c==="g"?36:2):0;t=(c==="g"?"🟢":c==="r"?"🔴":"⚫")+" "+n}
+  else{const SY=[["🍒",40],["🍋",30],["🔔",15],["💎",10],["7️⃣",5]],P={"🍒":5,"🍋":8,"🔔":15,"💎":40,"7️⃣":200},R=[0,0,0].map(()=>wpick(SY,y=>y[1])[0]);t=R.join(" ");
+    if(R[0]===R[1]&&R[1]===R[2])m=P[R[0]];else if(R.filter(y=>y==="🍒").length===2)m=1}
+  const d=Math.floor(amt*m)-amt;S.bal+=d;if(d<0)V().spent+=-d;
+  if(m>=5){const q=m>=36?6:4;sfx("win",q);winFx(q)}else if(m>0)sfx("coin");else sfx("err");
+  CRS=`${t}<br><span class="${d>=0?"good":"bad"}">${m?"×"+m:"мимо"} · ${d>=0?"+":"−"}${fmtC(Math.abs(d))} $</span>`;upd();rVip()}
+{const _r=rVip;rVip=function(){_r();const l=S.vl||0,el=$("vip"),n=VT[l];
+  el.insertAdjacentHTML("beforeend",`<h3>🛒 Оптовая закупка кейсов</h3><p class="hint">Цена кейсов растёт с богатством: сейчас ×${wtax().toFixed(2)}. VIP-клубы снижают эту надбавку.</p>
+<div class="stk"><select id="wcase" onchange="WC=+this.value;rVip()">${CASES.map((c,i)=>`<option value="${i}" ${i===WC?"selected":""}>${c.i} ${c.n} — ${c.gem?c.gem+" 💎":fmtC(cprice(c))+" $"}</option>`).join("")}</select>
+<div class="r2" style="margin-top:8px">${[1,10,50,100].map(q=>`<button class="btn alt sm" data-a="wq" data-v="${q}">${q}</button>`).join("")}<button class="btn alt sm" data-a="wq" data-v="max">МАКС</button></div>
+<div class="chrow" style="margin-top:8px"><input id="wqty" type="number" min="1" value="${WQ}" oninput="WQ=+this.value"><button class="btn" data-a="wbuy">Купить</button></div>
+<p class="hint" style="margin:6px 0 0">Итого: ${CASES[WC].gem?fmtC(CASES[WC].gem*WQ)+" 💎":fmtC(cprice(CASES[WC])*WQ)+" $"}</p></div>
+<h3>👑 VIP-клубы</h3><p class="hint">Постоянно снижают надбавку к цене кейсов на 12% за уровень (сейчас ${l}/5).</p>
+<div class="stk"><button class="btn" data-a="vipb" style="width:100%" ${n&&S.bal>=n[0]?"":"disabled"}>${n?n[1]+" — "+fmtC(n[0])+" $":"Максимум: Чёрная карта 🖤"}</button></div>
+<h3>🎲 Казино</h3><p class="hint">Монетка ×1,95 · Рулетка (красное/чёрное ×2, зеро ×36) · Слоты до ×200.</p>
+<div class="stk"><div class="chrow"><input id="cam" type="number" min="100" value="${CAM}" oninput="CAM=+this.value"></div>
+<div class="r2" style="margin-top:6px">${[["0.01","1%"],["0.1","10%"],["0.5","50%"],["1","ALL"]].map(b=>`<button class="btn alt sm" data-a="camq" data-v="${b[0]}">${b[1]}</button>`).join("")}</div>
+<div class="r2" style="margin-top:8px"><button class="btn" data-a="cas" data-v="coin:h">🦅 Орёл</button><button class="btn" data-a="cas" data-v="coin:t">🪙 Решка</button></div>
+<div class="r2" style="margin-top:6px"><button class="btn" data-a="cas" data-v="rou:r">🔴</button><button class="btn" data-a="cas" data-v="rou:b">⚫</button><button class="btn" data-a="cas" data-v="rou:g">🟢 ×36</button></div>
+<button class="btn" data-a="cas" data-v="slot" style="width:100%;margin-top:6px">🎰 Крутить слоты</button><div class="cres">${CRS}</div></div>`)}}
+{const _s=SDA;SDA=function(a,v){switch(a){case"vipb":vipb();return 1;case"wq":wq(v);return 1;case"wbuy":wbuy();return 1;case"camq":camq(v);return 1;case"cas":cas(v);return 1}return _s(a,v)}}
+CHANGELOG.unshift({v:"3.3",d:"18.11.2026",t:["Баланс кейсов, казино и VIP 🎲","Case balance, casino and VIP 🎲"],it:[
+ ["Дроп кейсов стал скупее: редкие карты, фоны и «Удача» выпадают реже, состояние карт хуже","Case drops are stingier: rare cards, backgrounds and Luck trigger less, card condition is worse"],
+ ["Налог на богатство: цена кейсов растёт вместе с балансом, снижается VIP-клубами","Wealth tax: case prices grow with your balance, reduced by VIP clubs"],
+ ["Оптовая закупка кейсов на любое количество, 8 новых коллекционных изданий (всего 17)","Bulk case purchase of any amount, 8 new collectible editions (17 total)"],
+ ["Казино: монетка, рулетка, слоты","Casino: coin flip, roulette, slots"]]});
+/* ===== v3.4: КРАШ ===== */
+let CRG=null,CAT=2,CHS=[],CRR="";
+const crM=()=>CRG?Math.exp(.12*(Date.now()-CRG.t0)/1e3):1;
+function crEnd(m,win){const g=CRG;clearInterval(g.iv);CRG=null;
+  if(win){const p=Math.floor(g.bet*m);S.bal+=p;sfx("win",m>=50?6:m>=10?5:m>=3?4:2);if(m>=5)winFx(m>=50?6:m>=10?5:4);CRR=`<span class="good">✅ Забрал ×${m.toFixed(2)} · +${fmtC(p-g.bet)} $</span>`}
+  else{V().spent+=g.bet;sfx("err");CRR=`<span class="bad">💥 Крэш на ×${g.cp.toFixed(2)} · −${fmtC(g.bet)} $</span>`}
+  CHS.unshift(g.cp);CHS=CHS.slice(0,10);upd();rVip()}
+function crT(){const g=CRG;if(!g)return;const m=crM();
+  if(CAT>=1.01&&CAT<=g.cp&&m>=CAT)return crEnd(CAT,1);
+  if(m>=g.cp)return crEnd(g.cp,0);
+  const e=$("crm"),x=$("crp");if(e){e.textContent="×"+m.toFixed(2);e.style.color=m>=10?"#ffc83d":m>=2?"#3ecf8e":"var(--text)"}
+  if(x)x.textContent="+"+fmtC(Math.floor(g.bet*m)-g.bet)+" $"}
+function crst(){if(CRG)return;const amt=Math.floor(+$("cam").value);CAM=amt;if(amt>S.bal){toast(tt("Не хватает $ 😕"));return}if(!(amt>=100)){toast("Минимальная ставка 100 $");return}
+  const u=Math.random(),cp=Math.min(1000,Math.max(1,Math.floor(96/(1-u))/100));S.bal-=amt;CRR="";
+  CRG={bet:amt,cp,t0:Date.now()};CRG.iv=setInterval(crT,50);upd();rVip()}
+function crcash(){const g=CRG;if(!g)return;const m=crM();m>=g.cp?crEnd(g.cp,0):crEnd(m,1)}
+{const _r=rVip;rVip=function(){_r();$("vip").insertAdjacentHTML("beforeend",`<h3>🚀 Краш</h3><p class="hint">Множитель растёт — успей забрать до крэша. Ставка берётся из поля казино. Можно задать авто-вывод.</p>
+<div class="stk"><div id="crm" style="text-align:center;font-size:46px;font-weight:900;font-family:var(--fd)">${CRG?"×"+crM().toFixed(2):"🚀"}</div><div id="crp" class="cres" style="font-size:15px;margin:0 0 8px"></div>
+<div class="chrow"><span class="hint" style="align-self:center">Авто-вывод ×</span><input id="crat" type="number" step="0.1" min="1.01" value="${CAT}" oninput="CAT=+this.value"></div>
+<button class="btn" data-a="${CRG?"crcash":"crst"}" style="width:100%;margin-top:8px">${CRG?"💰 Забрать":"🚀 Старт"}</button><div class="cres">${CRR}</div>
+<div style="text-align:center;font-size:12px">${CHS.map(x=>`<b style="color:${x>=2?"#3ecf8e":"#ff5c6c"}">×${x.toFixed(2)}</b>`).join(" · ")}</div></div>`)}}
+{const _s=SDA;SDA=function(a,v){if(a==="crst"){crst();return 1}if(a==="crcash"){crcash();return 1}return _s(a,v)}}
+CHANGELOG.unshift({v:"3.4",d:"18.11.2026",t:["Краш 🚀","Crash 🚀"],it:[["Краш в Бутике: множитель растёт, успей забрать до крэша, есть авто-вывод","Crash in the Boutique: the multiplier climbs, cash out before it crashes, with auto cash-out"]]});
 function openLog(){const en=LANG==="en",i=en?1:0;
  $("modal").innerHTML=`<div class="mb logb"><div class="logh"><b>${tt("Что нового")}</b><span class="logv">v${CHANGELOG[0].v}</span></div><div class="logs">${CHANGELOG.map(e=>`<div><div class="logh"><b>${e.t[i]}</b><span class="logd">v${e.v} · ${e.d}</span></div><ul>${e.it.map(x=>`<li>${x[i]}</li>`).join("")}</ul></div>`).join("")}</div><button class="btn" data-a="close" style="width:100%">${tt("Закрыть")}</button></div>`;
  $("modal").classList.add("on");lset("kx_logv",CHANGELOG[0].v);$("nwd").hidden=true}

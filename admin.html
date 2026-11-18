@@ -110,7 +110,7 @@ function applyTheme(t){var e=document.documentElement;if(t==="dark"||t==="light"
 try{applyFont(localStorage.getItem("kx_font")||"classic")}catch(e){}
 try{matchMedia("(prefers-color-scheme: light)").addEventListener("change",function(){try{applyBg(localStorage.getItem("kx_bg")||"default")}catch(e){}})}catch(e){}
 try{applyAccent(localStorage.getItem("kx_acc")||"#c6ff00");applyTheme(localStorage.getItem("kx_theme")||"auto")}catch(e){applyAccent("#c6ff00")}
-</script></head><body class="lock"><div id="gate"><h2>🔒 Админка Card Rush</h2><input id="gp" type="password" placeholder="Пароль"><button class="btn" id="gb">Войти</button><div class="msg" id="gm" style="color:#ff5c6c"></div></div>
+</script><style>body.mod .pg{display:none!important}body.mod #p-mod{display:block!important}body.mod .dock{display:none!important}</style></head><body class="lock"><div id="gate"><h2>🔒 Админка Card Rush</h2><input id="gp" type="password" placeholder="Пароль"><button class="btn" id="gb">Войти</button><div class="msg" id="gm" style="color:#ff5c6c"></div></div>
 <section class="pg on" id="p-cards"><h2>Карточки</h2><p class="hint">Выдача карточек в игру. Открывай на том же сайте, что и игра: если игра открыта, карточки придут за секунду, иначе при следующем запуске.</p>
 <div class="box"><input id="aq" placeholder="Поиск карточки"><select id="ac"></select><select id="ab"></select><input id="acn" type="number" min="0" max="100" placeholder="Состояние % (пусто = 100)"><input id="an" type="number" min="1" max="100" value="1"><div id="apv"></div><button class="btn" id="give">Выдать себе</button><div class="msg" id="msg"></div></div></section>
 <section class="pg" id="p-promo"><h2>Промокоды</h2><p class="hint">Игрок вводит код в магазине. Каждый игрок может активировать код один раз.</p>
@@ -136,6 +136,9 @@ try{applyAccent(localStorage.getItem("kx_acc")||"#c6ff00");applyTheme(localStora
 <div class="box"><h3>Тема</h3><div class="seg" id="thm"><button data-v="auto">Авто</button><button data-v="dark">Тёмная</button><button data-v="light">Светлая</button></div></div>
 <div class="box"><h3>Шрифт</h3><div class="fonts" id="fontBox"></div></div>
 <div class="box"><h3>Фон</h3><div class="bgs" id="bgBox"></div><p class="hint">Цвета фона подстраиваются под выбранную тему.</p></div><div class="box"><h3>💾 Бэкап базы</h3><p class="hint">Промокоды, акции игроков и настройки курсов. Восстановление перезаписывает эти данные.</p><button class="btn" id="bkd">Скачать бэкап</button><button class="btn alt" id="bkr">Восстановить из файла</button><input type="file" id="bkf" accept="application/json,.json" hidden><div class="msg" id="bkm"></div></div><div class="box"><button class="btn bad" id="lo">🔒 Выйти из админки</button></div></section>
+<section class="pg" id="p-mod"><h2>🛡️ Модератор</h2><p class="hint">Можно создать 1 промокод раз в 24 часа. Код работает на 1 активацию и живёт 48 часов.</p>
+<div class="box"><div class="hint" id="m_st">Проверяю лимит…</div><input id="m_c" placeholder="Код (от 4 символов, A–Z, 0–9)" maxlength="14"><input id="m_k" type="number" min="0" max="25000" placeholder="+ $ (до 25 000)"><input id="m_g" type="number" min="0" max="5" placeholder="+ гемы 💎 (до 5)"><select id="m_cs"></select><input id="m_n" type="number" min="1" max="2" value="1" placeholder="Кейсов (до 2)"><button class="btn" id="mmk" disabled>Создать промокод</button><div class="msg" id="m_msg"></div></div>
+<div class="box"><button class="btn bad" onclick="window.kxLock&&kxLock()">🔒 Выйти</button></div></section>
 <div class="dock" id="dock"><button data-p="cards" class="on">🃏<span>Карточки</span></button><button data-p="promo">🎟<span>Промо</span></button><button data-p="stocks">📈<span>Акции</span></button><button data-p="players">👥<span>Игроки</span></button><button data-p="rig">🎯<span>Бустер</span></button><button data-p="set">⚙️<span>Настройки</span></button></div>
 <script>(()=>{const g=i=>document.getElementById(i),K="kx2_rig";
 function show(){let r=null;try{r=JSON.parse(localStorage.getItem(K)||"null")}catch(e){}g("rgm").textContent=r&&r.n>0?`Бустер включён: шанс ≤ ${r.ch}%, осталось раз: ${r.n}`:"Бустер выключен"}
@@ -146,21 +149,23 @@ g("rgx").onclick=()=>{try{localStorage.removeItem(K)}catch(e){}show()};show()})(
 <script>
 (async()=>{
 /* Пароля в коде нет: только соль и проверочный хэш от ключа PBKDF2 (250 000 итераций). Сессия живёт в sessionStorage и сама блокируется после 15 минут простоя. */
-const SALT="449d3a5b111478402a70c82a4c067856",H2="35a78e082f7da599712469853eb02c746340fbbde97467c8ab9a4fd8658d25f1",IT=250000,IDLE=9e5,g=i=>document.getElementById(i),
+const SALT="449d3a5b111478402a70c82a4c067856",H2="35a78e082f7da599712469853eb02c746340fbbde97467c8ab9a4fd8658d25f1",MH="fecacc17fce3ff1354c351c04708dcdd7e30dbee8d66c45f70fffdd24f59a822",IT=250000,IDLE=9e5,g=i=>document.getElementById(i),
 hx=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join(""),
 sha=async t=>hx(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t))),
 kdf=async p=>{const k=await crypto.subtle.importKey("raw",new TextEncoder().encode(p),"PBKDF2",false,["deriveBits"]);return hx(await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt:new Uint8Array(SALT.match(/../g).map(x=>parseInt(x,16))),iterations:IT},k,256))},
 ss=(k,v)=>{try{v==null?sessionStorage.removeItem(k):sessionStorage.setItem(k,v)}catch(e){}},sg=k=>{try{return sessionStorage.getItem(k)||""}catch(e){return ""}};
-const lock=()=>{ss("kxa");ss("kxe");location.reload()};
+const lock=()=>{ss("kxa");ss("kxm");ss("kxe");location.reload()};
 const open=()=>{document.body.classList.remove("lock");g("gate").remove();ss("kxe",String(Date.now()+IDLE));let t=0;
   ["pointerdown","keydown","scroll"].forEach(ev=>addEventListener(ev,()=>{const n=Date.now();if(n-t>3e4){t=n;ss("kxe",String(Date.now()+IDLE))}},{passive:true}));
   setInterval(()=>{if(Date.now()>(+sg("kxe")||0))lock()},15e3);window.kxLock=lock};
 if(!(window.crypto&&crypto.subtle)){g("gm").textContent="Открой админку по https:// — иначе вход недоступен";g("gb").disabled=true;return}
 try{if(sg("kxa")&&(+sg("kxe")||0)>Date.now()&&await sha(sg("kxa"))===H2)return open()}catch(e){}
+try{if(sg("kxm")&&(+sg("kxe")||0)>Date.now()&&await sha(sg("kxm"))===MH){document.body.classList.add("mod");return open()}}catch(e){}
 let fails=0;
 const go=async()=>{if(g("gb").disabled)return;const v=g("gp").value;if(!v)return;g("gb").disabled=true;let ok=false,K="";
   try{K=await kdf(v);ok=(await sha(K))===H2}catch(e){}
   if(ok){ss("kxa",K);return open()}
+  try{if(K&&(await sha(K))===MH){ss("kxm",K);document.body.classList.add("mod");return open()}}catch(e){}
   g("gp").value="";fails++;let w=Math.min(30,2**fails);
   const tick=()=>{if(w<=0){g("gb").disabled=false;g("gm").textContent="Неверный пароль";return}g("gm").textContent="Неверный пароль · подожди "+w+" с";w--;setTimeout(tick,1000)};tick()};
 g("gb").onclick=go;g("gp").onkeydown=e=>{if(e.key==="Enter")go()}})();
@@ -345,4 +350,25 @@ let last=Date.now();function wake(){last=Date.now();if(asleep){asleep=false;face
 ["pointerdown","keydown","scroll"].forEach(v=>addEventListener(v,()=>{if(!asleep)last=Date.now()},{passive:true}));
 setInterval(()=>{if(!asleep&&!document.body.classList.contains("lock")&&Date.now()-last>45000){asleep=true;face("😴");sx("zzz");say("Zzz… разбуди меня тапом 💤",4500)}},5000);
 })();</script>
+<script>
+/* Модераторка: вход по коду Mod. Лимиты и «раз в 24 часа» должны подкрепляться правилами базы (см. cfg/mk, madm, modlog). */
+(()=>{const MKEY=()=>{try{return sessionStorage.getItem("kxm")||""}catch(e){return ""}},isMod=()=>document.body.classList.contains("mod"),LIM={kx:25000,gem:5,cs:3,cn:2,h:48},CD=864e5;
+$("m_cs").innerHTML='<option value="">— без кейса —</option>'+CNM.slice(0,LIM.cs).map((n,i)=>`<option value="${i}">${n} кейс</option>`).join("");
+const left=t=>{const m=Math.ceil(t/6e4);return Math.floor(m/60)+" ч "+m%60+" мин"};
+async function lastTs(){let a=0;try{a=+localStorage.getItem("kx_modl")||0}catch(e){}try{return Math.max(a,+(await raw("modlog/last"))||0)}catch(e){return a}}
+async function mref(){for(let i=0;i<20&&!DB;i++)await new Promise(r=>setTimeout(r,300));if(!isMod())return;const w=CD-(Date.now()-await lastTs());$("m_st").textContent=w>0?"⏳ Следующий промокод через "+left(w):"✅ Можно создать промокод";$("mmk").disabled=w>0}
+$("mmk").onclick=async()=>{if(!isMod()||!DB)return;const msg=$("m_msg"),code=$("m_c").value.toUpperCase().replace(/[^A-Z0-9_-]/g,"").slice(0,14),kx=Math.min(LIM.kx,Math.max(0,Math.round(+$("m_k").value)||0)),gem=Math.min(LIM.gem,Math.max(0,Math.round(+$("m_g").value)||0)),cid=$("m_cs").value,cn=Math.min(LIM.cn,Math.max(0,Math.round(+$("m_n").value)||0));
+  if(code.length<4){msg.textContent="Код: от 4 символов (A–Z, 0–9, _ -)";return}
+  if(!(kx||gem||(cid!==""&&cn>0))){msg.textContent="Выбери награду";return}
+  $("mmk").disabled=true;
+  try{if(Date.now()-await lastTs()<CD){msg.textContent="Лимит: 1 промокод в 24 часа";return mref()}
+    if(await raw("promos/"+code)){msg.textContent="Такой код уже есть";$("mmk").disabled=false;return}
+    const o={ts:Date.now(),max:1,exp:Date.now()+LIM.h*36e5,mod:1};if(kx)o.kx=kx;if(gem)o.gem=gem;if(cid!==""&&cn>0)o.cs={[cid]:cn};
+    const k=MKEY();await raw("madm/"+k,"PUT",true);
+    try{await raw("modlog/last","PUT",Date.now());await raw("promos/"+code,"PUT",o)}finally{await raw("madm/"+k,"DELETE").catch(()=>{})}
+    try{localStorage.setItem("kx_modl",String(Date.now()))}catch(e){}
+    msg.textContent="Создан: "+code+" ✅ (1 активация, "+LIM.h+" ч)"}catch(e){msg.textContent="Ошибка записи (проверь правила базы для модераторов)"}
+  mref()};
+setTimeout(mref,1500);setInterval(mref,6e4)})();
+</script>
 </body></html>
