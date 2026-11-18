@@ -365,7 +365,7 @@ $("mmk").onclick=async()=>{if(!isMod()||!DB)return;const msg=$("m_msg"),code=$("
     if(await raw("promos/"+code)){msg.textContent="Такой код уже есть";$("mmk").disabled=false;return}
     const o={ts:Date.now(),max:1,exp:Date.now()+LIM.h*36e5,mod:1};if(kx)o.kx=kx;if(gem)o.gem=gem;if(cid!==""&&cn>0)o.cs={[cid]:cn};
     const k=MKEY();await raw("madm/"+k,"PUT",true);
-    try{await raw("modlog/last","PUT",Date.now());await raw("promos/"+code,"PUT",o)}finally{await raw("madm/"+k,"DELETE").catch(()=>{})}
+    try{await raw("modlog/last","PUT",{".sv":"timestamp"});await raw("promos/"+code,"PUT",o)}finally{await raw("madm/"+k,"DELETE").catch(()=>{})}
     try{localStorage.setItem("kx_modl",String(Date.now()))}catch(e){}
     msg.textContent="Создан: "+code+" ✅ (1 активация, "+LIM.h+" ч)"}catch(e){msg.textContent="Ошибка записи (проверь правила базы для модераторов)"}
   mref()};
