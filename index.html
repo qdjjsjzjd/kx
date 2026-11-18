@@ -494,6 +494,85 @@ header{background:var(--bg);border-bottom:1px solid var(--line)}
 .bg-kings{background-image:linear-gradient(135deg,#3b0a5a,#b01fff,#ffd400,#3b0a5a)}
 .cres{text-align:center;font-size:20px;min-height:28px;margin-top:8px;font-weight:800}
 </style>
+<style>
+/* ===== v3.7: баг-фикс вёрстки ===== */
+/* аватарки: inline background сбрасывал origin/clip, из-за этого в рамке 2px повторялся край градиента */
+.avt{border:0!important;box-sizing:border-box;aspect-ratio:1;background-repeat:no-repeat!important;background-size:cover!important;background-position:center!important;box-shadow:0 0 0 2px var(--accent);overflow:hidden;flex:none}
+.avt.fr-g{box-shadow:0 0 0 3px #ffc83d,0 0 16px #ffc83d99}
+.avt.fr-v{box-shadow:0 0 0 3px #000,0 0 0 5px #7a00ff,0 0 20px #7a00ffcc}
+.avt.fr-r{box-shadow:0 0 0 3px #fff,0 0 0 5px #ff5cc8,0 0 18px #5cc8ff;animation:ringHue 4s linear infinite}
+@keyframes ringHue{to{filter:hue-rotate(360deg)}}
+.avs{gap:14px;padding:7px 8px 12px;scroll-snap-type:x proximity}
+.avs>span{flex:none;display:block;border-radius:50%;scroll-snap-align:center;transition:transform .15s}
+.avs>span:active{transform:scale(.92)}
+.avs>span.sel .avt{box-shadow:0 0 0 3px var(--bg),0 0 0 6px var(--accent)}
+#bigAv{flex:none}
+/* шапка */
+header{gap:8px}
+.me{flex:1 1 0;min-width:0;margin-right:0}
+.me span{max-width:none}
+.mn{display:flex;flex-direction:column;min-width:0;line-height:1.2}
+.mn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mn small{font-size:10px;font-weight:800;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bal{flex:none}
+/* кнопки */
+.btn{line-height:1.2;position:relative;overflow:hidden;text-align:center}
+.btn.sm{min-height:40px}
+.r2{flex-wrap:wrap}
+.r2 .btn{flex:1 1 64px;min-width:0;min-height:44px}
+/* карточки кейсов */
+.cases{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:620px){.cases{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}}
+.case{display:flex;flex-direction:column;align-items:center;min-width:0}
+.case b{display:inline-block;max-width:100%;overflow-wrap:anywhere;line-height:1.3}
+.case .bdg{display:inline-block;vertical-align:middle;white-space:nowrap;margin:4px 0 0}
+.case small{min-height:20px}
+.case s{display:block;margin-bottom:6px}
+.case .r2{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;margin-top:auto}
+.case .r2 .btn{flex:none;min-height:44px;padding:8px 4px;white-space:nowrap}
+.case .r2 .btn:first-child{grid-column:1/-1}
+.qk{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}
+.qk .btn{display:flex;align-items:center;justify-content:center;gap:8px}
+/* нижняя панель */
+.dock{width:calc(100% - 16px);max-width:520px;padding:5px;gap:1px}
+.dk{flex:1 1 0;min-width:0;padding:7px 0 6px}
+.dk span{font-size:9.5px;letter-spacing:-.02em;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+/* карточки: длинные названия */
+.card{min-width:0}
+.card .nm{overflow-wrap:anywhere;line-height:1.2}
+.show .card{width:92px}
+.show .card .nm{font-size:9px;letter-spacing:0}
+/* профиль: титулы */
+.pf{align-items:flex-start}
+.ttl{flex:1 1 100%;display:flex;flex-direction:column;gap:10px;padding-top:12px;border-top:1px solid var(--line)}
+.tchips{display:flex;flex-wrap:wrap;gap:8px}
+.tc{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;font-weight:800;font-size:13px;border:1px solid var(--line);background:var(--bg);max-width:100%;overflow-wrap:anywhere}
+.tc.big{font-size:15px;padding:9px 16px;border-color:var(--accent);color:var(--accent)}
+.tsub{font-size:12px;color:var(--muted);font-weight:700}
+.tpg{height:8px;border-radius:8px;background:var(--bg);overflow:hidden}
+.tpg i{display:block;height:100%;border-radius:8px;background:var(--accent);transition:width .6s}
+/* топы */
+.tr .top{align-items:center}
+.tl{display:flex;align-items:center;gap:10px;min-width:0}
+.tm{font-style:normal;width:34px;text-align:center;font-weight:800;flex:none}
+.tn{display:flex;flex-direction:column;min-width:0}
+.tn b,.tn small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tn small{font-size:11px;color:var(--muted)}
+.tv{flex:none}
+.tr{animation:pop .35s both}
+.tr.p1{border-color:#ffc83d}.tr.p2{border-color:#c9cde0}.tr.p3{border-color:#d98b52}
+/* анимации кнопок «Топы» и «Бутик» */
+@keyframes icoWob{0%,60%,100%{transform:rotate(0) scale(1)}12%{transform:rotate(-16deg) scale(1.15)}28%{transform:rotate(14deg) scale(1.15)}44%{transform:rotate(-8deg) scale(1.05)}}
+@keyframes icoBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px) scale(1.12)}}
+@keyframes hotSweep{0%{transform:translateX(-160%) skewX(-20deg)}60%,100%{transform:translateX(320%) skewX(-20deg)}}
+@keyframes hotPulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 50%,transparent)}60%{box-shadow:0 0 0 7px transparent}}
+.hot{position:relative;overflow:hidden}
+.hot::before{content:"";position:absolute;top:0;bottom:0;left:0;width:38%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.32),transparent);animation:hotSweep 3.4s ease-in-out infinite;pointer-events:none}
+.hot .ico{display:inline-block;font-style:normal;animation:icoWob 3s ease-in-out infinite;transform-origin:50% 65%}
+.dk.hot .ico{animation:icoBob 2.1s ease-in-out infinite}
+.hot:not(.on):not(:disabled){animation:hotPulse 2.6s ease-out infinite}
+.dk.hot:not(.on){animation:none}
+</style>
 </head>
 <body>
 <div id="splash"><div class="sp-g"></div><div class="sp-t">Card Rush - Welcome</div></div>
@@ -523,6 +602,7 @@ header{background:var(--bg);border-bottom:1px solid var(--line)}
 <section id="cases" class="sec on">
   <div class="ev" id="evBox"></div>
   <button class="btn alt" data-a="tab" data-v="mods" style="width:100%;margin:2px 0 10px">💎 <span data-t="Модификаторы за гемы"></span></button>
+  <div class="qk" id="qk"></div>
   <div class="stk nb" id="nbBox"></div><p class="hint" id="taxInfo"></p>
   <h3 data-t="Кейсы"></h3>
   <div class="cases" id="caseList"></div>
@@ -602,7 +682,7 @@ header{background:var(--bg);border-bottom:1px solid var(--line)}
 <section id="prof" class="sec">
   <div id="offers"></div>
   <div class="pf"><div id="bigAv"></div><div><input id="nick" maxlength="16" data-tp="Ник"><div class="hint" id="stats" style="margin:6px 0 0"></div>
-    <div class="idrow"><span>ID: <b id="myid"></b></span><button class="btn alt sm" data-a="copyid" style="padding:6px 10px">⧉</button></div></div></div>
+    <div class="idrow"><span>ID: <b id="myid"></b></span><button class="btn alt sm" data-a="copyid" style="padding:6px 10px">⧉</button></div></div><div id="titles" class="ttl"></div></div>
   <h3 data-t="Витрина"></h3><div class="show" id="showc"></div>
   <h3 data-t="Аватарка"></h3><div class="avs" id="avs"></div>
   <h3 data-t="Выбери до 5 карточек в витрину"></h3><div class="grid" id="pickGrid"></div>
@@ -676,8 +756,10 @@ const MODMS=864e5,modOn=id=>!!(S.mods&&S.mods[id]>Date.now()),modLeft=id=>Math.m
 const def=()=>({season:SEASON,bal:START,gem:0,lp:{},lang:LANG,taxTs:Date.now(),taxPaid:0,snd:true,cases:{},mods:{},ord:[],codes:[],inv:[],list:[],nid:1,ts:Date.now(),st:{},cost:{},biz:[],out:[],seen:[],uid:Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4),prof:{nick:tt("Игрок")+(100+Math.floor(Math.random()*900)),av:"😎",show:[]}});
 let invTab="c",S=def(),M=[],busy=false,cnt=0,cur="cases",IN={},inBusy=0;
 const $=id=>document.getElementById(id);
-const fmt=n=>n>=1e15?fmtC(n):Math.round(n).toLocaleString(LOC);
-const fmtC=n=>{const D=LANG==="en",f=(v,x)=>String(+v.toFixed(2)).replace(".",D?".":",")+x;return n>=1e18?f(n/1e18,D?"Qi":" квинт."):n>=1e15?f(n/1e15,D?"Qa":" квадр."):n>=1e12?f(n/1e12,D?"T":" трлн"):n>=1e9?f(n/1e9,D?"B":" млрд"):fmt(n)};
+const NU=()=>LANG==="en"?[[1e33,"Dc"],[1e30,"No"],[1e27,"Oc"],[1e24,"Sp"],[1e21,"Sx"],[1e18,"Qi"],[1e15,"Qa"],[1e12,"T"],[1e9,"B"],[1e6,"M"]]:[[1e33,"дец"],[1e30,"нон"],[1e27,"окт"],[1e24,"септ"],[1e21,"секст"],[1e18,"квинт"],[1e15,"квадр"],[1e12,"трлн"],[1e9,"млрд"],[1e6,"млн"]];
+/* v3.7: от 1 млн числа всегда сокращаются: 1.6млн, 2.5млрд, 19.9квадр */
+const fmt=n=>{n=+n;if(!isFinite(n))return"∞";const a=Math.abs(n),r=Math.round(a),s=n<0&&r>0?"-":"";if(a<1e6)return s+r.toLocaleString(LOC);const U=NU();let i=U.findIndex(u=>a>=u[0]);if(i<0)i=U.length-1;let v=Math.round(a/U[i][0]*100)/100;if(v>=1000&&i>0){i--;v=Math.round(a/U[i][0]*100)/100}return s+String(v)+U[i][1]};
+const fmtC=fmt;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 /* Состояние карт: cn = % на момент ct (только у карт в инвентаре износ идёт со временем) */
 const DECAY=2,RMAX=90,RCOST=1.1,rcost=()=>RCOST*(evNow().t==="rest"?.7:1),clp=(x,a,b)=>Math.min(b,Math.max(a,x));
@@ -1428,7 +1510,7 @@ ${AS.map(a=>{const own=V_.ast[a[0]],inc=aInc(a);return`<div class="stk"><div cla
 <h3>🗂️ Моя коллекция (${V_.col.length})</h3><div class="grid">${V_.col.slice().sort((a,b)=>ccVal(b)-ccVal(a)).map(c=>`<div class="item">${ccHTML(c)}</div>`).join("")||'<span class="hint">Пока пусто</span>'}</div>`}
 (()=>{const mk=(c,h,v)=>{const b=document.createElement("button");b.className=c;b.innerHTML=h;b.dataset.a="tab";b.dataset.v=v;return b};
   const s=document.createElement("section");s.id="vip";s.className="sec";document.body.insertBefore(s,$("prof"));
-  $("dp").insertBefore(mk("tb",`<span>💸 ${tt("Бутик")}</span>`,"vip"),$("dp").querySelector(".sp"));$("dock").appendChild(mk("dk",`💸<span>${tt("Бутик")}</span>`,"vip"))})();
+  $("dp").insertBefore(mk("tb hot",`<span><i class="ico">💸</i> ${tt("Бутик")}</span>`,"vip"),$("dp").querySelector(".sp"));$("dock").appendChild(mk("dk hot",`<i class="ico">💸</i><span>${tt("Бутик")}</span>`,"vip"))})();
 {const _t=tab;tab=function(v){_t(v);if(v==="vip"){rVip();pullMint()}}}
 {const _s=SDA;SDA=function(a,v){switch(a){case"vbuy":vbuy(v);return 1;case"vsell":vsell(v);return 1;case"vinsp":vinsp(v);return 1;case"abuy":abuy(v);return 1;case"acol":acol(v);return 1;case"bet":bet(v);return 1}return _s(a,v)}}
 CHANGELOG.unshift({v:"3.1",d:"17.11.2026",t:["Бутик: большие траты 💸","Boutique: spend big 💸"],it:[
@@ -1450,7 +1532,7 @@ function don(f){const amt=Math.floor(S.bal*+f);if(amt<1000){toast("Слишко�
   el.insertAdjacentHTML("afterbegin",`<div class="stk"><div class="top"><b>🎁 Ежедневный сундук</b><span class="hint">серия: ${d.s||0}</span></div><p class="hint" style="margin:6px 0">Деньги и гемы; чем длиннее серия (до 10), тем больше награда. Серия сгорает через 2 дня.</p><button class="btn" data-a="dchest" style="width:100%" ${w>0?"disabled":""}>${w>0?"Через "+fmtT(w):"Открыть"}</button></div>`);
   el.insertAdjacentHTML("beforeend",`<h3>🔥 Благотворительный фонд</h3><p class="hint">Отдай долю баланса: растёт титул, а за каждые 10 млн приходит 💎 (до 50).</p><div class="stk"><div class="r2">${[["0.05","5%"],["0.25","25%"],["0.5","50%"]].map(b=>`<button class="btn alt" data-a="don" data-v="${b[0]}">${b[1]}</button>`).join("")}</div></div>`)}}
 {const _v=vinsp;vinsp=function(id){_v(id);const c=V().col.find(x=>x.id===id),b=c&&$("modal").querySelector('[data-a="vsell"]');if(b&&!c.gr)b.insertAdjacentHTML("beforebegin",`<button class="btn" data-a="vgrade" data-v="${c.id}">🔍 Оценить (3% = ${fmtC(Math.floor(ccVal(c)*.03))} $)</button>`)}}
-{const _p=rProf;rProf=function(){_p();const C=V().col;if(C.length)$("stats").textContent+=" · 🎴 "+C.length+" ("+fmtC(C.reduce((t,c)=>t+ccVal(c),0))+" $) · "+rank()[1]}}
+{const _p=rProf;rProf=function(){_p();const C=V().col;if(C.length)$("stats").textContent+=" · 🎴 "+C.length+" ("+fmtC(C.reduce((t,c)=>t+ccVal(c),0))+" $)"}}
 {const _s=SDA;SDA=function(a,v){switch(a){case"vgrade":vgrade(v);return 1;case"aup":aup(v);return 1;case"dchest":dchest();return 1;case"don":don(v);return 1}return _s(a,v)}}
 CHANGELOG.unshift({v:"3.2",d:"18.11.2026",t:["Бутик 2.0 ✨","Boutique 2.0 ✨"],it:[
  ["Оценка коллекционных карт 1–10: меняет ценность от ×0,6 до ×1,5","Collectible grading 1–10: changes value from ×0.6 to ×1.5"],
@@ -1535,7 +1617,7 @@ function mon(){const l=S.mon||0;if(l>=10)return;const p=monP(l);if(S.bal<p)retur
 <div class="r2" style="margin-top:8px">${FR.map(x=>`<button class="btn alt sm" data-a="cframe" data-v="${x[0]}" ${c.f===x[0]?"disabled":""}>${x[1]} ${x[2]}<br>${c.f===x[0]?"куплено":fmtC(x[3])+" $"}</button>`).join("")}</div></div>
 <h3>🗿 Монумент твоего величия</h3><p class="hint">10 уровней, каждый в 10 раз дороже. Сейчас: ${MN[l]} (${l}/10). Просто чтобы все видели.</p>
 <div class="stk"><button class="btn" data-a="mon" style="width:100%" ${l>=10||S.bal<monP(l)?"disabled":""}>${l>=10?"Построено всё 🏆":"Улучшить до «"+MN[l+1]+"» — "+fmtC(monP(l))+" $"}</button></div>`)}}
-{const _p=rProf;rProf=function(){_p();const t=cosTag();if(t||S.mon)$("stats").textContent+=" · "+t+(S.mon?" 🗿"+S.mon:"")}}
+/* v3.7: титул, рамка и монумент теперь в блоке #titles профиля */
 {const _s=SDA;SDA=function(a,v){switch(a){case"ctitle":ctitle();return 1;case"cframe":cframe(v);return 1;case"mon":mon();return 1}return _s(a,v)}}
 CHANGELOG.unshift({v:"3.5",d:"19.11.2026",t:["Для богатых 💎","For the rich 💎"],it:[["Фикс: счётчик тиража коллекционных карт после перезахода","Fix: collectible edition counter after reload"],["Мега-активы: остров-государство, континент, планета, звёздная система, галактика","Mega assets: island nation, continent, planet, star system, galaxy"],["Свой титул, рамки профиля, монумент в 10 уровней и новые ранги мецената","Custom title, profile frames, a 10-level monument and new patron ranks"]]});
 /* ===== v3.6: фильтр ников и топы ===== */
@@ -1545,20 +1627,48 @@ function badNick(v){let n=String(v||"").toLowerCase().replace(/ё/g,"е").replac
   const m=n.replace(/[abcehkmoptxy]/g,c=>CLK[c]),q=x=>x.replace(/(.)\1+/g,"$1"),l=n.replace(/[авсенкмортху]/g,c=>({"а":"a","в":"b","с":"c","е":"e","н":"h","к":"k","м":"m","о":"o","р":"p","т":"t","х":"x","у":"y"})[c]),F=[n,m,l,q(n),q(m),q(l)];return BADL.some(w=>F.some(x=>x.includes(w)))}
 {const _h=rHead;rHead=function(){if(S.prof&&badNick(S.prof.nick||"")){S.prof.nick=tt("Игрок")+S.uid;save()}_h()}}
 const TP=[["c","💰","Капитал"],["k","🎴","Коллекции"],["s","💸","Траты"],["q","🃏","Карточек"]];let TB=null,TT="c";
-const myTop=()=>{const V_=V(),tot=S.inv.reduce((t,c)=>t+val(c),0)+S.list.reduce((t,c)=>t+val(c),0);return{n:String(S.prof.nick||"Игрок").slice(0,16),a:S.prof.av,c:Math.round(tot+S.bal),k:Math.round(V_.col.reduce((t,c)=>t+ccVal(c),0)),s:Math.round(V_.spent),q:S.inv.length+S.list.length,t:Date.now()}};
+const myTop=()=>{const V_=V(),tot=S.inv.reduce((t,c)=>t+val(c),0)+S.list.reduce((t,c)=>t+val(c),0);return{n:String(S.prof.nick||"Игрок").slice(0,16),a:S.prof.av,c:Math.round(tot+S.bal),k:Math.round(V_.col.reduce((t,c)=>t+ccVal(c),0)),s:Math.round(V_.spent),q:S.inv.length+S.list.length,r:rank()[1],ti:String(S.cos&&S.cos.t||"").slice(0,16),f:((FR.find(x=>x[0]===(S.cos||{}).f)||[])[1])||"",t:Date.now()}};
 async function tpush(){if(!DB_URL||LOCK||!AUTH)return;try{await fetch(`${DB_URL}/top/${S.uid}.json`,{method:"PUT",body:JSON.stringify(myTop())})}catch(e){}}
 async function tpull(){await tpush();try{const r=await fetch(`${DB_URL}/top.json`);if(r.ok)TB=(await r.json())||{}}catch(e){}if(cur==="tops")rTops()}
 const tAv=a=>a&&typeof a==="object"&&CARDS[+a.c]&&BGS[+a.g]?{c:+a.c,g:+a.g}:typeof a==="string"?esc(a.slice(0,8)):"🙂";
 function rTops(){let h=`<h3>🏆 Топы игроков</h3><div class="stk"><div class="r2">${TP.map(t=>`<button class="btn ${t[0]===TT?"":"alt"} sm" data-a="ttab" data-v="${t[0]}">${t[1]} ${t[2]}</button>`).join("")}</div></div>`;
-  if(!TB)h+='<p class="hint">Загрузка…</p>';else{const me=String(S.uid),rows=Object.entries(TB).filter(([k,v])=>v&&typeof v==="object").map(([k,v])=>({k,n:String(v.n||"Игрок").slice(0,16),a:v.a,v:Math.max(0,+v[TT]||0)})).filter(r=>r.v>0||r.k===me).sort((a,b)=>b.v-a.v),mi=rows.findIndex(r=>r.k===me);
-    h+=rows.slice(0,25).map((r,i)=>`<div class="stk" style="${r.k===me?"border-color:var(--accent)":""}"><div class="top"><span>${["🥇","🥈","🥉"][i]||"#"+(i+1)} ${avHTML(tAv(r.a),28)} <b>${esc(r.n)}</b></span><b>${fmtC(r.v)}${TT==="q"?"":" $"}</b></div></div>`).join("")||'<p class="hint">Пока никого</p>';
-    if(mi>=25)h+=`<p class="hint">Твоё место: #${mi+1}</p>`}
+  if(!TB)h+='<p class="hint">Загрузка…</p>';else{const me=String(S.uid),rows=Object.entries(TB).filter(([k,v])=>v&&typeof v==="object").map(([k,v])=>({k,n:String(v.n||"Игрок").slice(0,16),a:v.a,r:String(v.r||"").slice(0,30),ti:String(v.ti||"").replace(/[<>&"'`]/g,"").slice(0,16),v:Math.max(0,+v[TT]||0)})).filter(r=>r.v>0||r.k===me).sort((a,b)=>b.v-a.v),mi=rows.findIndex(r=>r.k===me);
+    h+=rows.slice(0,25).map((r,i)=>{const sub=[r.r,r.ti?"「"+r.ti+"」":""].filter(Boolean).join(" · ");return `<div class="stk tr${r.k===me?" me":""}${i<3?" p"+(i+1):""}" style="animation-delay:${i*35}ms"><div class="top"><span class="tl"><i class="tm">${["🥇","🥈","🥉"][i]||"#"+(i+1)}</i>${avHTML(tAv(r.a),34)}<span class="tn"><b>${esc(r.n)}</b>${sub?`<small>${esc(sub)}</small>`:""}</span></span><b class="tv">${fmtC(r.v)}${TT==="q"?"":" $"}</b></div></div>`}).join("")||'<p class="hint">Пока никого</p>';
+    if(mi>=0)h+=`<p class="hint" style="text-align:center">${tt("Твоё место: #{0} из {1}",mi+1,rows.length)}</p>`}
   $("tops").innerHTML=h}
-(()=>{const s=document.createElement("section");s.id="tops";s.className="sec";document.body.insertBefore(s,$("prof"));const b=document.createElement("button");b.className="tb";b.innerHTML="<span>🏆 "+tt("Топы")+"</span>";b.dataset.a="tab";b.dataset.v="tops";$("dp").insertBefore(b,$("dp").querySelector(".sp"));setTimeout(tpush,15000);setInterval(tpush,12e4)})();
+(()=>{const s=document.createElement("section");s.id="tops";s.className="sec";document.body.insertBefore(s,$("prof"));const b=document.createElement("button");Object.assign(EN,{"Топы":"Top players"});b.className="tb hot";b.innerHTML='<span><i class="ico">🏆</i> '+tt("Топы")+'</span>';b.dataset.a="tab";b.dataset.v="tops";$("dp").insertBefore(b,$("dp").querySelector(".sp"));setTimeout(tpush,15000);setInterval(tpush,12e4)})();
 {const _t=tab;tab=function(v){_t(v);if(v==="tops"){rTops();tpull()}}}
 {const _s=SDA;SDA=function(a,v){if(a==="ttab"){TT=v;rTops();return 1}return _s(a,v)}}
 Object.assign(EN,{"Топы":"Top players"});
 CHANGELOG.unshift({v:"3.6",d:"19.11.2026",t:["Топы и фильтр ников 🏆","Leaderboards and nickname filter 🏆"],it:[["Топы игроков: капитал, коллекции, траты, число карточек","Leaderboards: wealth, collections, spending, card count"],["Фильтр мата в логине при регистрации и в нике профиля","Profanity filter for login at sign-up and profile nickname"]]});
+/* ===== v3.7: баг-фикс, титулы в профиле, анимации ===== */
+Object.assign(EN,{"Твоё место: #{0} из {1}":"Your place: #{0} of {1}","До «{0}»: ещё {1} $ трат":"To “{0}”: {1} $ more spending","Максимальный титул 🏆":"Max title 🏆","Свой титул, рамка и монумент — в Бутике":"Custom title, frame and monument — in the Boutique","Титулы":"Titles","Рамка":"Frame"});
+const RKC=["#9aa0ad","#4aa3ff","#c9cde0","#ffc83d","#7ee8ff","#ff5cc8","#ff8a3d","#ff3d6e"];
+function rTitles(){const el=$("titles");if(!el)return;const V_=V(),rk=rank(),ri=RK.indexOf(rk),nx=RK[ri+1],c=S.cos||{},fr=FR.find(x=>x[0]===c.f),vl=S.vl||0,mn=S.mon||0,sp=V_.spent,col=RKC[Math.min(ri,RKC.length-1)];
+  let h=`<div class="tsub">🎖️ ${tt("Титулы")}</div><div class="tchips"><span class="tc rk" style="border-color:${col};color:${col}">🏅 ${esc(rk[1])}</span>`;
+  if(c.t)h+=`<span class="tc big">🏷️ 「${esc(c.t)}」</span>`;
+  if(vl>0&&VT[vl-1])h+=`<span class="tc">👑 ${esc(VT[vl-1][1])}</span>`;
+  if(mn>0)h+=`<span class="tc">🗿 ${esc(MN[mn])} · ${mn}/10</span>`;
+  if(fr)h+=`<span class="tc">${fr[1]} ${esc(fr[2])}</span>`;
+  h+=`</div>`;
+  if(!c.t&&!fr&&!mn&&!vl)h+=`<div class="tsub">${tt("Свой титул, рамка и монумент — в Бутике")}</div>`;
+  if(nx){const pct=Math.max(0,Math.min(100,(sp-rk[0])/(nx[0]-rk[0])*100));h+=`<div class="tpg"><i style="width:${pct.toFixed(1)}%"></i></div><div class="tsub">${tt("До «{0}»: ещё {1} $ трат",esc(nx[1]),fmtC(Math.max(0,nx[0]-sp)))}</div>`}
+  else h+=`<div class="tsub">${tt("Максимальный титул 🏆")}</div>`;
+  el.innerHTML=h}
+{const _p=rProf;rProf=function(){_p();rTitles();const f=(S.cos||{}).f,b=$("bigAv").firstElementChild;if(b&&f)b.classList.add("fr-"+f);const a=S.prof.av,k=typeof a==="object"?"c|"+a.c+"|"+a.g:"e|"+a;document.querySelectorAll("#avs>span").forEach(x=>x.classList.toggle("sel",x.dataset.v===k))}}
+{const _h=rHead;rHead=function(){_h();const c=S.cos||{},t=c.t?"「"+c.t+"」":rank()[1];$("head").innerHTML=avHTML(S.prof.av,38)+`<div class="mn"><span>${esc(S.prof.nick||tt("Игрок"))}</span><small>${esc(t)}</small></div>`;const b=$("head").firstElementChild;if(b&&c.f)b.classList.add("fr-"+c.f)}}
+{const _r=rVip;rVip=function(){_r();document.querySelectorAll('#vip [data-a="dchest"]:not(:disabled)').forEach(b=>b.classList.add("hot"))}}
+$("qk").innerHTML=`<button class="btn alt hot qb" data-a="tab" data-v="tops"><i class="ico">🏆</i><span>${tt("Топы")}</span></button><button class="btn alt hot qb" data-a="tab" data-v="vip"><i class="ico">💸</i><span>${tt("Бутик")}</span></button>`;
+rHead();rProf();
+CHANGELOG.unshift({v:"3.7",d:"19.11.2026",t:["Баг-фикс и полировка 🛠️","Bug fixes & polish 🛠️"],it:[
+ ["Фикс: кривые аватарки — на краю круга больше нет «обрезанного» куска фона, размеры в шапке, профиле и топах выровнены","Fix: broken avatars — no more cut-off background strip on the circle edge, sizes aligned in header, profile and tops"],
+ ["Фикс: кнопки в карточках кейсов вылезали за край экрана — теперь «Купить» на всю ширину, 🔍 и ×5 ровно под ней","Fix: buttons in case cards overflowed the screen — Buy is now full width with 🔍 and ×5 evenly below"],
+ ["Фикс: одинаковая высота кнопок в рядах, подписи нижней панели больше не обрезаются, длинные названия карточек в витрине помещаются","Fix: equal button heights in rows, bottom bar labels no longer clipped, long card names fit in the showcase"],
+ ["Фикс: название «Топы» не переводилось на английский","Fix: “Топы” was not translated to English"],
+ ["Числа от 1 млн везде сокращаются: 1.6млн, 2.5млрд, 19.9квадр (баланс, цены, акции, топы, Бутик, админка)","Numbers from 1M are shortened everywhere: 1.6M, 2.5B, 19.9Qa (balance, prices, stocks, tops, Boutique, admin)"],
+ ["Титулы в профиле: ранг, свой титул, VIP-клуб, монумент и рамка отдельным блоком, шкала до следующего ранга; титул виден в шапке и в топах, рамка надевается на аватарку","Titles in profile: rank, custom title, VIP club, monument and frame in a dedicated block with a progress bar; the title shows in the header and tops, the frame goes on your avatar"],
+ ["Анимации кнопок «Топы» и «Бутик»: покачивание значка, блик, пульс; быстрые кнопки в Магазине","Animated “Tops” and “Boutique” buttons: wobbling icon, shine and pulse; quick buttons in the Shop"],
+ ["Новое: выбранная аватарка подсвечивается, в топах видны ранги и титулы игроков, а твоё место показывается всегда","New: the chosen avatar is highlighted, tops show players’ ranks and titles, and your place is always shown"]]});
 function openLog(){const en=LANG==="en",i=en?1:0;
  $("modal").innerHTML=`<div class="mb logb"><div class="logh"><b>${tt("Что нового")}</b><span class="logv">v${CHANGELOG[0].v}</span></div><div class="logs">${CHANGELOG.map(e=>`<div><div class="logh"><b>${e.t[i]}</b><span class="logd">v${e.v} · ${e.d}</span></div><ul>${e.it.map(x=>`<li>${x[i]}</li>`).join("")}</ul></div>`).join("")}</div><button class="btn" data-a="close" style="width:100%">${tt("Закрыть")}</button></div>`;
  $("modal").classList.add("on");lset("kx_logv",CHANGELOG[0].v);$("nwd").hidden=true}
