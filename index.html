@@ -1149,29 +1149,35 @@ const CHANGELOG=[
 Object.assign(EN,{"Бутик":"Boutique"});
 const V=()=>{S.col=S.col||[];S.ast=S.ast||{};S.mint=S.mint||{};S.spent=S.spent||0;return S};
 const ED=[["holo","HOLO","🌈","Голограмма",5e6,500],["glit","GLCH","👾","Глитч",25e6,300],["lava","LAVA","🌋","Магма",12e7,200],["crys","CRYS","💠","Кристалл",6e8,100],["gala","GALX","🌌","Галактика",5e9,50],["void","VOID","🕳️","Чёрная дыра",8e10,20],["gold","GOLD","👑","Золото 24K",1e12,7]];
+/* Ресток: каждые RSCD() в продажу докидывают RSQ() карт; чем меньше тираж, тем дольше кулдаун и меньше пополнение */
+const RS0=Date.UTC(2026,10,19,12,0),RSQ=e=>Math.max(1,Math.round(e[5]*.1)),RSCD=e=>Math.round(15*Math.pow(500/e[5],1.6))*6e4;
+const rsK=e=>Math.max(0,Math.floor((nowS()-RS0)/RSCD(e))),rsCap=e=>e[5]+RSQ(e)*rsK(e),rsNext=e=>RS0+(rsK(e)+1)*RSCD(e);
+const fmtDur=ms=>{const s=Math.max(0,Math.ceil(ms/1000)),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),c=s%60,p=x=>String(x).padStart(2,"0");return(d?d+"д ":"")+p(h)+":"+p(m)+":"+p(c)};
+const fmtCd=ms=>{const m=Math.round(ms/6e4),d=Math.floor(m/1440),h=Math.floor(m%1440/60),mm=m%60;return[d&&d+"д",h&&h+"ч",mm&&mm+"м"].filter(Boolean).join(" ")};
+const serTxt=(c,e)=>c.n<=e[5]?`#${c.n}/${e[5]}`:`#${c.n}`;
 const AS=[["isl","🏝️","Частный остров",2e6],["yac","🛥️","Мегаяхта",15e6],["jet","✈️","Частный джет",9e7],["twr","🏙️","Небоскрёб",6e8],["sat","🛰️","Свой спутник",8e9],["stn","🚀","Орбитальная станция",12e10],["moo","🌙","Участок на Луне",3e12],["mar","🪐","Колония на Марсе",9e13]];
 const RK=[[0,"Новичок"],[1e6,"Меценат"],[1e8,"Серебряный меценат"],[1e10,"Золотой меценат"],[1e12,"Платиновый меценат"],[1e14,"Легенда Card Rush"]];
 const rank=()=>RK.filter(r=>V().spent>=r[0]).pop(),edOf=id=>ED.find(x=>x[0]===id);
 const smul=(n,t)=>n===1?10:n<=9?4:(/^(\d)\1+$/.test(String(n))||n%100===0)?3:n<=t/10?1.5:1;
 const ccVal=c=>{const e=edOf(c.e);return Math.round(e[4]*smul(c.n,e[5])*(c.gr?.5+c.gr*.1:1))};
 const cid=(e,n)=>{let h=2166136261;const s=e[1]+n+"CR";for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return`CR-${e[1]}-${String(n).padStart(4,"0")}-${(h>>>0).toString(36).slice(-3).toUpperCase()}`};
-const ccHTML=(c,plain)=>{const e=edOf(c.e);return`<div class="cc bg-${c.e}" ${plain?"":`data-a="vinsp" data-v="${c.id}"`}><i class="ccs"></i><div class="cct">${e[3]}</div><div class="cci">${e[2]}</div><div><div class="ccn">#${c.n}/${e[5]}${c.gr?` · 🔍${c.gr}/10`:""}</div><div class="ccid">${c.id}</div></div></div>`};
+const ccHTML=(c,plain)=>{const e=edOf(c.e);return`<div class="cc bg-${c.e}" ${plain?"":`data-a="vinsp" data-v="${c.id}"`}><i class="ccs"></i><div class="cct">${e[3]}</div><div class="cci">${e[2]}</div><div><div class="ccn">${serTxt(c,e)}${c.gr?` · 🔍${c.gr}/10`:""}</div><div class="ccid">${c.id}</div></div></div>`};
 let MINT={},MINTL=0,VBR="",VB=0;
 /* серийный номер берётся из общего счётчика в базе (у всех игроков уникален); офлайн — локальный */
 async function mintSerial(e){const t=e[5],p="mint/"+e[0];for(let i=0;i<25&&!DB_URL;i++)await new Promise(r=>setTimeout(r,300));
-  if(DB_URL&&!LOCK){for(let k=0;k<6;k++){try{const g=await fetch(`${DB_URL}/${p}.json`,{headers:{"X-Firebase-ETag":"true"}});if(!g.ok)break;const et=g.headers.get("ETag"),n=(+(await g.json())||0)+1;if(n>t)return 0;
+  if(DB_URL&&!LOCK){for(let k=0;k<6;k++){try{const g=await fetch(`${DB_URL}/${p}.json`,{headers:{"X-Firebase-ETag":"true"}});if(!g.ok)break;const et=g.headers.get("ETag"),n=(+(await g.json())||0)+1;if(n>rsCap(e))return 0;
     const w=await fetch(`${DB_URL}/${p}.json`,{method:"PUT",headers:{"if-match":et},body:JSON.stringify(n)});if(w.ok)return n}catch(x){break}}}
-  const m=V().mint;m[e[0]]=(m[e[0]]||0)+1;return m[e[0]]>t?0:m[e[0]]}
+  const m=V().mint;m[e[0]]=(m[e[0]]||0)+1;return m[e[0]]>rsCap(e)?0:m[e[0]]}
 async function pullMint(){for(let i=0;i<25&&!DB_URL;i++)await new Promise(r=>setTimeout(r,300));if(DB_URL){try{const r=await fetch(`${DB_URL}/mint.json`);if(r.ok){MINT=(await r.json())||{};MINTL=1}}catch(e){}}if(cur==="vip")rVip()}
 async function vbuy(id){const e=edOf(id);if(!e||VB)return;if(S.bal<e[4]){toast(tt("Не хватает $ 😕"));return}
   VB=1;toast("⏳ Чеканка…");const n=await mintSerial(e);VB=0;
-  if(!n){toast("Тираж «"+e[3]+"» распродан");pullMint();return}
+  if(!n){toast("«"+e[3]+"»: всё разобрали, жди рестока");pullMint();return}
   if(S.bal<e[4]){toast(tt("Не хватает $ 😕"));return}
   const V_=V(),c={e:id,n,id:cid(e,n),ts:Date.now()};S.bal-=e[4];V_.spent+=e[4];V_.col.push(c);MINT[id]=Math.max(MINT[id]||0,n);
   sfx("win",5);winFx(5);toast("🎴 "+c.id+(smul(n,e[5])>1?" · ×"+smul(n,e[5])+" за номер!":""));upd();rVip();vinsp(c.id)}
 function vsell(id){const V_=V(),i=V_.col.findIndex(c=>c.id===id);if(i<0)return;const c=V_.col.splice(i,1)[0],p=Math.floor(ccVal(c)*.7);S.bal+=p;sfx("coin");closeM();toast("+"+fmtC(p)+" $");upd();rVip()}
 function vinsp(id){const c=V().col.find(x=>x.id===id);if(!c)return;const e=edOf(c.e);
-  $("modal").innerHTML=`<div class="mb insp">${ccHTML(c,1)}<div class="idesc"><div><span>ID</span><b>${c.id}</b></div><div><span>Издание</span><b>${e[2]} ${e[3]}</b></div><div><span>Номер</span><b>#${c.n} из ${e[5]}</b></div><div><span>Множитель номера</span><b>×${smul(c.n,e[5])}</b></div><div><span>Ценность</span><b>${fmtC(ccVal(c))} $</b></div><div><span>Отчеканена</span><b>${new Date(c.ts).toLocaleDateString(LOC)}</b></div></div><button class="btn alt" data-a="vsell" data-v="${c.id}">Продать за ${fmtC(Math.floor(ccVal(c)*.7))} $</button><button class="btn alt" data-a="close" style="width:100%">${tt("Закрыть")}</button></div>`;$("modal").classList.add("on")}
+  $("modal").innerHTML=`<div class="mb insp">${ccHTML(c,1)}<div class="idesc"><div><span>ID</span><b>${c.id}</b></div><div><span>Издание</span><b>${e[2]} ${e[3]}</b></div><div><span>Номер</span><b>${c.n<=e[5]?"#"+c.n+" из "+e[5]:"#"+c.n+" (ресток)"}</b></div><div><span>Множитель номера</span><b>×${smul(c.n,e[5])}</b></div><div><span>Ценность</span><b>${fmtC(ccVal(c))} $</b></div><div><span>Отчеканена</span><b>${new Date(c.ts).toLocaleDateString(LOC)}</b></div></div><button class="btn alt" data-a="vsell" data-v="${c.id}">Продать за ${fmtC(Math.floor(ccVal(c)*.7))} $</button><button class="btn alt" data-a="close" style="width:100%">${tt("Закрыть")}</button></div>`;$("modal").classList.add("on")}
 const aInc=a=>{const t=V().ast[a[0]];return t?Math.floor(a[3]*(a[4]||1)*(.005+.001*((S.lvl||{})[a[0]]||0))*Math.min(Date.now()-t,6048e5)/864e5):0};
 function abuy(id){const a=AS.find(x=>x[0]===id),V_=V();if(!a||V_.ast[id])return;if(S.bal<a[3]){toast(tt("Не хватает $ 😕"));return}S.bal-=a[3];V_.spent+=a[3];V_.ast[id]=Date.now();sfx("win",4);winFx(4);toast(a[1]+" "+a[2]+" — твой!");upd();rVip()}
 function acol(id){const a=AS.find(x=>x[0]===id),p=a&&aInc(a);if(!p)return;S.bal+=p;V().ast[id]=Date.now();sfx("coin");toast("+"+fmtC(p)+" $");upd();rVip()}
@@ -1182,13 +1188,14 @@ function bet(f){const amt=Math.floor(f==="all"?S.bal:S.bal*+f);if(amt<100){toast
   VBR=`<b class="${m>=1?"good":"bad"}" style="font-size:22px">×${m}</b> · ${d>=0?"+":"−"}${fmtC(Math.abs(d))} $`;upd();rVip()}
 function rVip(){const V_=V(),rk=rank();
   $("vip").innerHTML=`<div class="stk"><div class="top"><b>🏅 ${rk[1]}</b><b>${fmtC(V_.spent)} $</b></div><p class="hint" style="margin:6px 0 0">Потрачено в Бутике. Чем больше — тем выше титул.</p></div>
-<h3>🎴 Коллекционные издания</h3><p class="hint">Ограниченные тиражи. У каждой карты свой ID и номер: #1 — ×10, #2–9 — ×4, красивые номера — ×3. Продажа — 70% ценности.</p>
-<div class="grid">${ED.map(e=>{const used=Math.max(MINT[e[0]]||0,V_.mint[e[0]]||0,...V_.col.filter(c=>c.e===e[0]).map(c=>c.n)),left=e[5]-used;return`<div class="item" style="cursor:default"><div class="cc bg-${e[0]}"><i class="ccs"></i><div class="cct">${e[3]}</div><div class="cci">${e[2]}</div><div class="ccn">осталось ${MINTL||used?left:"…"}/${e[5]}</div></div><button class="btn sm" data-a="vbuy" data-v="${e[0]}" ${S.bal<e[4]||left<=0?"disabled":""}>${left<=0?"Распродано":fmtC(e[4])+" $"}</button></div>`}).join("")}</div>
+<h3>🎴 Коллекционные издания</h3><p class="hint">Ограниченные тиражи с рестоком: чем меньше тираж, тем реже и меньше докидывают. У каждой карты свой ID и номер: #1 — ×10, #2–9 — ×4, красивые номера — ×3. Продажа — 70% ценности.</p>
+<div class="grid">${ED.map(e=>{const used=Math.max(MINT[e[0]]||0,V_.mint[e[0]]||0,...V_.col.filter(c=>c.e===e[0]).map(c=>c.n)),left=rsCap(e)-used;return`<div class="item" style="cursor:default"><div class="cc bg-${e[0]}"><i class="ccs"></i><div class="cct">${e[3]}</div><div class="cci">${e[2]}</div><div class="ccn">в наличии ${MINTL||used?left:"…"}</div></div><button class="btn sm" data-a="vbuy" data-v="${e[0]}" ${S.bal<e[4]||left<=0?"disabled":""}>${left<=0?"Нет в наличии":fmtC(e[4])+" $"}</button><div class="hint rsl" data-rs="${e[0]}" style="margin:0;text-align:center;font-size:11px">⏱ ресток через ${fmtDur(rsNext(e)-nowS())} · +${RSQ(e)}</div><div class="hint" style="margin:0;text-align:center;font-size:11px">каждые ${fmtCd(RSCD(e))}</div></div>`}).join("")}</div>
 <h3>🏝️ Престиж-активы</h3><p class="hint">Покупаются один раз и приносят 0,5% цены в сутки (копится до 7 дней).</p>
 ${AS.map(a=>{const own=V_.ast[a[0]],inc=aInc(a);return`<div class="stk"><div class="top"><b>${a[1]} ${a[2]}</b>${own?`<button class="btn sm" data-a="acol" data-v="${a[0]}" ${inc?"":"disabled"}>Собрать ${fmtC(inc)} $</button><button class="btn alt sm" data-a="aup" data-v="${a[0]}">⬆ ур.${(S.lvl||{})[a[0]]||0}/5</button>`:`<button class="btn sm" data-a="abuy" data-v="${a[0]}" ${S.bal<a[3]?"disabled":""}>${fmtC(a[3])} $</button>`}</div></div>`}).join("")}
 <h3>🎰 Высокие ставки</h3><p class="hint">Множители от ×0 до ×500. Ставка — доля твоего баланса.</p>
 <div class="stk"><div class="r2">${[["0.01","1%"],["0.1","10%"],["0.5","50%"],["all","ALL-IN"]].map(b=>`<button class="btn" data-a="bet" data-v="${b[0]}">${b[1]}</button>`).join("")}</div><div class="res">${VBR}</div></div>
 <h3>🗂️ Моя коллекция (${V_.col.length})</h3><div class="grid">${V_.col.slice().sort((a,b)=>ccVal(b)-ccVal(a)).map(c=>`<div class="item">${ccHTML(c)}</div>`).join("")||'<span class="hint">Пока пусто</span>'}</div>`}
+setInterval(()=>{if(cur!=="vip")return;let ch=0;document.querySelectorAll(".rsl[data-rs]").forEach(el=>{const e=edOf(el.dataset.rs),d=rsNext(e)-nowS();if(d<=0)ch=1;else el.textContent="⏱ ресток через "+fmtDur(d)+" · +"+RSQ(e)});if(ch)rVip()},1000);
 (()=>{const mk=(c,h,v)=>{const b=document.createElement("button");b.className=c;b.innerHTML=h;b.dataset.a="tab";b.dataset.v=v;return b};
   const s=document.createElement("section");s.id="vip";s.className="sec";document.body.insertBefore(s,$("prof"));
   $("dp").insertBefore(mk("tb hot",`<span><i class="ico">💸</i> ${tt("Бутик")}</span>`,"vip"),$("dp").querySelector(".sp"));$("dock").appendChild(mk("dk hot",`<i class="ico">💸</i><span>${tt("Бутик")}</span>`,"vip"))})();
@@ -1301,6 +1308,7 @@ function mon(){const l=S.mon||0;if(l>=10)return;const p=monP(l);if(S.bal<p)retur
 /* v3.7: титул, рамка и монумент теперь в блоке #titles профиля */
 {const _s=SDA;SDA=function(a,v){switch(a){case"ctitle":ctitle();return 1;case"cframe":cframe(v);return 1;case"mon":mon();return 1}return _s(a,v)}}
 CHANGELOG.unshift({v:"3.5",d:"19.11.2026",t:["Для богатых 💎","For the rich 💎"],it:[["Фикс: счётчик тиража коллекционных карт после перезахода","Fix: collectible edition counter after reload"],["Мега-активы: остров-государство, континент, планета, звёздная система, галактика","Mega assets: island nation, continent, planet, star system, galaxy"],["Свой титул, рамки профиля, монумент в 10 уровней и новые ранги мецената","Custom title, profile frames, a 10-level monument and new patron ranks"]]});
+CHANGELOG.unshift({v:"3.6",d:"19.11.2026",t:["Ресток коллекционных карт ⏱","Collectible card restock ⏱"],it:[["Бутик: коллекционные издания пополняются по таймеру. Чем меньше тираж, тем реже и меньше докидывают: Голограмма каждые 15 мин, Золото 24K раз в ~10 дней","Boutique: collectible editions restock on a timer. The smaller the run, the rarer and smaller the restock: Holo every 15 min, Gold 24K about every 10 days"]]});
 /* ===== v3.6: фильтр ников и топы ===== */
 const BADL=["хуй","хуе","хуя","хуи","пизд","пезд","ебат","ебан","ебал","ебуч","еблан","заеб","доеб","долбоеб","блят","бляд","сука","сучк","сучар","мудак","мудил","мудозв","залуп","пидор","пидар","пидр","педик","гандон","гондон","шлюх","шалав","манда","дроч","нахуй","похуй","fuck","shit","bitch","cunt","pussy","nigg","fagg","whore","slut","hitler","nazi","retard","asshole","huy","xuy","pizd","ebat","eban","ebal","blyat","blyad","suka","pidor","pidar","pidr","mudak","mudil","gandon","zalup","dolboeb","nahuy","pohuy"];
 const CLK={a:"а",b:"в",c:"с",e:"е",h:"н",k:"к",m:"м",o:"о",p:"р",t:"т",x:"х",y:"у"};
