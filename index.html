@@ -572,6 +572,49 @@ header{gap:8px}
 .dk.hot .ico{animation:icoBob 2.1s ease-in-out infinite}
 .hot:not(.on):not(:disabled){animation:hotPulse 2.6s ease-out infinite}
 .dk.hot:not(.on){animation:none}
+
+/* ===== РЕДИЗАЙН v2: «Биржевой зал» ===== */
+html{--r:18px;--rs:12px;--ink:#0a0b10;--s1:#14161f;--s2:#1b1e2a;--ln:rgba(255,255,255,.08)}
+html[data-theme="light"],html:not([data-theme="dark"]){--ln:var(--line)}
+html body{max-width:720px;padding:14px 14px 110px;font-family:var(--fb,'Manrope',system-ui,sans-serif);letter-spacing:-.005em}
+html body h3{font-family:var(--fd);font-size:13px;font-weight:700;color:var(--muted);margin:22px 4px 10px;letter-spacing:.01em}
+/* шапка */
+html header{position:sticky;top:0;z-index:11;margin:0 -14px 14px;padding:10px 14px;background:color-mix(in srgb,var(--bg) 88%,transparent);border-bottom:1px solid var(--line)}
+html .menu{border-radius:14px;width:44px;height:44px;background:var(--panel);border:1px solid var(--line)}
+html .bal{border-radius:999px;padding:10px 16px;font-variant-numeric:tabular-nums;font-weight:800;background:var(--panel);border:1px solid var(--line);box-shadow:none}
+html .avt{border:0;box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
+/* карточки и панели */
+html .case,html .pf,html .upbox,html .rw,html .lr,html .chbox,html .ev,html .mb,html .rst{border-radius:var(--r);background:var(--panel);border:1px solid var(--line);box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 24px -14px rgba(0,0,0,.5)}
+html .case:hover,html .lr:hover{transform:none;border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+html .chip{border-radius:999px}
+/* кнопки */
+html .btn{border-radius:14px;font-weight:800;padding:12px 16px;border:0;background:var(--accent);color:var(--on,#fff);box-shadow:none;transition:transform .12s,filter .15s}
+html .btn:active:not(:disabled){transform:scale(.96)}html .btn:disabled{opacity:.38}
+html .btn.alt{background:transparent;color:var(--text);border:1.5px solid var(--line)}
+/* нижняя панель */
+html .dock{width:min(460px,calc(100% - 20px));padding:6px;border-radius:999px;background:var(--s1);border:1px solid var(--ln);box-shadow:0 18px 40px -10px rgba(0,0,0,.65)}
+html .dk{border-radius:999px;padding:9px 2px 8px;font-size:20px;transition:flex .25s,background .25s}
+html .dk span{font-size:10px;font-weight:700}
+html .dk.on{flex:1.5;background:var(--accent);color:var(--on,#fff);box-shadow:none;animation:none}
+/* акции */
+html #stList{grid-template-columns:1fr;gap:12px}
+html .stk{padding:16px;border-radius:22px;border-left:1px solid var(--line);background:var(--panel);overflow:hidden}
+html .stk.up{box-shadow:inset 0 3px 0 var(--ok)}html .stk.dn{box-shadow:inset 0 3px 0 var(--bad)}
+html .stk:hover{transform:none}
+html .stk .top b:first-child{font-size:17px}
+html .stk .pp{font-size:22px;font-variant-numeric:tabular-nums}
+html .stk .dd{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:800}
+html .stk .dd.good{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+html .stk .dd.bad{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
+html .stc{height:150px;margin:12px 0 8px;padding:6px 0;border-radius:14px;background:var(--ink);border:1px solid var(--ln)}
+html .stc svg{width:100%;height:100%;margin:0;filter:none;display:block}
+html .stk .row{gap:8px}
+html .stk .row .btn:nth-child(-n+2){background:var(--ok);color:#04130b}
+html .stk .row .btn.alt{border-color:var(--bad);color:var(--bad)}
+html .stk .row .btn.alt:disabled{border-color:var(--line);color:var(--muted)}
+html .sdw{height:260px;border-radius:20px;background:var(--ink);border:1px solid var(--ln)}
+html .sdpr{font-variant-numeric:tabular-nums}
+@media (min-width:720px){html #stList{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -1048,10 +1091,10 @@ function chartOld(h,up){const mn=Math.min(...h),mx=Math.max(...h),r=mx-mn||1;
   const pts=h.map((v,i)=>`${(i/(h.length-1||1)*300).toFixed(1)},${(84-(v-mn)/r*78).toFixed(1)}`).join(" ");
   return `<svg viewBox="0 0 300 90" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--${up?"ok":"bad"})" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>`}
 function rSt(){const L=$("stList");
-  rNewSt();const sg=STK.map(a=>a.k+(a.cap||"")).join();if(L.dataset.sig!==sg){L.dataset.sig=sg;L.innerHTML=STK.map(a=>`<div class="stk" id="s-${a.k}" data-a="sopen" data-v="${a.k}"><div class="top"><b>${a.i} ${a.n} <span class="hint">${a.k}</span></b><span><b class="pp"></b> <span class="dd"></span></span></div>${ci(a)}<div class="cc"></div><div class="hint hh" style="margin-bottom:8px"></div><div class="row">${[["buy",1,"Купить 1"],["buy",10,"Купить 10"],["sell",1,"Продать 1"],["sell","all","Всё"]].map(([x,n,t])=>`<button class="btn ${x==="sell"?"alt":""}" data-a="trade" data-v="${a.k}|${x}|${n}">${tt(t)}</button>`).join("")}</div></div>`).join("");}
+  rNewSt();const sg=STK.map(a=>a.k+(a.cap||"")).join();if(L.dataset.sig!==sg){L.dataset.sig=sg;L.innerHTML=STK.map(a=>`<div class="stk" id="s-${a.k}" data-a="sopen" data-v="${a.k}"><div class="top"><b>${a.i} ${a.n} <span class="hint">${a.k}</span></b><span><b class="pp"></b> <span class="dd"></span></span></div>${ci(a)}<div class="stc"></div><div class="hint hh" style="margin-bottom:8px"></div><div class="row">${[["buy",1,"Купить 1"],["buy",10,"Купить 10"],["sell",1,"Продать 1"],["sell","all","Всё"]].map(([x,n,t])=>`<button class="btn ${x==="sell"?"alt":""}" data-a="trade" data-v="${a.k}|${x}|${n}">${tt(t)}</button>`).join("")}</div></div>`).join("");}
   STK.forEach(a=>{const h=MK.h[a.k],p=MK.p[a.k],pr=h[h.length-2]||p,d=(p-pr)/pr*100,q=S.st[a.k]||0,e=$("s-"+a.k);
     e.querySelector(".pp").textContent=fmt(p)+" $";const dd=e.querySelector(".dd");dd.className="dd "+(d>=0?"good":"bad");dd.textContent=(d>=0?"▲ ":"▼ ")+Math.abs(d).toFixed(2)+"%";
-    const hs=h.slice(-130);e.querySelector(".cc").innerHTML=chart(hs,hs[hs.length-1]>=hs[0]);e.querySelector(".hh").textContent=tt("В портфеле: {0} шт · ≈ {1} $",fmt(q),fmt(q*p));
+    const hs=h.slice(-130);e.querySelector(".stc").innerHTML=chart(hs,hs[hs.length-1]>=hs[0]);e.querySelector(".hh").textContent=tt("В портфеле: {0} шт · ≈ {1} $",fmt(q),fmt(q*p));
     const b=e.querySelectorAll("button");b[0].disabled=S.bal<p*1.03;b[1].disabled=S.bal<p*10.3;b[2].disabled=b[3].disabled=q<1;e.classList.toggle("up",d>=0);e.classList.toggle("dn",d<0)});if(SD)rSd()}
 function trade(v){const [k,side,n]=v.split("|"),p=MK.p[k],have=S.st[k]||0;S.cost=S.cost||{};if(have>0&&S.cost[k]==null)S.cost[k]=have*p;
   if(side==="buy"){const q=+n,c=Math.ceil(p*q*1.03);if(!(q>=1)||S.bal<c){toast(tt("Не хватает $ 😕"));return}S.bal-=c;S.st[k]=have+q;S.cost[k]=(S.cost[k]||0)+c}
