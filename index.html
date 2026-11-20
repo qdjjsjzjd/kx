@@ -622,7 +622,7 @@ const artS=seed=>{if(_ac[seed])return _ac[seed];const h=hsh(seed),H=h%360,sh=(h>
  M=[`<path d="M42 65q8 8 16 0" stroke="${D}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,`<path d="M43 67h14" stroke="${D}" stroke-width="3.5" stroke-linecap="round"/>`,`<ellipse cx="50" cy="68" rx="4" ry="5" fill="${D}"/>`,`<path d="M40 63h20q-2 11-10 11t-10-11z" fill="${D}"/><path d="M45 63v4m5-4v5m5-5v4" stroke="#fff" stroke-width="2.2"/>`][mo],
  X=["",`<path d="M34 24l5-10 6 8 5-12 5 12 6-8 5 10z" fill="${ac}" stroke="${D}" stroke-opacity=".4"/>`,`<path d="M50 20V7" stroke="${ac}" stroke-width="3"/><circle cx="50" cy="7" r="4.5" fill="${ac}"/>`,`<path d="M29 30l-7-14 15 6zM71 30l7-14-15 6z" fill="${ac}"/>`,`<ellipse cx="50" cy="10" rx="15" ry="4.5" fill="none" stroke="${ac}" stroke-width="3"/>`][dc];
  return _ac[seed]=`<svg class="art" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c3}"/><stop offset=".45" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs><ellipse cx="50" cy="92" rx="26" ry="4" fill="#000" opacity=".25"/>${X}<path d="${SHP[sh]}" fill="url(#${g})" stroke="${c2}" stroke-opacity=".7" stroke-width="1.6"/><path d="M29 36q4-12 18-14" stroke="#fff" stroke-opacity=".55" stroke-width="4" fill="none" stroke-linecap="round"/>${E}${M}</svg>`};
-const art=ci=>artS("c"+ci+(CARDS[ci]?(CARDS[ci].s||CARDS[ci].e):"")),artE=e=>artS("e"+e[0]+(e.s||e[3]));
+const art=ci=>artS("c"+ci+(CARDS[ci]?(CARDS[ci].s||CARDS[ci].e):"")),artE=e=>`<span class="emo" style="font-size:46px;line-height:1;display:block;padding-top:4px">${e[2]}</span>`;
 /* ===== v6: арты-маскоты остаются, названия подобраны под нарисованное; новые ящики для дропов ===== */
 Object.assign(EN,{"{0} карт · {1} – {2} $":"{0} cards · {1} – {2} $","С возвращением! Войди, чтобы продолжить":"Welcome back! Sign in to continue","Создай аккаунт и открой свой первый дроп":"Create an account and open your first case","Прогресс хранится в облаке — заходи с любого устройства":"Progress is stored in the cloud — sign in from any device"});
 /* название берётся из того, что реально нарисовано: форма, цвет, глаза, рот, украшение */
@@ -1309,16 +1309,41 @@ function cardOut(){const c=S.card||(S.card={b:0});if(!(c.b>0)){toast(tt("На к
   S.bal+=c.b;cLog("out",c.b,"С карты на баланс");toast(tt("На баланс: ")+fmt(c.b)+" $");c.b=0;sfx("coin");upd();rCard()}
 function shopBuy(k){const c=S.card||(S.card={b:0}),it=SHOP[k];if(!it)return;if(c.b<it.p){toast(tt("Не хватает денег на карте"));return}
   c.b-=it.p;it.a();cLog("buy",it.p,"Покупка: "+it.n);sfx("buy");toast("✓ "+tt(it.n));upd();rCard()}
+const SHOPG=[
+{id:"c1",c:"Машины",i:"🚗",n:"Городской седан «Виста»",p:150000},
+{id:"c2",c:"Машины",i:"🚙",n:"Внедорожник «Титан»",p:900000},
+{id:"c3",c:"Машины",i:"🏎️",n:"Спорткар «Аллегро»",p:2500000},
+{id:"c4",c:"Машины",i:"🔋",n:"Электрокар «Вольт»",p:400000},
+{id:"c5",c:"Машины",i:"🏁",n:"Гиперкар «Вулкан X»",p:40000000},
+{id:"t1",c:"Телефоны",i:"📱",n:"Смартфон «Неон 15»",p:80000},
+{id:"t2",c:"Телефоны",i:"📲",n:"Смартфон «Неон 15 Pro Max»",p:250000},
+{id:"t3",c:"Телефоны",i:"📱",n:"Складной «Фолд Z»",p:600000},
+{id:"t4",c:"Телефоны",i:"👑",n:"Золотой «Монарх»",p:5000000},
+{id:"w1",c:"Вещи",i:"⌚",n:"Часы «Хронос»",p:300000},
+{id:"w2",c:"Вещи",i:"🧥",n:"Пальто из кашемира",p:90000},
+{id:"w3",c:"Вещи",i:"👟",n:"Кроссовки «Спринт»",p:15000},
+{id:"w4",c:"Вещи",i:"💎",n:"Колье с бриллиантами",p:12000000},
+{id:"w5",c:"Вещи",i:"🖼️",n:"Картина «Закат»",p:2000000},
+{id:"h1",c:"Недвижимость",i:"🏢",n:"Студия в центре",p:20000000},
+{id:"h2",c:"Недвижимость",i:"🏖️",n:"Вилла у моря",p:500000000},
+{id:"h3",c:"Недвижимость",i:"🏝️",n:"Частный остров",p:8000000000}];
+function buyGood(id){const c=S.card||(S.card={b:0}),g=SHOPG.find(x=>x.id===id);if(!g)return;
+  if(c.b<g.p){toast(tt("Не хватает денег на карте"));return}
+  c.b-=g.p;c.items=c.items||{};c.items[id]=(c.items[id]||0)+1;cLog("buy",g.p,"Покупка: "+g.n);sfx("buy");toast("✓ "+tt(g.n));upd();rCard()}
+function goodsHTML(c){const cats=[...new Set(SHOPG.map(x=>x.c))];
+  const own=SHOPG.filter(x=>(c.items||{})[x.id]>0);
+  return cats.map(cat=>`<h3>${tt(cat)}</h3><div class="stk" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${SHOPG.filter(x=>x.c===cat).map(x=>`<div style="text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center"><div style="font-size:40px;line-height:1">${x.i}</div><div class="hint" style="margin:0;min-height:34px">${tt(x.n)}</div><button class="btn sm" data-a="good" data-v="${x.id}" ${c.b>=x.p?"":"disabled"}>${fmt(x.p)} $</button></div>`).join("")}</div>`).join("")+
+  `<h3>${tt("Мои вещи")}</h3><div class="stk">${own.length?own.map(x=>`<div class="hint" style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)"><span>${x.i} ${tt(x.n)}</span><b>×${c.items[x.id]}</b></div>`).join(""):`<p class="hint">${tt("Пока ничего не куплено")}</p>`}</div>`}
 function cLog(k,a,l){const c=S.card||(S.card={b:0});c.h=c.h||[];c.h.unshift({t:Date.now(),k,a,l});if(c.h.length>50)c.h.length=50}
 function rCard(){const el=$("cBox");if(!el)return;const c=S.card||(S.card={b:0}),h=c.h||[];
-  if(!$("ccss")){const st=document.createElement("style");st.id="ccss";st.textContent=".cstage{perspective:1000px;padding:8px 16px 18px;overflow-x:clip}.cc{position:relative;width:100%;max-width:400px;aspect-ratio:1.586;margin:0 auto;border-radius:22px;padding:18px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;color:#f3f3f6;background:linear-gradient(135deg,#343a4d,#11131b 60%,#1b1f2b);border:1px solid #3a3f52;box-shadow:0 30px 60px -20px #000,inset 0 1px 0 #ffffff22;cursor:pointer;transform-origin:50% 100%;transition:transform .55s cubic-bezier(.2,.8,.2,1)}.cc.tilt{transform:perspective(900px) rotateX(-18deg) translateY(-6px)}.cc-top{display:flex;justify-content:space-between;align-items:baseline}.cc-top b{font-size:18px;letter-spacing:.5px}.cc-top span{font-size:12px;opacity:.6}.cc-chip{width:44px;height:32px;border-radius:7px;background:linear-gradient(135deg,#d9c58a,#8c7a45)}.cc-num{font-size:20px;letter-spacing:3px}.cc-bot{display:flex;justify-content:space-between;align-items:flex-end}.cc-bot small{display:block;font-size:11px;opacity:.6}.cc-bot b{font-size:22px}.cc-bot>span{font-size:11px;opacity:.5}";document.head.appendChild(st)}
+  if(!$("ccss")){const st=document.createElement("style");st.id="ccss";st.textContent=".cstage{perspective:1000px;padding:8px 16px 18px;overflow-x:clip}.cc{position:relative;width:100%;max-width:400px;aspect-ratio:1.586;margin:0 auto;border-radius:22px;padding:18px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;color:#f3f3f6;background:linear-gradient(135deg,#343a4d,#11131b 60%,#1b1f2b);border:1px solid #3a3f52;box-shadow:0 30px 60px -20px #000,inset 0 1px 0 #ffffff22;cursor:pointer;transform-origin:50% 50%;transition:transform .45s cubic-bezier(.2,.8,.2,1)}.cc.tilt{transform:perspective(900px) translateZ(-24px) rotateX(10deg)}.cc-top{display:flex;justify-content:space-between;align-items:baseline}.cc-top b{font-size:18px;letter-spacing:.5px}.cc-top span{font-size:12px;opacity:.6}.cc-chip{width:44px;height:32px;border-radius:7px;background:linear-gradient(135deg,#d9c58a,#8c7a45)}.cc-num{font-size:20px;letter-spacing:3px}.cc-bot{display:flex;justify-content:space-between;align-items:flex-end}.cc-bot small{display:block;font-size:11px;opacity:.6}.cc-bot b{font-size:22px}.cc-bot>span{font-size:11px;opacity:.5}";document.head.appendChild(st)}
   const sh=SHOP.map((it,k)=>`<div style="display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)"><span style="flex:1">${tt(it.n)}</span><button class="btn sm" data-a="shop" data-v="${k}" ${c.b>=it.p?"":"disabled"}>${fmt(it.p)} $</button></div>`).join("");
   el.innerHTML=`<div class="cstage"><div class="cc" id="cc" data-a="ctilt"><div class="cc-top"><b>KX Pay</b><span>${tt("игровая карта")}</span></div><div class="cc-chip"></div><div class="cc-num">•••• •••• •••• 0000</div><div class="cc-bot"><div><small>${tt("Баланс карты")}</small><b>${fmt(c.b)} $</b></div><span>${tt("только для игры")}</span></div></div></div>
 <p class="hint" style="text-align:center;margin:0 0 6px">${tt("Нажми на карту")} · ${tt("Внутриигровая валюта, реальных денег нет")}</p>
 <div class="stk"><div class="top"><b>${tt("Баланс игры")}</b><b>${fmt(S.bal)} $</b></div></div>
 <h3>${tt("Пополнить карту")}</h3><div class="stk"><div style="display:flex;gap:8px"><input id="cAm" type="number" min="1" placeholder="${tt("Сумма")}" style="flex:1;min-width:0"><button class="btn" data-a="cin">${tt("Пополнить")}</button></div><div class="r2" style="margin-top:8px"><button class="btn sm alt" data-a="cardin" data-v="1000">+1 000</button><button class="btn sm alt" data-a="cardin" data-v="100000">+100 000</button><button class="btn sm alt" data-a="cardin" data-v="max">${tt("Всё")}</button></div></div>
 <h3>${tt("Вывод")}</h3><div class="stk"><button class="btn" data-a="cardout" data-v="0" style="width:100%" ${c.b>0?"":"disabled"}>${tt("Вывести на баланс")} · ${fmt(c.b)} $</button></div>
-<h3>${tt("Магазин")}</h3><div class="stk">${sh}</div>
+<h3>${tt("Игровой магазин")}</h3><div class="stk">${sh}</div>${goodsHTML(c)}
 <h3>${tt("История")}</h3><div class="stk">${h.length?h.slice(0,30).map(e=>`<div class="hint" style="display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--line)"><span>${new Date(e.t).toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"})} · ${tt(e.l)}</span><b>${e.k==="in"?"+":"−"}${fmt(e.a)} $</b></div>`).join(""):`<p class="hint">${tt("Операций пока нет")}</p>`}</div>`}
 function rQuests(){const el=$("qBox");if(!el)return;qEnsure();const b=bpS(),L=bpLv(b.xp),pct=L.n?Math.round(L.cur/L.n*100):100;
   const bar=p=>`<div style="height:8px;border-radius:4px;background:var(--line);overflow:hidden"><i style="display:block;height:100%;width:${p}%;background:var(--accent)"></i></div>`;
@@ -1340,7 +1365,7 @@ function rQuests(){const el=$("qBox");if(!el)return;qEnsure();const b=bpS(),L=bp
   h+=`<h3>${tt("Достижения")} · ${Object.keys(A).length}/${ACH.length}</h3><div class="grid">`;
   ACH.forEach(a=>{const ok=!!A[a[0]];h+=`<div class="stk" style="opacity:${ok?1:.45}"><div class="top"><b>${ok?"🏅":"🔒"} ${tt(a[1])}</b></div><div class="hint">${tt(a[2])} · +3 ◈ · +50 XP</div></div>`});
   el.innerHTML=h+"</div>"}
-{const _s=SDA;SDA=function(a,v){switch(a){case"qc":qClaim(+v);return 1;case"bpc":{const p=String(v).split("|");bpClaim(+p[1],+p[0]);return 1}case"bpbuy":bpBuy();return 1;case"bpbuy2":bpBuyPlus();return 1;case"cardin":cardIn(v);return 1;case"cardout":cardOut();return 1;case"cin":cardIn(+$("cAm").value||0);return 1;case"mall":openAll(CASES.find(c=>c.id===+v));return 1;case"ctilt":{const e=$("cc");if(e)e.classList.toggle("tilt");return 1}case"shop":shopBuy(+v);return 1}return _s(a,v)}}
+{const _s=SDA;SDA=function(a,v){switch(a){case"qc":qClaim(+v);return 1;case"bpc":{const p=String(v).split("|");bpClaim(+p[1],+p[0]);return 1}case"bpbuy":bpBuy();return 1;case"bpbuy2":bpBuyPlus();return 1;case"cardin":cardIn(v);return 1;case"cardout":cardOut();return 1;case"cin":cardIn(+$("cAm").value||0);return 1;case"mall":openAll(CASES.find(c=>c.id===+v));return 1;case"good":buyGood(v);return 1;case"ctilt":{const e=$("cc");if(e)e.classList.toggle("tilt");return 1}case"shop":shopBuy(+v);return 1}return _s(a,v)}}
 /* Старт */
 load();S.inv.forEach(c=>{if(c.cn==null){c.cn=100;c.ct=Date.now()}});
 document.documentElement.lang=LANG;document.title=LANG==="en"?"$ Cases":"$ Дропы";
@@ -1585,7 +1610,7 @@ CHANGELOG.unshift({v:"3.2",d:"18.11.2026",t:["Лимитки 2.0 ✨","Boutique 
 /* ===== v3.3: оптовая закупка, больше карт, казино, VIP-клубы ===== */
 ED.push(["sakura","SAKU","🌸","Сакура",15e5,800],["ice","ICE0","🧊","Вечная мерзлота",12e6,400],["toxic","TOXC","☣️","Токсик",6e7,250],["storm","STRM","⛈️","Буря",3e8,150],["auro","AURO","🌠","Северное сияние",2e9,75],["abys","ABYS","🐙","Бездна",15e9,40],["dia","DIAM","◈","Алмаз",25e10,12],["kings","KING","🤴","Корона",8e12,5]);
 ED.sort((a,b)=>a[4]-b[4]);
-(()=>{const used={};ED.forEach(e=>{e.s=e[3];const n=nmOf(NMF("e"+e[0]+e.s)),c=used[n[0]]=(used[n[0]]||0)+1;e[3]=n[0]+(c>1?" №"+c:"")})})();
+ED.forEach(e=>{e.s=e[3]});
 const VT=[[5e7,"Бронзовый клуб"],[5e9,"Серебряный клуб"],[5e11,"Золотой клуб"],[5e13,"Платиновый клуб"],[5e15,"Чёрная карта"]];
 let WC=0,WQ=10,CAM=1e4,CRS="";
 function vipb(){const l=S.vl||0;if(l>=5)return;const p=VT[l][0];if(S.bal<p){toast(tt("Не хватает $ 😕"));return}S.bal-=p;V().spent+=p;S.vl=l+1;sfx("win",5);winFx(5);toast("👑 "+VT[l][1]+": налог на богатство −"+12*(l+1)+"%");upd();rVip()}
