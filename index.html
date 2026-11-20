@@ -1626,12 +1626,12 @@ function badNick(v){let n=String(v||"").toLowerCase().replace(/ё/g,"е").replac
   const m=n.replace(/[abcehkmoptxy]/g,c=>CLK[c]),q=x=>x.replace(/(.)\1+/g,"$1"),l=n.replace(/[авсенкмортху]/g,c=>({"а":"a","в":"b","с":"c","е":"e","н":"h","к":"k","м":"m","о":"o","р":"p","т":"t","х":"x","у":"y"})[c]),F=[n,m,l,q(n),q(m),q(l)];return BADL.some(w=>F.some(x=>x.includes(w)))}
 {const _h=rHead;rHead=function(){if(S.prof&&badNick(S.prof.nick||"")){S.prof.nick=tt("Игрок")+S.uid;save()}_h()}}
 const TP=[["c","💰","Капитал"],["k","🎴","Коллекции"],["s","💸","Траты"],["q","🃏","Карточек"]];let TB=null,TT="c";
-const myTop=()=>{const V_=V(),tot=S.inv.reduce((t,c)=>t+val(c),0)+S.list.reduce((t,c)=>t+val(c),0);return{n:String(S.prof.nick||"Игрок").slice(0,16),a:S.prof.av,c:Math.round(tot+S.bal),k:Math.round(V_.col.reduce((t,c)=>t+ccVal(c),0)),s:Math.round(V_.spent),q:S.inv.length+S.list.length,r:rank()[1],ti:String(S.cos&&S.cos.t||"").slice(0,16),f:((FR.find(x=>x[0]===(S.cos||{}).f)||[])[1])||"",t:Date.now()}};
+const myTop=()=>{const V_=V(),tot=S.inv.reduce((t,c)=>t+val(c),0)+S.list.reduce((t,c)=>t+val(c),0);return{n:String(S.prof.nick||"Игрок").slice(0,16),a:S.prof.av,c:Math.round(tot+S.bal),k:Math.round(V_.col.reduce((t,c)=>t+ccVal(c),0)),s:Math.round(V_.spent),q:S.inv.length+S.list.length,r:rank()[1],ti:String(S.cos&&S.cos.t||"").slice(0,16),f:((FR.find(x=>x[0]===(S.cos||{}).f)||[])[1])||"",se:SEASON,t:Date.now()}};
 async function tpush(){if(!DB_URL||LOCK||!AUTH)return;try{await fetch(`${DB_URL}/top/${S.uid}.json`,{method:"PUT",body:JSON.stringify(myTop())})}catch(e){}}
 async function tpull(){await tpush();try{const r=await fetch(`${DB_URL}/top.json`);if(r.ok)TB=(await r.json())||{}}catch(e){}if(cur==="tops")rTops()}
 const tAv=a=>a&&typeof a==="object"&&CARDS[+a.c]&&BGS[+a.g]?{c:+a.c,g:+a.g}:typeof a==="string"?esc(a.slice(0,8)):"🙂";
 function rTops(){let h=`<h3>🏆 Рейтинг игроков</h3><div class="stk"><div class="r2">${TP.map(t=>`<button class="btn ${t[0]===TT?"":"alt"} sm" data-a="ttab" data-v="${t[0]}">${t[1]} ${t[2]}</button>`).join("")}</div></div>`;
-  if(!TB)h+='<p class="hint">Загрузка…</p>';else{const me=String(S.uid),rows=Object.entries(TB).filter(([k,v])=>v&&typeof v==="object").map(([k,v])=>({k,n:String(v.n||"Игрок").slice(0,16),a:v.a,r:String(v.r||"").slice(0,30),ti:String(v.ti||"").replace(/[<>&"'`]/g,"").slice(0,16),v:Math.max(0,+v[TT]||0)})).filter(r=>r.v>0||r.k===me).sort((a,b)=>b.v-a.v),mi=rows.findIndex(r=>r.k===me);
+  if(!TB)h+='<p class="hint">Загрузка…</p>';else{const me=String(S.uid),rows=Object.entries(TB).filter(([k,v])=>v&&typeof v==="object"&&v.se===SEASON).map(([k,v])=>({k,n:String(v.n||"Игрок").slice(0,16),a:v.a,r:String(v.r||"").slice(0,30),ti:String(v.ti||"").replace(/[<>&"'`]/g,"").slice(0,16),v:Math.max(0,+v[TT]||0)})).filter(r=>r.v>0||r.k===me).sort((a,b)=>b.v-a.v),mi=rows.findIndex(r=>r.k===me);
     h+=rows.slice(0,25).map((r,i)=>{const sub=[r.r,r.ti?"「"+r.ti+"」":""].filter(Boolean).join(" · ");return `<div class="stk tr${r.k===me?" me":""}${i<3?" p"+(i+1):""}" style="animation-delay:${i*35}ms"><div class="top"><span class="tl"><i class="tm">${["🥇","🥈","🥉"][i]||"#"+(i+1)}</i>${avHTML(tAv(r.a),34)}<span class="tn"><b>${esc(r.n)}</b>${sub?`<small>${esc(sub)}</small>`:""}</span></span><b class="tv">${fmtC(r.v)}${TT==="q"?"":" $"}</b></div></div>`}).join("")||'<p class="hint">Пока никого</p>';
     if(mi>=0)h+=`<p class="hint" style="text-align:center">${tt("Твоё место: #{0} из {1}",mi+1,rows.length)}</p>`}
   $("tops").innerHTML=h}
@@ -1707,8 +1707,13 @@ async function doReg(lg,pw,p2){if(badNick(lg))return{err:"Недопустимы
     const h=await hpw(pw,id);if((await dbr("pw/"+id,"PUT",h)).s!==200)continue;
     if((await dbr("names/"+lg,"PUT",id)).s!==200)return{err:"Логин занят"};return{id,h,n:lg}}
   return{err:"Не удалось создать аккаунт, попробуй ещё раз"}}
-function finishAuth(r){const cl=r.cloud&&typeof r.cloud==="object"&&r.cloud.season===SEASON?r.cloud:null;const n=Object.assign(def(),cl||{});n.uid=String(r.id);n.season=SEASON;if(!cl){n.prof.nick=(r.n||tt("Игрок")+r.id).slice(0,16);n.lang=LANG}n.ts=Date.now();n.ac=acSum(n);
-  try{localStorage.setItem("kx2_save",JSON.stringify(n));localStorage.setItem("kx3_auth",JSON.stringify({id:r.id,h:r.h,n:r.n||""}))}catch(e){$("aMsg").textContent=tt("Ошибка");return}location.reload()}
+function finishAuth(r){const cl=r.cloud&&typeof r.cloud==="object"?r.cloud:null,ok=!!(cl&&cl.season===SEASON);const n=Object.assign(def(),ok?cl:{});
+  if(cl&&!ok&&cl.prof){n.prof.nick=String(cl.prof.nick||n.prof.nick).slice(0,16);if(cl.prof.av!=null)n.prof.av=cl.prof.av;if(cl.lang)n.lang=cl.lang}
+  n.uid=String(r.id);n.season=SEASON;if(!cl){n.prof.nick=(r.n||tt("Игрок")+r.id).slice(0,16);n.lang=LANG}
+  n.ts=Date.now();n.ac=acSum(n);
+  try{localStorage.setItem("kx2_save",JSON.stringify(n));localStorage.setItem("kx3_auth",JSON.stringify({id:r.id,h:r.h,n:r.n||""}))}catch(e){$("aMsg").textContent=tt("Ошибка");return}
+  const go=()=>location.reload();
+  try{fetch(`${DB_URL}/saves/${r.id}/${r.h}.json`,{method:"PUT",body:JSON.stringify(Object.assign({},n,{ts:0,ac:0}))}).then(go,go)}catch(e){go()}}
 function showBan(b){LOCK=true;$("banr").textContent=String(b&&b.r||"—").slice(0,300);$("banid").textContent="ID: "+(AUTH?AUTH.id:"");$("banv").hidden=false;$("auth").hidden=true;$("modal").classList.remove("on")}
 let aMode="in";
 function aTab(m){aMode=m;$("aIn").classList.toggle("alt",m!=="in");$("aUp").classList.toggle("alt",m!=="up");$("aLn").placeholder=tt(m==="in"?"Логин или ID":"Логин (a-z, 0-9, _)");$("aGo").textContent=tt(m==="in"?"Войти":"Создать аккаунт");$("aSub").textContent=tt(m==="in"?"С возвращением! Войди, чтобы продолжить":"Создай аккаунт и открой свой первый дроп");$("aP2").hidden=m==="in";$("aMsg").textContent="";$("aPw").autocomplete=m==="in"?"current-password":"new-password"}
