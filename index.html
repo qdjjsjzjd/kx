@@ -606,11 +606,10 @@ let TOFF=0,TSYNC=0,TBUSY=0;const nowS=()=>Date.now()+TOFF;
 Object.assign(EN,{"🎁 Подарок от админа: +{0} $":"🎁 Gift from admin: +{0} $","Объявление":"Announcement"});
 const START=20,SELL=.8,FEE=.95;
 /* ===== v5: подписки KX, NFT-арт карт ===== */
-const SUBS=[null,{n:"KX Plus",g:60,cd:.05,sl:.04,fe:.01,tx:.1,gx:.05},{n:"KX Pro",g:150,cd:.1,sl:.08,fe:.02,tx:.2,gx:.1},{n:"KX Elite",g:360,cd:.15,sl:.12,fe:.03,tx:.3,gx:.15}],SUBZ={cd:0,sl:0,fe:0,tx:0,gx:0},SUBMS=30*864e5;
-const subT=()=>S&&S.sub&&S.sub.exp>Date.now()?S.sub.t:0,SUB=()=>SUBS[subT()]||SUBZ,fmtD=ms=>Math.ceil(ms/864e5)+" "+tt("дн.");
+const SUBS=[null,{n:"KX Plus",g:60,cd:.05,sl:.04,fe:.01,tx:.1,gx:.05,ch:1.5,hd:"Старт для тех, кто играет каждый день",pk:["Сундук дня ×1.5"]},{n:"KX Pro",g:150,cd:.1,sl:.08,fe:.02,tx:.2,gx:.1,ch:2,qm:1.5,hd:"Для тех, кто охотится за наградами",pk:["Сундук дня ×2","Награды заданий ×1.5"]},{n:"KX Elite",g:360,cd:.15,sl:.12,fe:.03,tx:.3,gx:.15,ch:3,qm:2,xp:1.5,wk:2,hd:"Для тех, кому нужно всё и сразу",pk:["Сундук дня ×3","Награды заданий ×2","XP батлпасса ×1.5","Подработка ×2"]}],SUBZ={cd:0,sl:0,fe:0,tx:0,gx:0},SUBMS=30*864e5;const subT=()=>S&&S.sub&&S.sub.exp>Date.now()?S.sub.t:0,SUB=()=>SUBS[subT()]||SUBZ,subX=k=>SUB()[k]||1,fmtD=ms=>Math.ceil(ms/864e5)+" "+tt("дн.");
 function subHTML(){const t=subT(),left=t?S.sub.exp-Date.now():0,P=v=>Math.round(v*100);
   return `<div class="subs">`+SUBS.slice(1).map((x,i)=>{const L=i+1,on=t===L,can=S.gem>=x.g&&t<=L;
-  return `<div class="stk sub s${L} ${on?"on":""}"><div class="subh"><span class="subn">${x.n}</span><span class="subp">${x.g} ◈ / 30 ${tt("дн.")}</span></div><ul><li>${tt("Дропы")} −${P(x.cd)}%</li><li>${tt("Комиссия продажи карт")} −${P(x.sl)} ${tt("п.п.")}</li><li>${tt("Комиссия рынка")} −${P(x.fe)} ${tt("п.п.")}</li><li>${tt("Налог на богатство")} −${P(x.tx)}%</li><li>${tt("Покупка токенов")} −${P(x.gx)}%</li></ul>${on?`<div class="hint" style="margin:0">${tt("Активна")}: ${fmtD(left)}</div>`:""}<button class="btn sm" data-a="sub" data-v="${L}" ${can?"":"disabled"}>${on?tt("Продлить"):tt("Подключить")} · ${x.g} ◈</button></div>`}).join("")+`</div><h3 style="grid-column:1/-1">${tt("Бонусы на 24 часа")}</h3>`}
+  return `<div class="stk sub s${L} ${on?"on":""}"><div class="subh"><span class="subn">${x.n}</span><span class="subp">${x.g} ◈ / 30 ${tt("дн.")}</span></div><div class="hint" style="margin:0 0 6px">${tt(x.hd)}</div><ul><li>${tt("Дропы")} −${P(x.cd)}%</li><li>${tt("Комиссия продажи карт")} −${P(x.sl)} ${tt("п.п.")}</li><li>${tt("Комиссия рынка")} −${P(x.fe)} ${tt("п.п.")}</li><li>${tt("Налог на богатство")} −${P(x.tx)}%</li><li>${tt("Покупка токенов")} −${P(x.gx)}%</li>${(x.pk||[]).map(p=>`<li><b>${tt(p)}</b></li>`).join("")}</ul>${on?`<div class="hint" style="margin:0">${tt("Активна")}: ${fmtD(left)}</div>`:""}<button class="btn sm" data-a="sub" data-v="${L}" ${can?"":"disabled"}>${on?tt("Продлить"):tt("Подключить")} · ${x.g} ◈</button></div>`}).join("")+`</div><h3 style="grid-column:1/-1">${tt("Бонусы на 24 часа")}</h3>`}
 function buySub(L){const x=SUBS[L];if(!x)return;const t=subT();if(t>L){toast(tt("Уже активна подписка выше"));return}if(S.gem<x.g){toast(tt("Не хватает токенов ◈"));return}S.gem-=x.g;S.sub={t:L,exp:Math.max(t?S.sub.exp:0,Date.now())+SUBMS};try{sfx("buy")}catch(e){}toast(x.n+" ✓");upd();rMods();rCases()}
 const hsh=s=>{let h=2166136261;s=String(s);for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
 const SHP=["M50 20a32 32 0 1 0 .01 0z","M30 22h40a10 10 0 0 1 10 10v36a10 10 0 0 1-10 10H30a10 10 0 0 1-10-10V32a10 10 0 0 1 10-10z","M50 16L80 27V54C80 70 66 80 50 87C34 80 20 70 20 54V27Z","M50 17L77 33V67L50 83L23 67V33Z","M50 13L83 50L50 87L17 50Z","M50 15C50 15 24 46 24 60C24 74 36 85 50 85C64 85 76 74 76 60C76 46 50 15 50 15Z","M50 14L60 39L87 41L66 58L73 85L50 70L27 85L34 58L13 41L40 39Z","M30 74C14 74 12 50 32 48C34 28 64 26 70 46C88 46 90 74 70 74Z"];
@@ -1205,9 +1204,9 @@ function restore(id){const c=S.inv.find(x=>x.id===id);if(!c||!$("rsl"))return;co
 const WK_MS=18e4,WK_MAX=1000;
 function rWork(){const el=$("workBox");if(!el)return;const poor=S.bal<WK_MAX,left=Math.max(0,(S.wk||0)-Date.now());
   el.innerHTML=`<div class="stk"><div class="top"><b>🔨 Подработка</b><span class="hint">${poor?"5–15 $ · раз в 3 мин":"недоступна при балансе от "+fmt(WK_MAX)+" $"}</span></div>${poor?`<button class="btn" data-a="work" style="width:100%;margin-top:8px" ${left>0?"disabled":""}>${left>0?"Через "+fmtT(left):"Подработать"}</button>`:""}</div>`}
-function work(){if(S.bal>=WK_MAX||Date.now()<(S.wk||0))return;const r=Math.round(rnd(5,15));S.bal+=r;S.wk=Date.now()+WK_MS;gEv("work",1);sfx("coin");toast("+"+r+" $ · подработка");upd();rWork()}
+function work(){if(S.bal>=WK_MAX||Date.now()<(S.wk||0))return;const r=Math.round(rnd(5,15)*subX("wk"));S.bal+=r;S.wk=Date.now()+WK_MS;gEv("work",1);sfx("coin");toast("+"+r+" $ · подработка");upd();rWork()}
 /* Задания, достижения, батлпасс */
-const BPN=30;
+const BPN=75;
 const QT=[
 {k:"open",n:"Открой {0} кейсов",ns:[3,5,8],m:20},
 {k:"sell",n:"Продай {0} карт",ns:[5,10,20],m:25},
@@ -1260,32 +1259,61 @@ function chkAch(){const A=S.ach||(S.ach={});let n=0;
   for(const a of ACH){if(A[a[0]])continue;let ok=false;try{ok=a[3](S.qs||{})}catch(e){}
     if(ok){A[a[0]]=1;n++;S.gem+=3;bpXp(50);toast("🏅 "+tt(a[1])+" · +3 ◈ · +50 XP")}}
   if(n){upd();if(cur==="quests")rQuests()}}
-function bpS(){if(!S.bp||S.bp.s!==SEASON)S.bp={s:SEASON,xp:0,c:{},pr:0,pc:{}};return S.bp}
-const bpNeed=l=>100+20*l;
+function bpS(){if(!S.bp||S.bp.s!==SEASON)S.bp={s:SEASON,xp:0,c:{},pr:0,pc:{},pl:0,lc:{}};return S.bp}
+const bpNeed=l=>60+8*l;
 function bpLv(xp){let l=0,c=0;while(l<BPN){const n=bpNeed(l);if(xp<c+n)break;c+=n;l++}return{l,c,n:l<BPN?bpNeed(l):0,cur:xp-c}}
-function bpXp(n){bpS().xp+=n}
+function bpXp(n){bpS().xp+=Math.round(n*subX("xp"))}
 function bpRew(L,pr){
+  if(pr===2){const p=bpRew(L,1);return{m:p.m?p.m*10:undefined,g:p.g?p.g*10:undefined,c:p.c,n:p.c!=null?(p.n||1)*10:undefined}}
   if(!pr)return L%10===0?{c:L%20===0?1:0,n:1}:L%5===0?{g:2+L/5}:L%3===0?{m:60*L}:{m:25*L};
   return L%10===0?{c:3,n:1,g:5}:L%5===0?{g:4+L/5,m:100*L}:{m:80*L,g:L%2?1:0}}
 const bpTxt=r=>[r.m?fmt(r.m)+" $":"",r.g?"+"+r.g+" ◈":"",r.c!=null&&CASES[r.c]?"🎁 "+tt(CASES[r.c].n)+" ×"+(r.n||1):""].filter(Boolean).join(" · ");
-function bpClaim(L,pr){const b=bpS();if(L>bpLv(b.xp).l){toast(tt("Уровень ещё не открыт"));return}
-  if(pr&&!b.pr){toast(tt("Сначала открой премиум"));return}
-  const map=pr?b.pc:b.c;if(map[L])return;const r=bpRew(L,pr);
+function bpClaim(L,t){const b=bpS();if(L>bpLv(b.xp).l){toast(tt("Уровень ещё не открыт"));return}
+  if(t===1&&!b.pr){toast(tt("Сначала открой премиум"));return}
+  if(t===2&&!b.pl){toast(tt("Сначала купи BP+"));return}
+  const map=t===2?(b.lc=b.lc||{}):t===1?b.pc:b.c;if(map[L])return;const r=bpRew(L,t);
   if(r.m)S.bal+=r.m;if(r.g)S.gem+=r.g;if(r.c!=null&&CASES[r.c])S.cases[r.c]=(S.cases[r.c]||0)+(r.n||1);
   map[L]=1;sfx("win",2);toast("🎖 "+L+" · "+bpTxt(r));upd();rQuests()}
 function bpBuy(){const b=bpS();if(b.pr)return;if(S.gem<100){toast(tt("Не хватает токенов ◈"));return}
   S.gem-=100;b.pr=1;sfx("buy");toast("★ "+tt("Премиум открыт"));upd();rQuests()}
+function bpBuyPlus(){const b=bpS();if(b.pl)return;if(S.gem<400){toast(tt("Не хватает токенов ◈"));return}
+  S.gem-=400;b.pl=1;sfx("buy");toast("★★ "+tt("BP+ открыт"));upd();rQuests()}
 function qClaim(i){qEnsure();const q=S.qd.t[i];if(!q||q.c||q.p<q.need)return;
-  q.c=1;S.bal+=q.m;S.gem+=q.g;bpXp(25);S.qs=S.qs||{};S.qs.qdone=(S.qs.qdone||0)+1;
-  sfx("coin");toast("+"+fmt(q.m)+" $ · +"+q.g+" ◈ · +25 XP");upd();rQuests()}
+  q.c=1;const qm=Math.round(q.m*subX("qm"));S.bal+=qm;S.gem+=q.g;bpXp(25);S.qs=S.qs||{};S.qs.qdone=(S.qs.qdone||0)+1;
+  sfx("coin");toast("+"+fmt(qm)+" $ · +"+q.g+" ◈ · +25 XP");upd();rQuests()}
+const SHOP=[
+{n:"+10 ◈",p:2000,a:()=>{S.gem+=10}},
+{n:"+50 ◈",p:8000,a:()=>{S.gem+=50}},
+{n:"Кейс дропа",p:1000,a:()=>{S.cases[0]=(S.cases[0]||0)+1}}];
+function cardIn(v){const c=S.card||(S.card={b:0});const a=v==="max"?S.bal:+v;if(!(a>0)||a>S.bal){toast(tt("Недостаточно средств"));return}
+  S.bal-=a;c.b+=a;sfx("coin");toast(tt("На карту: ")+fmt(a)+" $");upd();rQuests()}
+function cardOut(){const c=S.card||(S.card={b:0});if(!(c.b>0)){toast(tt("На карте пусто"));return}
+  S.bal+=c.b;toast(tt("На баланс: ")+fmt(c.b)+" $");c.b=0;sfx("coin");upd();rQuests()}
+function shopBuy(k){const c=S.card||(S.card={b:0}),it=SHOP[k];if(!it)return;if(c.b<it.p){toast(tt("Не хватает денег на карте"));return}
+  c.b-=it.p;it.a();sfx("buy");toast("✓ "+tt(it.n));upd();rQuests()}
+function cardHTML(){const c=S.card||(S.card={b:0});
+  return `<h3>💳 ${tt("Игровая карта KX Pay")}</h3><div class="stk">
+<div style="border-radius:16px;padding:14px;background:linear-gradient(135deg,#2a2d3a,#0d0f14);border:1px solid var(--line)">
+<div class="hint" style="margin:0">KX Pay · ${tt("игровая карта")}</div>
+<div style="font-size:18px;letter-spacing:2px;margin:10px 0">•••• •••• •••• 0000</div>
+<div style="display:flex;justify-content:space-between;align-items:baseline"><b>${fmt(c.b)} $</b><span class="hint" style="margin:0">${tt("только для игры")}</span></div></div>
+<p class="hint">${tt("Внутриигровая валюта. Реальных денег и настоящих карт здесь нет.")}</p>
+<div class="r2"><button class="btn sm alt" data-a="cardin" data-v="1000">+1 000 $</button><button class="btn sm alt" data-a="cardin" data-v="100000">+100 000 $</button><button class="btn sm alt" data-a="cardin" data-v="max">${tt("Всё")}</button><button class="btn sm" data-a="cardout" data-v="0" ${c.b>0?"":"disabled"}>${tt("Вывести на баланс")}</button></div>
+<h3 style="margin:14px 0 6px">${tt("Магазин")}</h3>
+${SHOP.map((it,k)=>`<div class="hint" style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)"><span style="flex:1">${tt(it.n)}</span><button class="btn sm" data-a="shop" data-v="${k}" ${c.b>=it.p?"":"disabled"}>${fmt(it.p)} $</button></div>`).join("")}
+</div>`}
 function rQuests(){const el=$("qBox");if(!el)return;qEnsure();const b=bpS(),L=bpLv(b.xp),pct=L.n?Math.round(L.cur/L.n*100):100;
   const bar=p=>`<div style="height:8px;border-radius:4px;background:var(--line);overflow:hidden"><i style="display:block;height:100%;width:${p}%;background:var(--accent)"></i></div>`;
-  let h=`<div class="stk"><div class="top"><b>🎖 ${tt("Батлпасс")} · ${tt("Сезон")} ${SEASON}</b><span class="hint">${tt("Ур.")} ${L.l}/${BPN}</span></div>${bar(pct)}
-<div class="hint" style="margin:6px 0">XP ${b.xp} ${L.n?"· до след. уровня "+(L.n-L.cur):"· максимум"}</div>
-${b.pr?`<div class="good">★ ${tt("Премиум открыт")}</div>`:`<button class="btn alt" data-a="bpbuy" style="width:100%">★ ${tt("Открыть премиум")} · 100 ◈</button>`}</div>`;
-  h+=`<h3>${tt("Награды")}</h3><div class="stk" style="padding:6px 10px">`;
-  for(let l=1;l<=BPN;l++){const r=bpRew(l,0),p=bpRew(l,1),ok=l<=L.l,f=b.c[l],pf=b.pc[l];
-    h+=`<div class="hint" style="display:flex;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--line)"><b style="min-width:30px">${l}</b><span style="flex:1">${bpTxt(r)}</span>${f?`<span class="good">✓</span>`:ok?`<button class="btn sm" data-a="bpc" data-v="0|${l}">✓</button>`:`<span>🔒</span>`}<span style="flex:1;text-align:right;opacity:${b.pr?1:.5}">★ ${bpTxt(p)}</span>${pf?`<span class="good">✓</span>`:(ok&&b.pr?`<button class="btn sm alt" data-a="bpc" data-v="1|${l}">✓</button>`:"")}</div>`}
+  let h=cardHTML();
+  h+=`<h3>🎖 ${tt("Батлпасс")} · ${tt("Сезон")} ${SEASON}</h3><div class="stk"><div class="top"><b>${tt("Уровень")} ${L.l}/${BPN}</b><span class="hint">${L.l>=BPN?tt("максимум"):tt("до след.")+" "+(L.n-L.cur)+" XP"}</span></div>${bar(pct)}
+<div class="hint" style="margin:6px 0">XP ${b.xp}</div>
+<div class="r2">${b.pr?`<span class="good">★ ${tt("Премиум открыт")}</span>`:`<button class="btn alt sm" data-a="bpbuy" data-v="0">★ ${tt("Премиум")} · 100 ◈</button>`}${b.pl?`<span class="good">★★ BP+ ${tt("открыт")}</span>`:`<button class="btn sm" data-a="bpbuy2" data-v="0">★★ BP+ · 400 ◈ · ×10</button>`}</div></div>`;
+  h+=`<div class="stk" style="padding:6px 10px">`;
+  for(let l=1;l<=BPN;l++){const r0=bpRew(l,0),r1=bpRew(l,1),r2=bpRew(l,2),ok=l<=L.l,f=b.c[l],p1=b.pc[l],p2=(b.lc||{})[l];
+    h+=`<div style="padding:6px 0;border-bottom:1px solid var(--line)">
+<div class="hint" style="display:flex;gap:6px;align-items:center"><b style="min-width:30px">${l}</b><span style="flex:1">${bpTxt(r0)}</span>${f?`<span class="good">✓</span>`:ok?`<button class="btn sm" data-a="bpc" data-v="0|${l}">✓</button>`:`<span>🔒</span>`}</div>
+<div class="hint" style="display:flex;gap:6px;align-items:center;opacity:${b.pr?1:.5}"><span style="min-width:30px">★</span><span style="flex:1">${bpTxt(r1)}</span>${p1?`<span class="good">✓</span>`:(ok&&b.pr?`<button class="btn sm alt" data-a="bpc" data-v="1|${l}">✓</button>`:"")}</div>
+<div class="hint" style="display:flex;gap:6px;align-items:center;opacity:${b.pl?1:.5}"><span style="min-width:30px">★★</span><span style="flex:1">${bpTxt(r2)}</span>${p2?`<span class="good">✓</span>`:(ok&&b.pl?`<button class="btn sm" data-a="bpc" data-v="2|${l}">✓</button>`:"")}</div></div>`}
   h+=`</div><h3>${tt("Задания на сегодня")}</h3>`;
   S.qd.t.forEach((q,i)=>{const done=q.p>=q.need;
     h+=`<div class="stk"><div class="top"><b>${tt(q.n,q.need)}</b><span class="hint">${q.p}/${q.need}</span></div>${bar(q.need?Math.round(q.p/q.need*100):100)}
@@ -1294,7 +1322,7 @@ ${b.pr?`<div class="good">★ ${tt("Премиум открыт")}</div>`:`<butt
   h+=`<h3>${tt("Достижения")} · ${Object.keys(A).length}/${ACH.length}</h3><div class="grid">`;
   ACH.forEach(a=>{const ok=!!A[a[0]];h+=`<div class="stk" style="opacity:${ok?1:.45}"><div class="top"><b>${ok?"🏅":"🔒"} ${tt(a[1])}</b></div><div class="hint">${tt(a[2])} · +3 ◈ · +50 XP</div></div>`});
   el.innerHTML=h+"</div>"}
-{const _s=SDA;SDA=function(a,v){switch(a){case"qc":qClaim(+v);return 1;case"bpc":{const p=String(v).split("|");bpClaim(+p[1],p[0]==="1");return 1}case"bpbuy":bpBuy();return 1}return _s(a,v)}}
+{const _s=SDA;SDA=function(a,v){switch(a){case"qc":qClaim(+v);return 1;case"bpc":{const p=String(v).split("|");bpClaim(+p[1],+p[0]);return 1}case"bpbuy":bpBuy();return 1;case"bpbuy2":bpBuyPlus();return 1;case"cardin":cardIn(v);return 1;case"cardout":cardOut();return 1;case"shop":shopBuy(+v);return 1}return _s(a,v)}}
 /* Старт */
 load();S.inv.forEach(c=>{if(c.cn==null){c.cn=100;c.ct=Date.now()}});
 document.documentElement.lang=LANG;document.title=LANG==="en"?"$ Cases":"$ Дропы";
@@ -1523,7 +1551,7 @@ function aup(id){const a=AS.find(x=>x[0]===id),L=S.lvl=S.lvl||{},l=L[id]||0;if(!
   const inc=aInc(a),p=Math.floor(a[3]*(l+1)*.5);if(S.bal+inc<p){toast(tt("Не хватает $ 😕"));return}
   S.bal+=inc-p;V().spent+=p;V().ast[id]=Date.now();L[id]=l+1;gEv("up",1);sfx("buy");toast(a[1]+" ур."+(l+1)+" · доход "+(0.5+.1*(l+1)).toFixed(1)+"%/сут");upd();rVip()}
 function dchest(){const d=S.dc||(S.dc={t:0,s:0}),n=Date.now();if(n-d.t<72e6)return;d.s=n-d.t>1728e5?1:d.s+1;d.t=n;
-  const r=Math.floor(Math.max(10,S.bal*.02)*(1+Math.min(d.s,10)*.25)),g=1+rn(3);S.bal+=r;S.gem+=g;gEv("chest",1);sfx("gem");winFx(4);toast("🎁 +"+fmtC(r)+" $ · +"+g+" ◈ · серия "+d.s);upd();rVip()}
+  const r=Math.floor(Math.max(10,S.bal*.02)*(1+Math.min(d.s,10)*.25)*subX("ch")),g=1+rn(3);S.bal+=r;S.gem+=g;gEv("chest",1);sfx("gem");winFx(4);toast("🎁 +"+fmtC(r)+" $ · +"+g+" ◈ · серия "+d.s);upd();rVip()}
 function don(f){const amt=Math.floor(S.bal*+f);if(amt<1000){toast("Слишком мало для пожертвования");return}S.bal-=amt;V().spent+=amt;const g=Math.min(50,Math.floor(amt/1e7));S.gem+=g;sfx("coin");toast("🙏 Спасибо! −"+fmtC(amt)+" $"+(g?" · +"+g+" ◈":""));upd();rVip()}
 {const _r=rVip;rVip=function(){_r();const d=S.dc||{t:0,s:0},w=72e6-(Date.now()-d.t),el=$("vip");
   el.insertAdjacentHTML("afterbegin",`<div class="stk"><div class="top"><b>🎁 Ежедневный сундук</b><span class="hint">серия: ${d.s||0}</span></div><p class="hint" style="margin:6px 0">Деньги и токены; чем длиннее серия (до 10), тем больше награда. Серия сгорает через 2 дня.</p><button class="btn" data-a="dchest" style="width:100%" ${w>0?"disabled":""}>${w>0?"Через "+fmtT(w):"Открыть"}</button></div>`);
