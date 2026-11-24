@@ -1680,14 +1680,15 @@ ED.push(["sakura","SAKU","🌸","Сакура",15e5,800],["ice","ICE0","🧊","�
 ED.sort((a,b)=>a[4]-b[4]);
 ED.forEach(e=>{e.s=e[3]});
 const VT=[[5e7,"Бронзовый клуб"],[5e9,"Серебряный клуб"],[5e11,"Золотой клуб"],[5e13,"Платиновый клуб"],[5e15,"Чёрная карта"]];
-let WC=0,WQ=10,CAM=1e4,CRS="";
+let WC=0,WQ=10;const CB={},CRS={},cbv=g=>CB[g]==null?1e4:CB[g];
 function vipb(){const l=S.vl||0;if(l>=5)return;const p=VT[l][0];if(S.bal<p){toast(tt("Не хватает $ 😕"));return}S.bal-=p;V().spent+=p;S.vl=l+1;sfx("win",5);winFx(5);toast("👑 "+VT[l][1]+": налог на богатство −"+12*(l+1)+"%");upd();rVip()}
 const wmax=c=>Math.floor(c.gem?S.gem/c.gem:S.bal/cprice(c));
 function wq(v){WC=+$("wcase").value;WQ=v==="max"?Math.max(1,wmax(CASES[WC])):+v;rVip()}
 function wbuy(){WC=+$("wcase").value;WQ=Math.max(1,Math.min(1e5,Math.floor(+$("wqty").value)||1));buyCase(WC,WQ);rVip()}
-function camq(v){CAM=Math.floor(S.bal*+v);rVip()}
-function cas(v){const amt=Math.floor(+$("cam").value);CAM=amt;if(amt>S.bal){toast(tt("Не хватает $ 😕"));return}if(amt>S.bal*BET_CAP){toast(tt("Ставка не больше 25% баланса"));return}if(!(amt>=100)){toast("Минимальная ставка 100 $");return}
-  const[g,x]=v.split(":");let m=0,t="";
+function camq(v){const[g,f]=v.split("|");CB[g]=Math.floor(S.bal*Math.min(+f,BET_CAP));rVip()}
+const betUI=(g,lock)=>`<div class="chrow"><input id="cam_${g}" type="number" min="100" value="${lock?lock:cbv(g)}" oninput="CB['${g}']=+this.value" ${lock?"disabled":""}></div><div class="r2" style="margin-top:6px">${[["0.01","1%"],["0.1","10%"],["0.25","25%"]].map(b=>`<button class="btn alt sm" data-a="camq" data-v="${g}|${b[0]}" ${lock?"disabled":""}>${b[1]}</button>`).join("")}</div>`;
+function cas(v){const[g,x]=v.split(":"),inp=$("cam_"+g),amt=Math.floor(+(inp?inp.value:cbv(g)));CB[g]=amt;if(amt>S.bal){toast(tt("Не хватает $ 😕"));return}if(amt>S.bal*BET_CAP){toast(tt("Ставка не больше 25% баланса"));return}if(!(amt>=100)){toast("Минимальная ставка 100 $");return}
+  let m=0,t="";
   if(g==="coin"){const r=Math.random()<.5?"h":"t";m=r===x?1.95:0;t=r==="h"?"🦅 Орёл":"🪙 Решка"}
   else if(g==="rou"){const n=rn(37),c=n===0?"g":[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(n)?"r":"b";m=c===x?(c==="g"?36:2):0;t=(c==="g"?"🟢":c==="r"?"🔴":"⚫")+" "+n}
   else if(g==="dice"){const r=rn(6)+1,ok=x==="hi"?r>=4:r<=3;m=ok?1.9:0;t="🎲 "+r}
@@ -1696,7 +1697,7 @@ function cas(v){const amt=Math.floor(+$("cam").value);CAM=amt;if(amt>S.bal){toas
     if(R[0]===R[1]&&R[1]===R[2])m=P[R[0]];else if(R.filter(y=>y==="🍒").length===2)m=1}
   const d=Math.floor(amt*m)-amt;S.bal+=d;if(d<0)V().spent+=-d;
   if(m>=5){const q=m>=36?6:4;sfx("win",q);winFx(q)}else if(m>0)sfx("coin");else sfx("err");
-  CRS=`${t}<br><span class="${d>=0?"good":"bad"}">${m?"×"+m:"мимо"} · ${d>=0?"+":"−"}${fmtC(Math.abs(d))} $</span>`;upd();rVip()}
+  CRS[g]=`${t}<br><span class="${d>=0?"good":"bad"}">${m?"×"+m:"мимо"} · ${d>=0?"+":"−"}${fmtC(Math.abs(d))} $</span>`;upd();rVip()}
 {const _r=rVip;rVip=function(){_r();const l=S.vl||0,el=$("vip"),n=VT[l];
   el.insertAdjacentHTML("beforeend",`<h3>🛒 Оптовая закупка дропов</h3><p class="hint">Цена дропов растёт с богатством: сейчас ×${wtax().toFixed(2)}. VIP-клубы снижают эту надбавку.</p>
 <div class="stk"><select id="wcase" onchange="WC=+this.value;rVip()">${CASES.map((c,i)=>`<option value="${i}" ${i===WC?"selected":""}>${c.i} ${c.n} — ${c.gem?c.gem+" ◈":fmtC(cprice(c))+" $"}</option>`).join("")}</select>
@@ -1705,12 +1706,18 @@ function cas(v){const amt=Math.floor(+$("cam").value);CAM=amt;if(amt>S.bal){toas
 <p class="hint" style="margin:6px 0 0">Итого: ${CASES[WC].gem?fmtC(CASES[WC].gem*WQ)+" ◈":fmtC(cprice(CASES[WC])*WQ)+" $"}</p></div>
 <h3>👑 VIP-клубы</h3><p class="hint">Постоянно снижают надбавку к цене дропов на 12% за уровень (сейчас ${l}/5).</p>
 <div class="stk"><button class="btn" data-a="vipb" style="width:100%" ${n&&S.bal>=n[0]?"":"disabled"}>${n?n[1]+" — "+fmtC(n[0])+" $":"Максимум: Чёрная карта 🖤"}</button></div>
-<h3>🎲 Казино</h3><p class="hint">Монетка ×1,95 · Рулетка (красное/чёрное ×2, зеро ×36) · Слоты до ×200.</p>
-<div class="stk"><div class="chrow"><input id="cam" type="number" min="100" value="${CAM}" oninput="CAM=+this.value"></div>
-<div class="r2" style="margin-top:6px">${[["0.01","1%"],["0.1","10%"],["0.5","50%"],["1","ALL"]].map(b=>`<button class="btn alt sm" data-a="camq" data-v="${b[0]}">${b[1]}</button>`).join("")}</div>
-<div class="r2" style="margin-top:8px"><button class="btn" data-a="cas" data-v="coin:h">🦅 Орёл</button><button class="btn" data-a="cas" data-v="coin:t">🪙 Решка</button></div>
-<div class="r2" style="margin-top:6px"><button class="btn" data-a="cas" data-v="rou:r">🔴</button><button class="btn" data-a="cas" data-v="rou:b">⚫</button><button class="btn" data-a="cas" data-v="rou:g">🟢 ×36</button></div>
-<button class="btn" data-a="cas" data-v="slot" style="width:100%;margin-top:6px">🎰 Крутить слоты</button><div class="r2" style="margin-top:6px"><button class="btn" data-a="cas" data-v="dice:hi">🎲 Больше 3</button><button class="btn" data-a="cas" data-v="dice:lo">🎲 Меньше 4</button></div><div class="r2" style="margin-top:6px"><button class="btn" data-a="cas" data-v="hl:up">⬆️ Выше</button><button class="btn" data-a="cas" data-v="hl:dn">⬇️ Ниже</button></div><div class="cres">${CRS}</div></div>`)}}
+<h3>🎲 Казино</h3><p class="hint">Выбери игру — у каждой своя вкладка и своя ставка.</p>
+<div class="grid" style="grid-template-columns:1fr 1fr">${VG.map(k=>`<button class="stk" style="text-align:left;cursor:pointer" data-a="tab" data-v="${k}"><b>${VTABS[k].e} ${tt(VTABS[k].n)}</b><small class="hint" style="display:block;margin-top:4px">${tt(VTABS[k].d)}</small></button>`).join("")}</div>
+<h3>🪙 Монетка</h3><p class="hint">Орёл или решка · выигрыш ×1,95.</p>
+<div class="stk">${betUI("coin")}<div class="r2" style="margin-top:8px"><button class="btn" data-a="cas" data-v="coin:h">🦅 Орёл</button><button class="btn" data-a="cas" data-v="coin:t">🪙 Решка</button></div><div class="cres">${CRS.coin||""}</div></div>
+<h3>🎡 Рулетка</h3><p class="hint">Красное/чёрное ×2, зеро ×36.</p>
+<div class="stk">${betUI("rou")}<div class="r2" style="margin-top:8px"><button class="btn" data-a="cas" data-v="rou:r">🔴</button><button class="btn" data-a="cas" data-v="rou:b">⚫</button><button class="btn" data-a="cas" data-v="rou:g">🟢 ×36</button></div><div class="cres">${CRS.rou||""}</div></div>
+<h3>🎰 Слоты</h3><p class="hint">Три барабана, выигрыш до ×200.</p>
+<div class="stk">${betUI("slot")}<button class="btn" data-a="cas" data-v="slot" style="width:100%;margin-top:8px">🎰 Крутить слоты</button><div class="cres">${CRS.slot||""}</div></div>
+<h3>🎲 Кости</h3><p class="hint">Больше 3 или меньше 4 · выигрыш ×1,9.</p>
+<div class="stk">${betUI("dice")}<div class="r2" style="margin-top:8px"><button class="btn" data-a="cas" data-v="dice:hi">🎲 Больше 3</button><button class="btn" data-a="cas" data-v="dice:lo">🎲 Меньше 4</button></div><div class="cres">${CRS.dice||""}</div></div>
+<h3>⬆️ Выше или ниже</h3><p class="hint">Угадай, будет ли следующее число (1–13) выше или ниже · ×1,9.</p>
+<div class="stk">${betUI("hl")}<div class="r2" style="margin-top:8px"><button class="btn" data-a="cas" data-v="hl:up">⬆️ Выше</button><button class="btn" data-a="cas" data-v="hl:dn">⬇️ Ниже</button></div><div class="cres">${CRS.hl||""}</div></div>`)}}
 {const _s=SDA;SDA=function(a,v){switch(a){case"vipb":vipb();return 1;case"wq":wq(v);return 1;case"wbuy":wbuy();return 1;case"camq":camq(v);return 1;case"cas":cas(v);return 1}return _s(a,v)}}
 CHANGELOG.unshift({v:"3.3",d:"18.11.2026",t:["Баланс дропов, казино и VIP 🎲","Case balance, casino and VIP 🎲"],it:[
  ["Дроп дропов стал скупее: редкие карты, фоны и «Удача» выпадают реже, состояние карт хуже","Case drops are stingier: rare cards, backgrounds and Luck trigger less, card condition is worse"],
@@ -1719,20 +1726,20 @@ CHANGELOG.unshift({v:"3.3",d:"18.11.2026",t:["Баланс дропов, каз�
  ["Казино: монетка, рулетка, слоты","Casino: coin flip, roulette, slots"]]});
 /* ===== v3.4: КРАШ ===== */
 /* v4.2: КРАШ — новая ракета и множитель, возврат на ×1.00, защита от тык-фарма */
-let CRG=null,CAT=2,CHS=[],CRR="",CRV={s:"idle",x:9,y:12,a:35,tr:[],k:""};
+let CRG=null,CHS=[],CRR="",CRV={s:"idle",x:9,y:12,a:35,tr:[],k:""};
 const CR_MIN=1.2,CR_REF=.03,CR_A=.9588,CR_K=.12;
 const crM=()=>CRG?Math.exp(CR_K*(Date.now()-CRG.t0)/1e3):1;
 const crF=m=>Math.floor(m*100+1e-9)/100;
 /* 3% — «ракета не взлетела» (возврат ставки); остальное — степенное распределение с общим RTP 96% */
 const crPt=()=>{if(Math.random()<CR_REF)return 1;const u=Math.random();return Math.min(1000,Math.max(1.01,Math.floor(CR_A/(1-u)*100)/100))};
-/* позиция ракеты зависит только от множителя (не от точки краша — иначе по ней можно вычислить крэш) */
-function crGeo(m){const p=Math.min(1,Math.log(Math.max(m,1))/Math.log(40)),x=9+76*p,y=12+66*Math.pow(p,.8);
+/* позиция ракеты: ближе к краю — ближе к взрыву (как в старой версии) */
+function crGeo(m){const p=Math.min(1,Math.log(Math.max(m,1))/Math.log(CRG?Math.max(CRG.cp,1.01):40)),x=9+76*p,y=12+66*Math.pow(p,.8);
   const v=$("crv"),W=v?v.offsetWidth:320,H=v?v.offsetHeight:190;
   const dx=76*W/100,dy=52.8*Math.pow(Math.max(p,.03),-.2)*H/100;
   return{x,y,a:Math.min(70,Math.atan2(dx,dy)*180/Math.PI)}}
 const CR_SVG=`<svg viewBox="0 0 40 72" width="30" height="54"><g class="crfl"><path d="M20 72 L12 52 H28Z" fill="#ff7a1a"/><path d="M20 66 L15.5 52 H24.5Z" fill="#ffe27a"/></g><path d="M9 44 L2 62 L14 53Z M31 44 L38 62 L26 53Z" fill="#ff5a78"/><path d="M20 0 C31 10 31 34 28 54 H12 C9 34 9 10 20 0Z" fill="#eef0f7" stroke="#aeb3c8" stroke-width="1.2"/><path d="M20 0 C25 4 28 10 29 17 H11 C12 10 15 4 20 0Z" fill="#ff5a78"/><circle cx="20" cy="32" r="5.6" fill="#35b8ff" stroke="#8d93ab" stroke-width="2"/><circle cx="18.2" cy="30.2" r="1.7" fill="#fff" opacity=".8"/></svg>`;
-/* топливо = вероятность, что ракета ещё летит (зависит только от множителя, крэш не выдаёт) */
-const crFuel=m=>Math.min(1,.93/Math.max(m,1));
+/* топливо = реальный остаток до взрыва: при 0% ракета взрывается */
+const crFuel=m=>CRG?Math.max(0,1-Math.log(Math.max(m,1))/Math.log(Math.max(CRG.cp,1.01))):1;
 function crFu(m){const f=crFuel(m),i=$("crfi"),t=$("crfp");CRV.f=f;if(i){i.style.width=(f*100).toFixed(1)+"%";i.className="crfi "+(f>.5?"ok":f>.2?"mid":"low")}if(t)t.textContent=Math.round(f*100)+"%"}
 function crTier(m){return m>=10?"t3":m>=5?"t2":m>=2?"t1":"t0"}
 function crChip(k){return k==="lock"?"🔒 Взлёт…":k==="go"?"🟢 Можно забирать":k==="crash"?"💥 Крэш":k==="win"?"✅ Забрал":k==="refund"?"↩️ Возврат":"Готов к запуску"}
@@ -1760,14 +1767,13 @@ function crEnd(m,win){const g=CRG;clearInterval(g.iv);CRG=null;CRV.k="";
   CHS.unshift(g.cp);CHS=CHS.slice(0,10);upd();rVip()}
 function crT(){const g=CRG;if(!g)return;const m=crM();
   if(g.cp===1){if(Date.now()-g.t0>=700)crEnd(1,2);return}
-  if(CAT>=CR_MIN&&CAT<=g.cp&&m>=CAT)return crEnd(crF(CAT),1);
   if(m>=g.cp)return crEnd(g.cp,0);
   crPos(m);crUi(m)}
-function crst(){if(CRG)return;const amt=Math.floor(+$("cam").value);CAM=amt;
+function crst(){if(CRG)return;const amt=Math.floor(+$("cam_crash").value);CB.crash=amt;
   if(amt>S.bal){toast(tt("Не хватает $ 😕"));return}
   if(amt>S.bal*BET_CAP){toast(tt("Ставка не больше 25% баланса"));return}
   if(!(amt>=100)){toast("Минимальная ставка 100 $");return}
-  CAT=Math.max(CR_MIN,+CAT||2);S.bal-=amt;CRR="";
+  S.bal-=amt;CRR="";
   CRV={s:"fly",x:9,y:12,a:35,tr:[],k:"",m:1,f:1};
   CRG={bet:amt,cp:crPt(),t0:Date.now()};CRG.iv=setInterval(crT,50);upd();rVip()}
 function crcash(){const g=CRG;if(!g)return;const m=crM();
@@ -1775,14 +1781,14 @@ function crcash(){const g=CRG;if(!g)return;const m=crM();
   m>=g.cp?crEnd(g.cp,0):crEnd(crF(m),1)}
 {const _r=rVip;rVip=function(){_r();const g=CRG,m=g?crM():1,mf=crF(m),k=g?(m>=CR_MIN?"go":"lock"):CRV.s,lock=g&&m<CR_MIN;
   const tier=g?crTier(mf):"t0",dead=!g&&CRV.s==="crash",fv=g?crFuel(m):(CRV.s==="win"?(CRV.f||1):1),fw=+(fv*100).toFixed(1),fcl=fv>.5?"ok":fv>.2?"mid":"low";
-  $("vip").insertAdjacentHTML("beforeend",`<h3>🚀 Краш</h3><p class="hint">Множитель растёт — успей забрать до крэша. Забрать можно с ×${CR_MIN.toFixed(2)}. Если ракета не взлетела (×1.00) — ставка возвращается. Ставка берётся из поля казино.</p>
+  $("vip").insertAdjacentHTML("beforeend",`<h3>🚀 Краш</h3><p class="hint">Множитель растёт — успей забрать до крэша. Забрать можно с ×${CR_MIN.toFixed(2)}. Если ракета не взлетела (×1.00) — ставка возвращается. Автовывода нет — забирай вручную.</p>
 ${crStage()}
 <div class="stk crbox"><div class="crmw"><div id="crm" class="crm ${g?tier:CRV.s==="crash"?"tx":CRV.s==="win"?"tw":"t0"}">×${(g?mf:(CRV.m||1)).toFixed(2)}</div><div id="crc" class="crchip">${tt(crChip(k))}</div></div>
 <div class="crfu"><span>⛽</span><div class="crfb"><i id="crfi" class="crfi ${fcl}${dead?" dead":""}" style="width:${dead?0:fw}%;--f:${fw}%"></i></div><b id="crfp">${dead?0:Math.round(fw)}%</b></div>
-<div class="hint crfh">Топливо — шанс, что ракета ещё в полёте. Бак пуст — двигатель глохнет и ракета взрывается.</div>
+<div class="hint crfh">Топливо кончается — ракета взрывается. Следи за баком и забирай вовремя.</div>
 <div id="crp" class="cres" style="font-size:15px;margin:0 0 8px"></div>
-<div class="chrow"><span class="hint" style="align-self:center">Авто-вывод ×</span><input id="crat" type="number" step="0.1" min="${CR_MIN}" value="${CAT}" oninput="CAT=+this.value" onchange="if(!(CAT>=${CR_MIN})){CAT=${CR_MIN};this.value=${CR_MIN}}"></div>
-<button id="crbtn" class="btn" data-a="${g?"crcash":"crst"}" ${lock?"disabled":""} style="width:100%;margin-top:8px">${g?(lock?"🔒 Взлёт…":"💰 "+tt("Забрать")):"🚀 Старт"}</button><div class="cres">${CRR}</div>
+${betUI("crash",g?g.bet:0)}
+<button id="crbtn" class="btn" data-a="${g?"crcash":"crst"}" ${lock?"disabled":""} style="width:100%;margin-top:10px">${g?(lock?"🔒 Взлёт…":"💰 "+tt("Забрать")):"🚀 Старт"}</button><div class="cres">${CRR}</div>
 <div class="crh">${CHS.map(x=>`<b style="color:${x===1?"var(--muted)":x>=2?"#3ecf8e":"#ff5c6c"}">×${x.toFixed(2)}</b>`).join(" · ")}</div></div>`);
   if(g)crUi(m)}}
 {const _s=SDA;SDA=function(a,v){if(a==="crst"){crst();return 1}if(a==="crcash"){crcash();return 1}return _s(a,v)}}
@@ -1846,15 +1852,23 @@ function rTitles(){const el=$("titles");if(!el)return;const V_=V(),rk=rank(),ri=
 {const _h=rHead;rHead=function(){_h();const c=S.cos||{},t=c.t?"「"+c.t+"」":rank()[1];$("head").innerHTML=avHTML(S.prof.av,38)+`<div class="mn"><span>${esc(S.prof.nick||tt("Игрок"))}</span><small>${esc(t)}</small></div>`;const b=$("head").firstElementChild;if(b&&c.f)b.classList.add("fr-"+c.f)}}
 {const _r=rVip;rVip=function(){_r();document.querySelectorAll('#vip [data-a="dchest"]:not(:disabled)').forEach(b=>b.classList.add("hot"))}}
 /* ===== Лимитки разнесены по вкладкам ===== */
-const VTABS={casino:{i:"vip",n:"Казино",k:["Казино","Краш","Высокие ставки"],d:"Казино, краш и высокие ставки"},
+const VTABS={casino:{i:"vip",n:"Казино",k:["Казино"],d:"Монетка, рулетка, слоты, кости, краш и высокие ставки"},
+ g_coin:{e:"🪙",n:"Монетка",k:["Монетка"],d:"Орёл или решка · ×1,95"},
+ g_rou:{e:"🎡",n:"Рулетка",k:["Рулетка"],d:"Красное/чёрное ×2 · зеро ×36"},
+ g_slot:{e:"🎰",n:"Слоты",k:["Слоты"],d:"Выигрыш до ×200"},
+ g_dice:{e:"🎲",n:"Кости",k:["Кости"],d:"Больше 3 или меньше 4 · ×1,9"},
+ g_hl:{e:"⬆️",n:"Выше или ниже",k:["Выше или ниже"],d:"Угадай число · ×1,9"},
+ g_hbet:{e:"💎",n:"Высокие ставки",k:["Высокие ставки"],d:"Множители от ×0 до ×500"},
+ g_crash:{e:"🚀",n:"Краш",k:["Краш"],d:"Успей забрать до крэша"},
  editions:{i:"inv",n:"Издания",k:["Коллекционные издания","Моя коллекция"],d:"Ограниченные карты и своя коллекция"},
  assets:{i:"st",n:"Активы",k:["Престиж-активы"],d:"Покупка престиж-активов и доход"},
  club:{i:"mods",n:"VIP-клубы",k:["VIP-клубы"],d:"Клубы и их бонусы"},
  prestige:{i:"prof",n:"Престиж",k:["Монумент","Титул и рамка","Благотворительный фонд"],d:"Монумент, титул, рамка и фонд"},
  bulk:{k:["Оптовая закупка дропов"]},
  chest:{k:[]}};
+const VG=["g_coin","g_rou","g_slot","g_dice","g_hl","g_hbet","g_crash"];
 const VT5=["casino","editions","assets","club","prestige"];
-VT5.forEach(k=>{const s=document.createElement("section");s.id=k;s.className="sec";s.innerHTML=`<div id="vb_${k}"></div>`;document.body.insertBefore(s,$("prof"))});
+[...VT5,...VG].forEach(k=>{const s=document.createElement("section");s.id=k;s.className="sec";s.innerHTML=`<div id="vb_${k}"></div>`;document.body.insertBefore(s,$("prof"))});
 $("cases").insertAdjacentHTML("beforeend",'<div id="vb_bulk"></div>');
 $("quests").insertAdjacentHTML("afterbegin",'<div id="vb_chest"></div>');
 $("dp").querySelector('[data-v="vip"]').insertAdjacentHTML("afterend",VT5.map(k=>`<button class="tb" data-a="tab" data-v="${k}"><span><i class="ico" data-i="${VTABS[k].i}"></i> ${tt(VTABS[k].n)}</span></button>`).join(""));
@@ -1865,10 +1879,10 @@ function vSplit(){const vip=$("vip");if(!vip)return;
     else if(/Ежедневный сундук/.test(n.textContent))grp="chest";
     if(grp!=="hub"){(g[grp]=g[grp]||[]).push(n)}
   }
-  for(const k of Object.keys(VTABS)){const box=$("vb_"+k);if(box)box.replaceChildren(...(g[k]||[]))}
+  for(const k of Object.keys(VTABS)){const box=$("vb_"+k);if(box){box.replaceChildren(...(g[k]||[]));if(VG.includes(k))box.insertAdjacentHTML("beforeend",`<button class="btn alt" data-a="tab" data-v="casino" style="width:100%;margin-top:10px">← ${tt("Казино")}</button>`)}}
   vip.insertAdjacentHTML("beforeend",`<h3>🗺️ Разделы</h3><div class="grid" style="grid-template-columns:1fr 1fr">${VT5.map(k=>`<button class="stk" style="text-align:left;cursor:pointer" data-a="tab" data-v="${k}"><b>${tt(VTABS[k].n)}</b><small class="hint" style="display:block;margin-top:4px">${tt(VTABS[k].d)}</small></button>`).join("")}</div>`)}
 {const _r=rVip;rVip=function(){_r();vSplit()}}
-{const _t=tab;tab=function(v){_t(v);if(VT5.includes(v)||v==="cases"||v==="quests")rVip()}}
+{const _t=tab;tab=function(v){_t(v);if(VT5.includes(v)||VG.includes(v)||v==="cases"||v==="quests")rVip();if(VG.includes(v))document.querySelectorAll('.dp .tb[data-v="casino"]').forEach(x=>x.classList.add("on"))}}
 CHANGELOG.unshift({v:"3.11",d:"20.11.2026",t:["Лимитки разнесены по вкладкам 🗂️","Limited shop split into tabs 🗂️"],it:[
   ["Казино, Издания, Активы, VIP-клубы и Престиж теперь отдельные вкладки","Casino, Editions, Assets, VIP clubs and Prestige are now separate tabs"],
   ["Ежедневный сундук — в «Задания», оптовая закупка — в «Дропы»","Daily chest moved to Quests, bulk case buying moved to Drops"]]});
@@ -1989,11 +2003,12 @@ mods:'<path d="M3 18h18M4 18L3 7l5 4 4-6 4 6 5-4-1 11"/>',prof:'<path d="M20 21v
 set:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><path d="M16 4v4M10 10v4M18 16v4"/>',log:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9 8h6M9 12h6"/>',vip:'<path d="M6 3h12l4 6-10 12L2 9l4-6z"/><path d="M2 9h20"/>',top:'<path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',chev:'<path d="M9 6l6 6-6 6"/>'};
 const fill=()=>document.querySelectorAll("i[data-i]:not([data-f])").forEach(e=>{const p=P[e.dataset.i];if(p){e.dataset.f=1;e.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+p+"</svg>"}});
 fill();new MutationObserver(fill).observe(document.body,{childList:true,subtree:true});
-const T={casino:"Казино",editions:"Издания",assets:"Активы",club:"VIP-клубы",prestige:"Престиж",card:"Карта",quests:"Задания",cases:"Дропы",mk:"Рынок",trd:"Обмен",st:"Биржа",inv:"Коллекция",up:"Апгрейд",mods:"Подписки",prof:"Профиль",set:"Настройки",vip:"Лимитки",tops:"Рейтинг"};
+const T={casino:"Казино",editions:"Издания",assets:"Активы",club:"VIP-клубы",prestige:"Престиж",card:"Карта",quests:"Задания",cases:"Дропы",mk:"Рынок",trd:"Обмен",st:"Биржа",inv:"Коллекция",up:"Апгрейд",mods:"Подписки",prof:"Профиль",set:"Настройки",vip:"Лимитки",tops:"Рейтинг",...Object.fromEntries(VG.map(k=>[k,VTABS[k].n]))};
 const pt=v=>{const n=tt(T[v]||v),el=document.getElementById("ptb");if(el)el.innerHTML='<div class="crumb"><i data-i="'+(P[v]?v:"cases")+'"></i><span>KX Market</span><i data-i="chev"></i><b>'+n+'</b></div><h1 class="pth">'+n+" <span>"+new Date().getFullYear()+"</span></h1>";fill()};
 {const _t=tab;tab=function(v){_t(v);pt(v)}}pt(cur||"cases");
 document.addEventListener("click",e=>{const b=e.target.closest('[data-a="sub"]');if(b)buySub(+b.dataset.v)});
 })();
+CHANGELOG.unshift({v:"3.12",d:"24.11.2026",t:["Казино по играм 🎰","Casino split by game 🎰"],it:[["Каждая игра казино — в отдельной вкладке, со своей ставкой под названием","Each casino game has its own tab with its own bet under the title"],["Из Краша убран авто-вывод — забирай вручную","Auto cash-out removed from Crash — cash out manually"]]});
 </script>
 </body>
 </html>
