@@ -360,6 +360,42 @@ h3{font:600 17px var(--fb);letter-spacing:-.02em;color:var(--text);margin:28px 2
 
 .card .nm,.cct{line-height:1.2;overflow-wrap:anywhere}
 .avt svg.av{width:100%;height:100%;display:block}
+
+/* ---------- краш v4.2: ракета и множитель ---------- */
+.crs{position:relative;height:200px;margin-bottom:12px;border-radius:var(--r);border:2px solid #2b2f55;overflow:hidden;box-shadow:0 5px 0 var(--slab);background:radial-gradient(120% 90% at 20% 110%,#2a1f5c 0,#121533 45%,#07081a 100%)}
+.crst1,.crst2{position:absolute;inset:-100% 0 0 0;background-repeat:repeat;opacity:.9}
+.crst1{background-image:radial-gradient(1.5px 1.5px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 70px 90px,#cfd6ff,transparent),radial-gradient(1.5px 1.5px at 130px 50px,#fff,transparent),radial-gradient(1px 1px at 180px 120px,#fff,transparent);background-size:200px 160px}
+.crst2{background-image:radial-gradient(1px 1px at 40px 70px,#9aa4ff,transparent),radial-gradient(2px 2px at 110px 20px,#fff8,transparent),radial-gradient(1px 1px at 160px 100px,#fff,transparent);background-size:240px 200px;opacity:.6}
+.crs.fly .crst1{animation:crsd 1.1s linear infinite}.crs.fly .crst2{animation:crsd 2.4s linear infinite}
+@keyframes crsd{to{transform:translateY(160px)}}
+.crtr{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.crtr polyline{stroke:#ffc83d;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.85;filter:drop-shadow(0 0 4px #ff9d2e)}
+.crs.refund .crtr,.crs.idle .crtr{display:none}
+.crpad{position:absolute;left:0;right:0;bottom:0;height:10px;background:linear-gradient(#2d2d45,#1a1a2e);border-top:2px solid #3b3f6b}
+#crr{position:absolute;z-index:3;width:30px;height:54px;transition:left .06s linear,bottom .06s linear}
+.crri{width:100%;height:100%;line-height:0}
+.crs.fly .crri{animation:crsh .14s linear infinite}
+@keyframes crsh{0%{transform:translate(0,0)}25%{transform:translate(1px,-1px)}50%{transform:translate(-1px,0)}75%{transform:translate(1px,1px)}100%{transform:translate(0,0)}}
+.crfl{transform-origin:20px 52px;transform-box:view-box;animation:crfl .1s ease-in-out infinite alternate}
+@keyframes crfl{from{transform:scaleY(.8)}to{transform:scaleY(1.45)}}
+.crs:not(.fly) .crfl{display:none}
+.crs.win #crr{filter:drop-shadow(0 0 10px #35e8a0)}
+.crs.crash #crr{display:none}
+#crx,#crsm{position:absolute;z-index:4;display:none;transform:translate(-50%,50%);font-size:46px;line-height:1;pointer-events:none}
+.crs.crash #crx{display:block;animation:crbm .6s cubic-bezier(.2,1.4,.4,1) both}
+.crs.refund #crsm{display:block;animation:crsm 1.4s ease-out both}
+@keyframes crbm{from{transform:translate(-50%,50%) scale(.2);opacity:0}60%{transform:translate(-50%,50%) scale(1.5);opacity:1}to{transform:translate(-50%,50%) scale(1.1);opacity:.9}}
+@keyframes crsm{from{transform:translate(-50%,50%) scale(.6);opacity:1}to{transform:translate(-50%,10%) scale(1.8);opacity:.35}}
+.crbox{padding-top:14px}
+.crmw{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:6px}
+.crm{font:900 54px/1 var(--fd);letter-spacing:-1px;text-align:center;color:var(--text);transition:color .2s,text-shadow .2s}
+.crm.t1{color:#35e8a0;text-shadow:0 0 18px #35e8a066}.crm.t2{color:#ffc83d;text-shadow:0 0 22px #ffc83d88}
+.crm.t3{color:#ff5cc8;text-shadow:0 0 26px #ff5cc8aa,0 0 50px #5cc8ff66;animation:crpu .5s ease-in-out infinite alternate}
+.crm.tw{color:#35e8a0;text-shadow:0 0 18px #35e8a066}.crm.tx{color:var(--bad);text-shadow:0 0 18px #ff5a7866}
+@keyframes crpu{to{transform:scale(1.07)}}
+.crchip{padding:4px 14px;border-radius:999px;background:var(--p2);border:2px solid var(--line);font-size:12px;font-weight:800;color:var(--muted)}
+.crh{text-align:center;font-size:12px;margin-top:10px}
+@media (prefers-reduced-motion:reduce){.crs.fly .crst1,.crs.fly .crst2,.crs.fly .crri,.crfl,.crm.t3{animation:none}}
 </style>
 <script>
 function isLight(){var a=document.documentElement.getAttribute("data-theme");return a?a==="light":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)}
@@ -1671,27 +1707,68 @@ CHANGELOG.unshift({v:"3.3",d:"18.11.2026",t:["Баланс дропов, каз�
  ["Оптовая закупка дропов на любое количество, 8 новых коллекционных изданий (всего 17)","Bulk case purchase of any amount, 8 new collectible editions (17 total)"],
  ["Казино: монетка, рулетка, слоты","Casino: coin flip, roulette, slots"]]});
 /* ===== v3.4: КРАШ ===== */
-let CRG=null,CAT=2,CHS=[],CRR="";
-const crM=()=>CRG?Math.exp(.12*(Date.now()-CRG.t0)/1e3):1;
-function crEnd(m,win){const g=CRG;clearInterval(g.iv);CRG=null;
-  if(win){const p=Math.floor(g.bet*m);S.bal+=p;sfx("win",m>=50?6:m>=10?5:m>=3?4:2);if(m>=5)winFx(m>=50?6:m>=10?5:4);CRR=`<span class="good">✅ Забрал ×${m.toFixed(2)} · +${fmtC(p-g.bet)} $</span>`}
-  else{V().spent+=g.bet;sfx("err");CRR=`<span class="bad">💥 Крэш на ×${g.cp.toFixed(2)} · −${fmtC(g.bet)} $</span>`}
+/* v4.2: КРАШ — новая ракета и множитель, возврат на ×1.00, защита от тык-фарма */
+let CRG=null,CAT=2,CHS=[],CRR="",CRV={s:"idle",x:9,y:12,a:35,tr:[],k:""};
+const CR_MIN=1.2,CR_REF=.03,CR_A=.9588,CR_K=.12;
+const crM=()=>CRG?Math.exp(CR_K*(Date.now()-CRG.t0)/1e3):1;
+const crF=m=>Math.floor(m*100+1e-9)/100;
+/* 3% — «ракета не взлетела» (возврат ставки); остальное — степенное распределение с общим RTP 96% */
+const crPt=()=>{if(Math.random()<CR_REF)return 1;const u=Math.random();return Math.min(1000,Math.max(1.01,Math.floor(CR_A/(1-u)*100)/100))};
+/* позиция ракеты зависит только от множителя (не от точки краша — иначе по ней можно вычислить крэш) */
+function crGeo(m){const p=Math.min(1,Math.log(Math.max(m,1))/Math.log(40)),x=9+76*p,y=12+66*Math.pow(p,.8);
+  const v=$("crv"),W=v?v.offsetWidth:320,H=v?v.offsetHeight:190;
+  const dx=76*W/100,dy=52.8*Math.pow(Math.max(p,.03),-.2)*H/100;
+  return{x,y,a:Math.min(70,Math.atan2(dx,dy)*180/Math.PI)}}
+const CR_SVG=`<svg viewBox="0 0 40 72" width="30" height="54"><g class="crfl"><path d="M20 72 L12 52 H28Z" fill="#ff7a1a"/><path d="M20 66 L15.5 52 H24.5Z" fill="#ffe27a"/></g><path d="M9 44 L2 62 L14 53Z M31 44 L38 62 L26 53Z" fill="#ff5a78"/><path d="M20 0 C31 10 31 34 28 54 H12 C9 34 9 10 20 0Z" fill="#eef0f7" stroke="#aeb3c8" stroke-width="1.2"/><path d="M20 0 C25 4 28 10 29 17 H11 C12 10 15 4 20 0Z" fill="#ff5a78"/><circle cx="20" cy="32" r="5.6" fill="#35b8ff" stroke="#8d93ab" stroke-width="2"/><circle cx="18.2" cy="30.2" r="1.7" fill="#fff" opacity=".8"/></svg>`;
+function crTier(m){return m>=10?"t3":m>=5?"t2":m>=2?"t1":"t0"}
+function crChip(k){return k==="lock"?"🔒 Взлёт…":k==="go"?"🟢 Можно забирать":k==="crash"?"💥 Крэш":k==="win"?"✅ Забрал":k==="refund"?"↩️ Возврат":"Готов к запуску"}
+function crStage(){
+  if(CRG){const o=crGeo(crM());Object.assign(CRV,o)}
+  else if(CRV.s==="idle"){Object.assign(CRV,crGeo(1),{tr:[]})}
+  const cls=CRG?"fly":CRV.s;
+  return `<div id="crv" class="crs ${cls}"><div class="crst1"></div><div class="crst2"></div>
+<svg class="crtr" viewBox="0 0 100 100" preserveAspectRatio="none"><polyline id="crpl" points="${CRV.tr.join(" ")}" fill="none" vector-effect="non-scaling-stroke"/></svg>
+<div class="crpad"></div><div id="crr" style="left:${CRV.x}%;bottom:${CRV.y}%;transform:translate(-50%,50%) rotate(${CRV.a}deg)"><div class="crri">${CR_SVG}</div></div>
+<div id="crx" style="left:${CRV.x}%;bottom:${CRV.y}%">💥</div><div id="crsm" style="left:${CRV.x}%;bottom:${CRV.y}%">💨</div></div>`}
+function crPos(m){const o=crGeo(m);Object.assign(CRV,o);
+  const r=$("crr");if(r){r.style.left=o.x+"%";r.style.bottom=o.y+"%";r.style.transform=`translate(-50%,50%) rotate(${o.a}deg)`}
+  const L=CRV.tr[CRV.tr.length-1];const pt=o.x.toFixed(1)+","+(100-o.y).toFixed(1);
+  if(pt!==L){CRV.tr.push(pt);if(CRV.tr.length>400)CRV.tr.shift();const pl=$("crpl");if(pl)pl.setAttribute("points",CRV.tr.join(" "))}}
+function crUi(m){const g=CRG;if(!g)return;const mf=crF(m),e=$("crm"),k=m>=CR_MIN?"go":"lock";
+  if(e){e.textContent="×"+mf.toFixed(2);e.className="crm "+crTier(mf)}
+  const pr=Math.floor(g.bet*mf)-g.bet,x=$("crp");if(x)x.textContent=(pr>=0?"+":"−")+fmtC(Math.abs(pr))+" $";
+  const b=$("crbtn");if(b){b.disabled=k==="lock";b.textContent=k==="lock"?tt("🔒 Взлёт…"):"💰 "+tt("Забрать")+" "+fmtC(Math.floor(g.bet*mf))+" $"}
+  if(CRV.k!==k){CRV.k=k;const c=$("crc");if(c)c.textContent=tt(crChip(k))}}
+function crEnd(m,win){const g=CRG;clearInterval(g.iv);CRG=null;CRV.k="";
+  if(win===1){const p=Math.floor(g.bet*m);S.bal+=p;CRV.s="win";CRV.m=m;sfx("win",m>=50?6:m>=10?5:m>=3?4:2);if(m>=5)winFx(m>=50?6:m>=10?5:4);CRR=`<span class="good">✅ Забрал ×${m.toFixed(2)} · +${fmtC(p-g.bet)} $</span>`}
+  else if(win===2){S.bal+=g.bet;CRV.s="refund";CRV.m=1;sfx("gem");CRR=`<span>↩️ Ракета не взлетела · ставка ${fmtC(g.bet)} $ возвращена</span>`}
+  else{V().spent+=g.bet;CRV.s="crash";CRV.m=g.cp;sfx("err");CRR=`<span class="bad">💥 Крэш на ×${g.cp.toFixed(2)} · −${fmtC(g.bet)} $</span>`}
   CHS.unshift(g.cp);CHS=CHS.slice(0,10);upd();rVip()}
 function crT(){const g=CRG;if(!g)return;const m=crM();
-  if(CAT>=1.01&&CAT<=g.cp&&m>=CAT)return crEnd(CAT,1);
+  if(g.cp===1){if(Date.now()-g.t0>=700)crEnd(1,2);return}
+  if(CAT>=CR_MIN&&CAT<=g.cp&&m>=CAT)return crEnd(crF(CAT),1);
   if(m>=g.cp)return crEnd(g.cp,0);
-  const b=$("crb"),rr=$("crr");if(b&&rr){const p=Math.min(1,Math.log(m)/Math.log(Math.max(g.cp,1.01)));b.style.height=(p*100)+"%";rr.style.left=(p*82)+"%";rr.style.bottom=(p*78)+"%"}
-  const e=$("crm"),x=$("crp");if(e){e.textContent="×"+m.toFixed(2);e.style.color=m>=10?"#ffc83d":m>=2?"#3ecf8e":"var(--text)"}
-  if(x)x.textContent="+"+fmtC(Math.floor(g.bet*m)-g.bet)+" $"}
-function crst(){if(CRG)return;const amt=Math.floor(+$("cam").value);CAM=amt;if(amt>S.bal){toast(tt("Не хватает $ 😕"));return}if(!(amt>=100)){toast("Минимальная ставка 100 $");return}
-  const u=Math.random(),cp=Math.min(1000,Math.max(1,Math.floor(96/(1-u))/100));S.bal-=amt;CRR="";
-  CRG={bet:amt,cp,t0:Date.now()};CRG.iv=setInterval(crT,50);upd();rVip()}
-function crcash(){const g=CRG;if(!g)return;const m=crM();m>=g.cp?crEnd(g.cp,0):crEnd(m,1)}
-{const _r=rVip;rVip=function(){_r();$("vip").insertAdjacentHTML("beforeend",`<h3>🚀 Краш</h3><p class="hint">Множитель растёт — успей забрать до крэша. Ставка берётся из поля казино. Можно задать авто-вывод.</p>
-<div id="crv" style="position:relative;height:130px;border-radius:14px;background:var(--line);overflow:hidden;margin-bottom:8px"><i id="crb" style="position:absolute;left:0;bottom:0;width:100%;height:0;background:linear-gradient(0deg,#3ecf8e22,#ffc83d55);transition:height .12s linear"></i><span id="crr" style="position:absolute;left:0;bottom:0;font-size:30px;transition:left .12s linear,bottom .12s linear">🚀</span></div><div class="stk"><div id="crm" style="text-align:center;font-size:46px;font-weight:900;font-family:var(--fd)">${CRG?"×"+crM().toFixed(2):"🚀"}</div><div id="crp" class="cres" style="font-size:15px;margin:0 0 8px"></div>
-<div class="chrow"><span class="hint" style="align-self:center">Авто-вывод ×</span><input id="crat" type="number" step="0.1" min="1.01" value="${CAT}" oninput="CAT=+this.value"></div>
-<button class="btn" data-a="${CRG?"crcash":"crst"}" style="width:100%;margin-top:8px">${CRG?"💰 Забрать":"🚀 Старт"}</button><div class="cres">${CRR}</div>
-<div style="text-align:center;font-size:12px">${CHS.map(x=>`<b style="color:${x>=2?"#3ecf8e":"#ff5c6c"}">×${x.toFixed(2)}</b>`).join(" · ")}</div></div>`)}}
+  crPos(m);crUi(m)}
+function crst(){if(CRG)return;const amt=Math.floor(+$("cam").value);CAM=amt;
+  if(amt>S.bal){toast(tt("Не хватает $ 😕"));return}
+  if(amt>S.bal*BET_CAP){toast(tt("Ставка не больше 25% баланса"));return}
+  if(!(amt>=100)){toast("Минимальная ставка 100 $");return}
+  CAT=Math.max(CR_MIN,+CAT||2);S.bal-=amt;CRR="";
+  CRV={s:"fly",x:9,y:12,a:35,tr:[],k:"",m:1};
+  CRG={bet:amt,cp:crPt(),t0:Date.now()};CRG.iv=setInterval(crT,50);upd();rVip()}
+function crcash(){const g=CRG;if(!g)return;const m=crM();
+  if(m<CR_MIN){toast(tt("Ракета ещё взлетает 🚀"));return}
+  m>=g.cp?crEnd(g.cp,0):crEnd(crF(m),1)}
+{const _r=rVip;rVip=function(){_r();const g=CRG,m=g?crM():1,mf=crF(m),k=g?(m>=CR_MIN?"go":"lock"):CRV.s,lock=g&&m<CR_MIN;
+  const tier=g?crTier(mf):"t0";
+  $("vip").insertAdjacentHTML("beforeend",`<h3>🚀 Краш</h3><p class="hint">Множитель растёт — успей забрать до крэша. Забрать можно с ×${CR_MIN.toFixed(2)}. Если ракета не взлетела (×1.00) — ставка возвращается. Ставка берётся из поля казино.</p>
+${crStage()}
+<div class="stk crbox"><div class="crmw"><div id="crm" class="crm ${g?tier:CRV.s==="crash"?"tx":CRV.s==="win"?"tw":"t0"}">×${(g?mf:(CRV.m||1)).toFixed(2)}</div><div id="crc" class="crchip">${tt(crChip(k))}</div></div>
+<div id="crp" class="cres" style="font-size:15px;margin:0 0 8px"></div>
+<div class="chrow"><span class="hint" style="align-self:center">Авто-вывод ×</span><input id="crat" type="number" step="0.1" min="${CR_MIN}" value="${CAT}" oninput="CAT=+this.value" onchange="if(!(CAT>=${CR_MIN})){CAT=${CR_MIN};this.value=${CR_MIN}}"></div>
+<button id="crbtn" class="btn" data-a="${g?"crcash":"crst"}" ${lock?"disabled":""} style="width:100%;margin-top:8px">${g?(lock?"🔒 Взлёт…":"💰 "+tt("Забрать")):"🚀 Старт"}</button><div class="cres">${CRR}</div>
+<div class="crh">${CHS.map(x=>`<b style="color:${x===1?"var(--muted)":x>=2?"#3ecf8e":"#ff5c6c"}">×${x.toFixed(2)}</b>`).join(" · ")}</div></div>`);
+  if(g)crUi(m)}}
 {const _s=SDA;SDA=function(a,v){if(a==="crst"){crst();return 1}if(a==="crcash"){crcash();return 1}return _s(a,v)}}
 CHANGELOG.unshift({v:"3.4",d:"18.11.2026",t:["Краш 🚀","Crash 🚀"],it:[["Краш в Лимиткие: множитель растёт, успей забрать до крэша, есть авто-вывод","Crash in the Boutique: the multiplier climbs, cash out before it crashes, with auto cash-out"]]});
 /* ===== v3.5: мега-активы, титулы, рамки, монумент ===== */
@@ -1818,6 +1895,10 @@ CHANGELOG.unshift({v:"4.0",d:"21.11.2026",t:["Большое обновлени�
 CHANGELOG.unshift({v:"4.1",d:"21.11.2026",t:["Ивенты и новости рынка","Events and market news"],it:[
   ["Новые акции: батлпасс XP ×2, задания вдвое, подработка вдвое, магазин карты −20%","New events: battle pass XP ×2, double quest pay, double side jobs, card shop −20%"],
   ["Лента «Новости рынка» в Заданиях: все смены акций","“Market news” feed in Quests: every event change"]]});
+CHANGELOG.unshift({v:"4.2",d:"24.11.2026",t:["Краш: новая ракета и честные правила","Crash: new rocket and fairer rules"],it:[
+  ["Новая ракета с огнём и следом, звёздный фон, цветной множитель; взрыв при крэше","New rocket with flame and trail, starfield, colored multiplier; explosion on crash"],
+  ["Ракета не взлетела (×1.00) — ставка возвращается полностью","Rocket didn't lift off (×1.00) — your bet is fully refunded"],
+  ["Забрать можно с ×1.20, выплата считается по показанному множителю: тык-фарм закрыт","Cash-out unlocks at ×1.20 and pays the displayed multiplier: tap-farming is closed"]]});
 if(ls("kx_logv","")!==CHANGELOG[0].v){$("nwd").hidden=false;setTimeout(()=>{if(!$("modal").classList.contains("on"))openLog()},3600)}
 /* v2.3: волна, вспышка, звуки окон */
 (()=>{const R=matchMedia("(prefers-reduced-motion:reduce)").matches;
