@@ -380,9 +380,8 @@ h3{font:600 17px var(--fb);letter-spacing:-.02em;color:var(--text);margin:28px 2
 @keyframes crfl{from{transform:scaleY(.8)}to{transform:scaleY(1.45)}}
 .crs:not(.fly) .crfl{display:none}
 .crs.win #crr{filter:drop-shadow(0 0 10px #35e8a0)}
-.crs.crash #crr{display:none}
 #crx,#crsm{position:absolute;z-index:4;display:none;transform:translate(-50%,50%);font-size:46px;line-height:1;pointer-events:none}
-.crs.crash #crx{display:block;animation:crbm .6s cubic-bezier(.2,1.4,.4,1) both}
+.crs.crash #crx{display:block}
 .crs.refund #crsm{display:block;animation:crsm 1.4s ease-out both}
 @keyframes crbm{from{transform:translate(-50%,50%) scale(.2);opacity:0}60%{transform:translate(-50%,50%) scale(1.5);opacity:1}to{transform:translate(-50%,50%) scale(1.1);opacity:.9}}
 @keyframes crsm{from{transform:translate(-50%,50%) scale(.6);opacity:1}to{transform:translate(-50%,10%) scale(1.8);opacity:.35}}
@@ -396,6 +395,18 @@ h3{font:600 17px var(--fb);letter-spacing:-.02em;color:var(--text);margin:28px 2
 .crchip{padding:4px 14px;border-radius:999px;background:var(--p2);border:2px solid var(--line);font-size:12px;font-weight:800;color:var(--muted)}
 .crh{text-align:center;font-size:12px;margin-top:10px}
 @media (prefers-reduced-motion:reduce){.crs.fly .crst1,.crs.fly .crst2,.crs.fly .crri,.crfl,.crm.t3{animation:none}}
+
+.crfu{display:flex;align-items:center;gap:10px;margin:2px 0 4px}.crfu span{font-size:18px}.crfu b{min-width:42px;text-align:right;font:800 13px var(--fd)}
+.crfb{flex:1;height:14px;border-radius:8px;background:var(--bg);border:2px solid var(--line);overflow:hidden}
+.crfi{display:block;height:100%;border-radius:6px;background:#35e8a0;transition:width .12s linear,background .2s}
+.crfi.mid{background:#ffc83d}.crfi.low{background:#ff5a78;animation:crlow .5s ease-in-out infinite alternate}
+.crfi.dead{animation:crfz .3s ease-in forwards}
+@keyframes crlow{to{opacity:.55}}@keyframes crfz{from{width:var(--f);opacity:1}to{width:0;opacity:.4}}
+.crfh{margin:0 0 6px;font-size:12px}
+.crs.crash #crr{display:block;animation:crdie .35s forwards}
+.crs.crash .crri{animation:crsh .06s linear infinite}
+@keyframes crdie{0%{opacity:1}85%{opacity:1}100%{opacity:0}}
+.crs.crash #crx{animation:crbm .6s .35s cubic-bezier(.2,1.4,.4,1) both}
 </style>
 <script>
 function isLight(){var a=document.documentElement.getAttribute("data-theme");return a?a==="light":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)}
@@ -1720,6 +1731,9 @@ function crGeo(m){const p=Math.min(1,Math.log(Math.max(m,1))/Math.log(40)),x=9+7
   const dx=76*W/100,dy=52.8*Math.pow(Math.max(p,.03),-.2)*H/100;
   return{x,y,a:Math.min(70,Math.atan2(dx,dy)*180/Math.PI)}}
 const CR_SVG=`<svg viewBox="0 0 40 72" width="30" height="54"><g class="crfl"><path d="M20 72 L12 52 H28Z" fill="#ff7a1a"/><path d="M20 66 L15.5 52 H24.5Z" fill="#ffe27a"/></g><path d="M9 44 L2 62 L14 53Z M31 44 L38 62 L26 53Z" fill="#ff5a78"/><path d="M20 0 C31 10 31 34 28 54 H12 C9 34 9 10 20 0Z" fill="#eef0f7" stroke="#aeb3c8" stroke-width="1.2"/><path d="M20 0 C25 4 28 10 29 17 H11 C12 10 15 4 20 0Z" fill="#ff5a78"/><circle cx="20" cy="32" r="5.6" fill="#35b8ff" stroke="#8d93ab" stroke-width="2"/><circle cx="18.2" cy="30.2" r="1.7" fill="#fff" opacity=".8"/></svg>`;
+/* топливо = вероятность, что ракета ещё летит (зависит только от множителя, крэш не выдаёт) */
+const crFuel=m=>Math.min(1,.93/Math.max(m,1));
+function crFu(m){const f=crFuel(m),i=$("crfi"),t=$("crfp");CRV.f=f;if(i){i.style.width=(f*100).toFixed(1)+"%";i.className="crfi "+(f>.5?"ok":f>.2?"mid":"low")}if(t)t.textContent=Math.round(f*100)+"%"}
 function crTier(m){return m>=10?"t3":m>=5?"t2":m>=2?"t1":"t0"}
 function crChip(k){return k==="lock"?"🔒 Взлёт…":k==="go"?"🟢 Можно забирать":k==="crash"?"💥 Крэш":k==="win"?"✅ Забрал":k==="refund"?"↩️ Возврат":"Готов к запуску"}
 function crStage(){
@@ -1738,7 +1752,7 @@ function crUi(m){const g=CRG;if(!g)return;const mf=crF(m),e=$("crm"),k=m>=CR_MIN
   if(e){e.textContent="×"+mf.toFixed(2);e.className="crm "+crTier(mf)}
   const pr=Math.floor(g.bet*mf)-g.bet,x=$("crp");if(x)x.textContent=(pr>=0?"+":"−")+fmtC(Math.abs(pr))+" $";
   const b=$("crbtn");if(b){b.disabled=k==="lock";b.textContent=k==="lock"?tt("🔒 Взлёт…"):"💰 "+tt("Забрать")+" "+fmtC(Math.floor(g.bet*mf))+" $"}
-  if(CRV.k!==k){CRV.k=k;const c=$("crc");if(c)c.textContent=tt(crChip(k))}}
+  crFu(m);if(CRV.k!==k){CRV.k=k;const c=$("crc");if(c)c.textContent=tt(crChip(k))}}
 function crEnd(m,win){const g=CRG;clearInterval(g.iv);CRG=null;CRV.k="";
   if(win===1){const p=Math.floor(g.bet*m);S.bal+=p;CRV.s="win";CRV.m=m;sfx("win",m>=50?6:m>=10?5:m>=3?4:2);if(m>=5)winFx(m>=50?6:m>=10?5:4);CRR=`<span class="good">✅ Забрал ×${m.toFixed(2)} · +${fmtC(p-g.bet)} $</span>`}
   else if(win===2){S.bal+=g.bet;CRV.s="refund";CRV.m=1;sfx("gem");CRR=`<span>↩️ Ракета не взлетела · ставка ${fmtC(g.bet)} $ возвращена</span>`}
@@ -1754,16 +1768,18 @@ function crst(){if(CRG)return;const amt=Math.floor(+$("cam").value);CAM=amt;
   if(amt>S.bal*BET_CAP){toast(tt("Ставка не больше 25% баланса"));return}
   if(!(amt>=100)){toast("Минимальная ставка 100 $");return}
   CAT=Math.max(CR_MIN,+CAT||2);S.bal-=amt;CRR="";
-  CRV={s:"fly",x:9,y:12,a:35,tr:[],k:"",m:1};
+  CRV={s:"fly",x:9,y:12,a:35,tr:[],k:"",m:1,f:1};
   CRG={bet:amt,cp:crPt(),t0:Date.now()};CRG.iv=setInterval(crT,50);upd();rVip()}
 function crcash(){const g=CRG;if(!g)return;const m=crM();
   if(m<CR_MIN){toast(tt("Ракета ещё взлетает 🚀"));return}
   m>=g.cp?crEnd(g.cp,0):crEnd(crF(m),1)}
 {const _r=rVip;rVip=function(){_r();const g=CRG,m=g?crM():1,mf=crF(m),k=g?(m>=CR_MIN?"go":"lock"):CRV.s,lock=g&&m<CR_MIN;
-  const tier=g?crTier(mf):"t0";
+  const tier=g?crTier(mf):"t0",dead=!g&&CRV.s==="crash",fv=g?crFuel(m):(CRV.s==="win"?(CRV.f||1):1),fw=+(fv*100).toFixed(1),fcl=fv>.5?"ok":fv>.2?"mid":"low";
   $("vip").insertAdjacentHTML("beforeend",`<h3>🚀 Краш</h3><p class="hint">Множитель растёт — успей забрать до крэша. Забрать можно с ×${CR_MIN.toFixed(2)}. Если ракета не взлетела (×1.00) — ставка возвращается. Ставка берётся из поля казино.</p>
 ${crStage()}
 <div class="stk crbox"><div class="crmw"><div id="crm" class="crm ${g?tier:CRV.s==="crash"?"tx":CRV.s==="win"?"tw":"t0"}">×${(g?mf:(CRV.m||1)).toFixed(2)}</div><div id="crc" class="crchip">${tt(crChip(k))}</div></div>
+<div class="crfu"><span>⛽</span><div class="crfb"><i id="crfi" class="crfi ${fcl}${dead?" dead":""}" style="width:${dead?0:fw}%;--f:${fw}%"></i></div><b id="crfp">${dead?0:Math.round(fw)}%</b></div>
+<div class="hint crfh">Топливо — шанс, что ракета ещё в полёте. Бак пуст — двигатель глохнет и ракета взрывается.</div>
 <div id="crp" class="cres" style="font-size:15px;margin:0 0 8px"></div>
 <div class="chrow"><span class="hint" style="align-self:center">Авто-вывод ×</span><input id="crat" type="number" step="0.1" min="${CR_MIN}" value="${CAT}" oninput="CAT=+this.value" onchange="if(!(CAT>=${CR_MIN})){CAT=${CR_MIN};this.value=${CR_MIN}}"></div>
 <button id="crbtn" class="btn" data-a="${g?"crcash":"crst"}" ${lock?"disabled":""} style="width:100%;margin-top:8px">${g?(lock?"🔒 Взлёт…":"💰 "+tt("Забрать")):"🚀 Старт"}</button><div class="cres">${CRR}</div>
