@@ -444,6 +444,45 @@ try{applyTheme(localStorage.getItem("kx_theme")||"auto")}catch(e){}
 
 
 
+<style>
+/* v5.1 · казино: анимации */
+.vz{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:190px;margin:0 0 14px;padding:14px;border-radius:22px;border:2px solid var(--line);background:radial-gradient(120% 90% at 50% 0,color-mix(in srgb,var(--accent) 16%,var(--panel)),var(--panel));box-shadow:0 5px 0 var(--slab);overflow:hidden;perspective:700px}
+.vz.win{animation:vzw .9s}.vz.lose{animation:vzl .45s}
+@keyframes vzw{40%{box-shadow:0 0 0 3px var(--ok),0 0 36px var(--ok)}}
+@keyframes vzl{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.vz svg{display:block}.rwl,.rbl,.wh{transform-box:view-box;transform-origin:0 0}
+.coin{position:relative;width:104px;height:104px;transform-style:preserve-3d}
+.coin i{position:absolute;inset:0;display:grid;place-items:center;border-radius:50%;font:normal 800 46px var(--fb);color:#7a4a00;border:5px solid #e0a020;background:radial-gradient(circle at 35% 30%,#fff3b0,#f5b82e 55%,#b9770e);box-shadow:inset 0 0 0 4px #ffe58a88,0 8px 18px #0006;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.coin i+i{transform:rotateX(180deg)}
+.reels{display:flex;gap:8px;padding:10px;border-radius:18px;background:var(--bg);border:2px solid var(--line)}
+.reel{width:72px;height:72px;overflow:hidden;border-radius:12px;background:var(--panel);box-shadow:inset 0 10px 10px #0006,inset 0 -10px 10px #0006}
+.reel.win{outline:3px solid var(--ok)}.reels.spin .rs{filter:blur(1.2px)}
+.rs{will-change:transform}.rs b{display:grid;place-items:center;height:72px;font:normal 40px var(--fb)}
+.die{display:grid;grid:repeat(3,1fr)/repeat(3,1fr);gap:5px;width:90px;height:90px;padding:13px;border-radius:20px;background:linear-gradient(145deg,#fff,#d4d6e2);box-shadow:0 6px 0 #9a9fb3,0 14px 22px #0005}
+.die i{border-radius:50%}.die i.p{background:#16161c;box-shadow:inset 0 2px 3px #000a}
+.die.roll{animation:dice .65s linear infinite}
+@keyframes dice{25%{transform:translateY(-34px) rotate(120deg)}50%{transform:translateY(0) rotate(240deg)}75%{transform:translateY(-14px) rotate(300deg)}to{transform:rotate(360deg)}}
+.hlr{display:flex;align-items:center;gap:14px}.hlm{font:800 28px var(--fb);color:var(--muted)}
+.pc{position:relative;width:78px;height:110px;transform-style:preserve-3d;transition:transform .6s}.pc.nt{transition:none}.pc.up{transform:rotateY(180deg)}
+.pc i{position:absolute;inset:0;display:grid;place-items:center;border-radius:12px;font:normal 800 38px var(--fb);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.pc .bk{color:#fff;border:4px solid #fff;background:repeating-linear-gradient(45deg,var(--accent2) 0 6px,var(--accent) 6px 12px)}
+.pc .f{background:#fff;color:#16161c;transform:rotateY(180deg)}
+.pc.ok .f{box-shadow:0 0 0 4px var(--ok),0 0 26px var(--ok)}.pc.no .f{box-shadow:0 0 0 4px var(--bad),0 0 26px var(--bad)}
+.t0{background:#4a4d5c;fill:#4a4d5c}.t1{background:#2f7d5b;fill:#2f7d5b}.t2{background:#2f66c9;fill:#2f66c9}.t3{background:#8a3dff;fill:#8a3dff}.t4{background:#d99a12;fill:#d99a12}
+.tk{position:relative;width:100%;overflow:hidden;padding:10px 0;border-radius:14px;background:var(--bg)}
+.tk::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;margin-left:-1.5px;background:#ffd84a;box-shadow:0 0 12px #ffd84a;z-index:2}
+.tkr{display:flex;gap:6px;width:max-content;will-change:transform}
+.tkc{flex:none;display:grid;place-items:center;width:64px;height:64px;border-radius:12px;color:#fff;font:800 17px var(--fb);border:2px solid #0004}
+.pb.hit rect{animation:hitp .7s 3}@keyframes hitp{50%{filter:brightness(1.9)}}
+.mh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;width:100%;max-width:300px;font:800 14px var(--fb)}.mh b{font-size:26px}
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:300px}
+.mt{aspect-ratio:1;border-radius:14px;border:2px solid var(--line);background:var(--p2);color:var(--text);box-shadow:0 4px 0 var(--slab);font:normal 28px var(--fb);cursor:pointer;padding:0}
+.mt:active{transform:translateY(3px);box-shadow:none}
+.mt.gem{background:color-mix(in srgb,var(--ok) 28%,var(--panel));border-color:var(--ok);animation:mflip .4s}
+.mt.bomb{background:color-mix(in srgb,var(--bad) 35%,var(--panel));border-color:var(--bad);animation:mboom .5s}.mt.dim{opacity:.5}
+@keyframes mflip{from{transform:rotateY(90deg) scale(.8)}}@keyframes mboom{30%{transform:scale(1.35) rotate(-8deg)}60%{transform:scale(.9) rotate(6deg)}}
+@media (prefers-reduced-motion:reduce){.vz.win,.vz.lose,.die.roll{animation:none}}
+</style>
 </head>
 <body>
 <div id="splash"><div class="sp-g"></div><div class="sp-t">KX Market - Welcome</div></div>
@@ -2072,6 +2111,106 @@ CHANGELOG.unshift({v:"5.0",d:"25.11.2026",t:["KX Market 5.0 — всё как в
  ["Все цены приведены к реальности: акции, машины, телефоны, недвижимость, ранги, VIP-клубы, активы и лимитки","All prices brought down to earth: stocks, cars, phones, real estate, ranks, VIP clubs, assets and limiteds"],
  ["Кастомный титул — просто серый текст под ником, без скобок","Custom title is plain gray text under the nick, no brackets"],
  ["Прогресс сброшен: новая экономика — новый сезон","Progress reset: new economy, new season"]]});
+/* ===== v5.1: визуал казино — монетка, рулетка, слоты, кости, выше/ниже, высокие ставки + Плинко, Мины, Колесо ===== */
+(()=>{
+const K=matchMedia("(prefers-reduced-motion:reduce)").matches?.3:1,D=n=>n*K,wait=n=>new Promise(r=>setTimeout(r,D(n))),ST={},BZ={},A={};
+const polar=(r,a)=>[+(Math.sin(a*Math.PI/180)*r).toFixed(1),+(-Math.cos(a*Math.PI/180)*r).toFixed(1)];
+const wedge=(r1,r2,a,b)=>{const[p,q]=polar(r1,a),[c,d]=polar(r2,a),[e,f]=polar(r2,b),[g,h]=polar(r1,b);return`M${p} ${q}L${c} ${d}A${r2} ${r2} 0 0 1 ${e} ${f}L${g} ${h}A${r1} ${r1} 0 0 0 ${p} ${q}Z`};
+const tier=m=>m>=50?4:m>=10?3:m>=3?2:m>=1?1:0,nrm=a=>(a%360+360)%360,COL=["#4a4d5c","#2f7d5b","#2f66c9","#8a3dff","#d99a12"];
+const go=(el,kf,o,end)=>{const a=el.animate(kf,{fill:"forwards",...o,duration:D(o.duration)}),f=()=>{el.style.transform=end;a.cancel()};return a.finished.then(f,f)};
+const fx=(st,w)=>{if(st){st.classList.remove("win","lose");void st.offsetWidth;st.classList.add(w?"win":"lose")}};
+const PIP={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+const dieF=(d,n)=>{d.innerHTML=Array.from({length:9},(_,i)=>`<i${PIP[n].includes(i)?' class="p"':""}></i>`).join("")};
+const SYM=["🍒","🍋","🔔","◈","7️⃣"],RED=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+const ORD=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+const PM=[10,3,1.4,.7,.3,.7,1.4,3,10],WM=[0,1.5,0,.5,0,2,0,1.2,0,.5,0,6];
+const chip=m=>`<div class="tkc t${tier(m)}">×${m}</div>`;
+const rouH=()=>{const w=360/37;let s='<svg viewBox="-100 -100 200 200" width="240" height="240"><circle r="97" fill="#6b4a1e"/><circle r="92" fill="#1a1208"/><g class="rwl">';
+ ORD.forEach((n,i)=>{const[x,y]=polar(71,i*w);s+=`<path d="${wedge(56,86,(i-.5)*w,(i+.5)*w)}" fill="${n?RED.includes(n)?"#c8283f":"#16161c":"#12915a"}" stroke="#d9b24a" stroke-width=".6"/><text x="${x}" y="${y}" transform="rotate(${i*w} ${x} ${y})" font-size="7" fill="#fff" text-anchor="middle" dominant-baseline="central">${n}</text>`});
+ return s+'</g><circle r="52" fill="#2a1d0c" stroke="#d9b24a" stroke-width="2"/><text class="rrn" text-anchor="middle" dominant-baseline="central" font-size="26" font-weight="800" fill="#fff"></text><g class="rbl"><circle class="rbc" cy="-89" r="4.2" fill="#fff" stroke="#999" stroke-width=".6"/></g><path d="M-6 -99 L6 -99 L0 -86Z" fill="#ffd84a"/></svg>'};
+const whlH=()=>{let s='<svg viewBox="-100 -108 200 212" style="width:100%;max-width:250px"><g class="wh">';
+ WM.forEach((m,i)=>{const[x,y]=polar(64,i*30);s+=`<path d="${wedge(14,94,i*30-15,i*30+15)}" fill="${COL[tier(m)]}" stroke="#0006"/><text x="${x}" y="${y}" transform="rotate(${i*30} ${x} ${y})" font-size="13" font-weight="800" fill="#fff" text-anchor="middle" dominant-baseline="central">${m?"×"+m:"✕"}</text>`});
+ return s+'</g><circle r="15" fill="#1a1208" stroke="#d9b24a" stroke-width="3"/><path d="M-8 -106 L8 -106 L0 -88Z" fill="#ffd84a" stroke="#7a4a00" stroke-width="1.5"/></svg>'};
+const plkH=()=>{let s='<svg viewBox="0 0 300 190" style="width:100%;max-width:340px">';
+ for(let r=0;r<8;r++)for(let j=0;j<=r;j++)s+=`<circle cx="${150+(2*j-r)*15}" cy="${24+r*17}" r="2.6" fill="var(--muted)"/>`;
+ PM.forEach((m,i)=>{const x=150+(i-4)*30;s+=`<g class="pb" data-i="${i}"><rect x="${x-13}" y="166" width="26" height="20" rx="5" class="t${tier(m)}"/><text x="${x}" y="176" font-size="9" font-weight="800" fill="#fff" text-anchor="middle" dominant-baseline="central">${m}</text></g>`});
+ return s+'<circle class="pball" r="5" fill="#ffd84a" stroke="#b9770e" stroke-width="1.5" style="transform:translate(150px,6px)"/></svg>'};
+const mineH='<div class="mh"><b id="mnM">×1.00</b><span id="mnP">Нажми «Начать»</span></div><div class="mg">'+Array.from({length:16},(_,i)=>`<button class="mt" data-a="mpick" data-v="${i}"></button>`).join("")+'</div><button class="btn" data-a="mcash" disabled style="width:100%;max-width:300px">💰 Забрать</button>';
+const mkSec=k=>{if($(k))return;const s=document.createElement("section");s.id=k;s.className="sec";s.innerHTML=`<div id="vb_${k}"></div>`;document.body.insertBefore(s,$("prof"))};
+Object.assign(VTABS,{g_plk:{e:"🔻",n:"Плинко",k:["Плинко"],d:"Шарик падает на множитель · до ×10"},g_mine:{e:"💣",n:"Мины",k:["Мины"],d:"Открывай клетки, забери до мины"},g_whl:{e:"🌀",n:"Колесо удачи",k:["Колесо"],d:"Крути колесо · до ×6"}});
+VTABS.casino.d="Монетка, рулетка, слоты, кости, краш, плинко, мины, колесо и высокие ставки";VG.push("g_plk","g_mine","g_whl");["g_plk","g_mine","g_whl"].forEach(mkSec);
+const stg=(g,sec,h)=>{const s=$(sec);if(!s)return;const d=document.createElement("div");d.className="vz";d.innerHTML=h;s.insertBefore(d,s.firstChild);return ST[g]=d};
+stg("coin","g_coin",'<div class="coin"><i>🦅</i><i>$</i></div>').style.cssText="min-height:230px;padding-top:60px";
+stg("rou","g_rou",rouH());
+stg("slot","g_slot",'<div class="reels">'+SYM.slice(0,3).map(y=>`<div class="reel"><div class="rs"><b>${y}</b></div></div>`).join("")+"</div>");
+stg("dice","g_dice",'<div class="die"></div>');dieF(ST.dice.firstChild,5);
+stg("hl","g_hl",'<div class="hlr"><div class="pc"><i class="bk">?</i><i class="f"></i></div><div class="hlm">⬆⬇</div><div class="pc"><i class="bk">?</i><i class="f"></i></div></div>');
+stg("hbet","g_hbet",'<div class="tk"><div class="tkr"></div></div>');
+{const ms=BT.map(x=>x[0]);ST.hbet.querySelector(".tkr").innerHTML=Array.from({length:14},(_,i)=>chip(ms[(i*3)%ms.length])).join("")}
+stg("plk","g_plk",plkH());stg("mine","g_mine",mineH);stg("whl","g_whl",whlH());
+
+A.coin=(st,r)=>{const a0=st.__a||0,a1=a0+1800+nrm((r==="h"?0:180)-a0);st.__a=a1;
+ return go(st.firstChild,[{transform:`translateY(0) rotateX(${a0}deg)`,easing:"ease-out"},{transform:`translateY(-60px) rotateX(${(a0+a1)/2}deg)`,easing:"ease-in"},{transform:`translateY(0) rotateX(${a1}deg)`}],{duration:1700},`rotateX(${a1}deg)`)};
+A.rou=(st,n)=>{const i=ORD.indexOf(n),w=st.querySelector(".rwl"),b=st.querySelector(".rbl"),c=st.querySelector(".rbc"),t=st.querySelector(".rrn"),a0=st.__a||0,a1=a0+1440+nrm(-i*360/37-a0),e="cubic-bezier(.12,.55,.2,1)";st.__a=a1;t.textContent="";c.getAnimations().forEach(x=>x.cancel());
+ return Promise.all([go(w,[{transform:`rotate(${a0}deg)`},{transform:`rotate(${a1}deg)`}],{duration:4200,easing:e},`rotate(${a1}deg)`),go(b,[{transform:"rotate(0deg)"},{transform:"rotate(-2160deg)"}],{duration:4200,easing:e},"rotate(0deg)"),
+  c.animate([{transform:"translateY(0)"},{transform:"translateY(0)",offset:.75},{transform:"translateY(19px)"}],{duration:D(4200),fill:"forwards"}).finished.catch(()=>{})]).then(()=>{t.textContent=n;t.setAttribute("fill",n?RED.includes(n)?"#ff5a78":"#fff":"#35e8a0")})};
+A.slot=(st,R)=>{const rs=st.querySelector(".reels"),L=[...st.querySelectorAll(".reel")];rs.classList.add("spin");L.forEach(r=>r.classList.remove("win"));
+ return Promise.all(L.map((rl,i)=>{const s=rl.firstChild,arr=[rl.__p||SYM[i],...Array.from({length:22},()=>SYM[rn(5)]),R[i]],end=`translateY(-${(arr.length-1)*72}px)`;s.innerHTML=arr.map(y=>`<b>${y}</b>`).join("");
+  return go(s,[{transform:"translateY(0)"},{transform:end}],{duration:1100+i*500,easing:"cubic-bezier(.25,.1,.2,1)"},end).then(()=>{rl.__p=R[i]})})).then(()=>rs.classList.remove("spin"))};
+A.dice=async(st,R)=>{const d=st.firstChild;d.classList.add("roll");const t=setInterval(()=>dieF(d,rn(6)+1),80);await wait(1400);clearInterval(t);d.classList.remove("roll");dieF(d,R);d.animate([{transform:"scale(1.3)"},{transform:"scale(1)"}],{duration:D(260)})};
+A.hl=async(st,R,x)=>{const[c1,c2]=st.querySelectorAll(".pc");[c1,c2].forEach(c=>{c.classList.add("nt");c.classList.remove("up","ok","no")});
+ c1.querySelector(".f").textContent=R[0];c2.querySelector(".f").textContent=R[1];st.querySelector(".hlm").textContent=x==="up"?"⬆":"⬇";void c1.offsetWidth;[c1,c2].forEach(c=>c.classList.remove("nt"));
+ c1.classList.add("up");await wait(900);c2.classList.add("up");await wait(700);c2.classList.add((x==="up"?R[1]>R[0]:R[1]<R[0])?"ok":"no")};
+A.hbet=(st,R)=>{const tk=st.querySelector(".tkr"),N=44,I=N-6,ms=BT.map(x=>x[0]);tk.innerHTML=Array.from({length:N},(_,i)=>chip(i===I?R:ms[rn(ms.length)])).join("");
+ const end=`translateX(${-(I*70+32-tk.parentNode.clientWidth/2)+rnd(-22,22)}px)`;return go(tk,[{transform:"translateX(0)"},{transform:end}],{duration:3600,easing:"cubic-bezier(.1,.6,.1,1)"},end)};
+A.plk=(st,K8)=>{const b=st.querySelector(".pball"),k=K8.reduce((a,c)=>a+c,0),T=(x,y,e)=>({transform:`translate(${x}px,${y}px)`,easing:e});let x=150,y=16;const kf=[T(150,6,"ease-in"),T(x,y,"ease-out")];
+ for(let r=0;r<8;r++){const d=K8[r]?15:-15;kf.push(T(x+d/2,y-7,"ease-in"));x+=d;y=r<7?16+(r+1)*17:162;kf.push(T(x,y,"ease-out"))}
+ st.querySelectorAll(".pb").forEach(g=>g.classList.remove("hit"));return go(b,kf,{duration:2500},`translate(${x}px,${y}px)`).then(()=>st.querySelector(`.pb[data-i="${k}"]`).classList.add("hit"))};
+A.whl=(st,i)=>{const w=st.querySelector(".wh"),a0=st.__a||0,a1=a0+1800+nrm(-i*30-a0+rnd(-10,10));st.__a=a1;return go(w,[{transform:`rotate(${a0}deg)`},{transform:`rotate(${a1}deg)`}],{duration:4200,easing:"cubic-bezier(.12,.6,.1,1)"},`rotate(${a1}deg)`)};
+
+const chk=amt=>{if(amt>S.bal){toast(tt("Не хватает $ 😕"));return 0}if(amt>Math.max(1,S.bal*BET_CAP)){toast(tt("Ставка не больше 25% баланса"));return 0}if(!(amt>=1)){toast("Минимальная ставка 1 $");return 0}return 1};
+cas=function(v){const[g,x]=v.split(":"),inp=$("cam_"+g),amt=Math.floor(+(inp?inp.value:cbv(g)));CB[g]=amt;if(BZ[g]||!chk(amt))return;
+ let m=0,t="",R;
+ if(g==="coin"){R=Math.random()<.5?"h":"t";m=R===x?1.95:0;t=R==="h"?"🦅 Орёл":"🪙 Решка"}
+ else if(g==="rou"){const n=R=rn(37),c=n===0?"g":RED.includes(n)?"r":"b";m=c===x?(c==="g"?36:2):0;t=(c==="g"?"🟢":c==="r"?"🔴":"⚫")+" "+n}
+ else if(g==="dice"){R=rn(6)+1;m=(x==="hi"?R>=4:R<=3)?1.9:0;t="🎲 "+R}
+ else if(g==="hl"){R=[rn(13)+1,rn(13)+1];m=(x==="up"?R[1]>R[0]:R[1]<R[0])?1.9:0;t=R[0]+" → "+R[1]}
+ else if(g==="plk"){R=Array.from({length:8},()=>rn(2));m=PM[R.reduce((a,c)=>a+c,0)];t="🔻 ×"+m}
+ else if(g==="whl"){R=rn(12);m=WM[R];t="🌀 "+(m?"×"+m:"✕")}
+ else{const SY=[["🍒",40],["🍋",30],["🔔",15],["◈",10],["7️⃣",5]],P={"🍒":5,"🍋":8,"🔔":15,"◈":40,"7️⃣":200};R=[0,0,0].map(()=>wpick(SY,y=>y[1])[0]);t=R.join(" ");
+  if(R[0]===R[1]&&R[1]===R[2])m=P[R[0]];else if(R.filter(y=>y==="🍒").length===2)m=1}
+ const d=Math.floor(amt*m)-amt,st=ST[g];S.bal+=d;if(d<0)V().spent+=-d;save();BZ[g]=1;
+ (st&&A[g]?A[g](st,R,x):Promise.resolve()).catch(()=>{}).then(async()=>{fx(st,m>1);if(g==="slot")st.querySelectorAll(".reel").forEach(r=>r.classList.toggle("win",m>0));await wait(550);
+  if(m>=5){const q=m>=36?6:4;sfx("win",q);winFx(q)}else if(m>0)sfx("coin");else sfx("err");
+  CRS[g]=`${t}<br><span class="${d>=0?"good":"bad"}">${m?"×"+m:"мимо"} · ${d>=0?"+":"−"}${fmtC(Math.abs(d))} $</span>`;BZ[g]=0;upd();rVip()})};
+bet=function(f){const amt=Math.max(1,Math.floor(S.bal*Math.min(f==="all"?BET_CAP:+f,BET_CAP)));if(amt>S.bal){toast(tt("Не хватает $ 😕"));return}if(BZ.hbet)return;
+ const m=wpick(BT,x=>x[1])[0],win=Math.floor(amt*m),d=win-amt,st=ST.hbet;S.bal+=d;if(d<0)V().spent+=-d;gEv("bet",1);if(d>0)gEv("win",1);save();BZ.hbet=1;
+ (st?A.hbet(st,m):Promise.resolve()).catch(()=>{}).then(async()=>{fx(st,m>1);await wait(500);const t=m>=50?6:m>=10?5:m>=3?4:m>1?3:0;if(m>1){sfx("win",t);winFx(t)}else sfx("err");
+  VBR=`<b class="${m>=1?"good":"bad"}" style="font-size:22px">×${m}</b> · ${d>=0?"+":"−"}${fmtC(Math.abs(d))} $`;BZ.hbet=0;upd();rVip()})};
+
+/* Мины: 4×4, 3 мины, множитель растёт с каждой открытой клеткой */
+let MN=null;const mnM=k=>{let m=.96;for(let i=0;i<k;i++)m*=(16-i)/(13-i);return Math.floor(m*100)/100};
+const mnU=()=>{const st=ST.mine,on=MN&&MN.on,m=on?mnM(MN.k):1;st.querySelector("#mnM").textContent="×"+m.toFixed(2);st.querySelector("#mnP").textContent=on?(MN.k?`Забрать ${fmtC(Math.floor(MN.amt*m))} $ · дальше ×${mnM(MN.k+1).toFixed(2)}`:"Открывай клетки · мин: 3"):"Нажми «Начать»";st.querySelector('[data-a="mcash"]').disabled=!(on&&MN.k)};
+const mnEnd=()=>{MN.on=0;ST.mine.querySelectorAll(".mt").forEach((b,i)=>{if(MN.mines.has(i)){b.classList.add("bomb");b.textContent="💣"}else if(!MN.open.has(i))b.classList.add("dim")})};
+function mstart(){if(MN&&MN.on)return;const inp=$("cam_mine"),amt=Math.floor(+(inp?inp.value:cbv("mine")));CB.mine=amt;if(!chk(amt))return;
+ S.bal-=amt;gEv("bet",1);save();const mines=new Set;while(mines.size<3)mines.add(rn(16));MN={on:1,amt,mines,open:new Set,k:0};
+ ST.mine.querySelectorAll(".mt").forEach(b=>{b.className="mt";b.textContent=""});ST.mine.classList.remove("win","lose");CRS.mine="";mnU();upd();rVip()}
+function mpick(i){if(!MN||!MN.on)return;i=+i;if(MN.open.has(i))return;MN.open.add(i);
+ if(MN.mines.has(i)){mnEnd();V().spent+=MN.amt;sfx("err");CRS.mine=`💥 Мина · −${fmtC(MN.amt)} $`;fx(ST.mine,0);mnU();upd();rVip();return}
+ const b=ST.mine.querySelectorAll(".mt")[i];MN.k++;b.classList.add("gem");b.textContent="💎";sfx("coin");MN.k>=13?mcash():mnU()}
+function mcash(){if(!MN||!MN.on||!MN.k)return;const m=mnM(MN.k),w=Math.floor(MN.amt*m),q=m>=5?5:m>=2?4:3;S.bal+=w;if(w<MN.amt)V().spent+=MN.amt-w;else gEv("win",1);mnEnd();
+ CRS.mine=`✅ ×${m} · ${w>=MN.amt?"+":"−"}${fmtC(Math.abs(w-MN.amt))} $`;sfx("win",q);winFx(q);fx(ST.mine,1);mnU();upd();rVip()}
+{const _s=SDA;SDA=function(a,v){switch(a){case"mstart":mstart();return 1;case"mpick":mpick(v);return 1;case"mcash":mcash();return 1}return _s(a,v)}}
+
+{const _r=rVip;rVip=function(){_r();const put=(k,h)=>{const b=$("vb_"+k);if(b)b.insertAdjacentHTML("afterbegin",h)},bb=(g,l,v)=>`<div class="stk">${betUI(g)}<button class="btn" data-a="cas" data-v="${v}" style="width:100%;margin-top:8px">${l}</button><div class="cres">${CRS[g]||""}</div></div>`;
+ put("g_plk",`<h3>🔻 Плинко</h3><p class="hint">Шарик падает через 8 рядов колышков. Края платят до ×10, центр — ×0,3.</p>${bb("plk","🔻 Бросить шарик","plk")}`);
+ put("g_whl",`<h3>🌀 Колесо удачи</h3><p class="hint">12 секторов: от ✕ (проигрыш) до ×6.</p>${bb("whl","🌀 Крутить колесо","whl")}`);
+ put("g_mine",`<h3>💣 Мины</h3><p class="hint">4×4 клетки, 3 мины. Каждый 💎 поднимает множитель — забери выигрыш до мины.</p><div class="stk">${betUI("mine",MN&&MN.on?MN.amt:0)}<button class="btn" data-a="mstart" style="width:100%;margin-top:8px" ${MN&&MN.on?"disabled":""}>💣 Начать</button><div class="cres">${CRS.mine||""}</div></div>`)}}
+CHANGELOG.unshift({v:"5.1",d:"25.11.2026",t:["Казино с анимациями 🎰","Animated casino 🎰"],it:[
+ ["Монетка подбрасывается, рулетка крутится с шариком, барабаны слотов вращаются, кости катятся, карты переворачиваются","Coin toss, spinning roulette with a ball, rolling slot reels, tumbling dice and flipping cards"],
+ ["Высокие ставки: лента множителей, как в открытии кейсов","High stakes: a multiplier reel like case opening"],
+ ["Три новые игры: Плинко, Мины и Колесо удачи","Three new games: Plinko, Mines and Wheel of Fortune"]]});
+})();
 </script>
 </body>
 </html>
