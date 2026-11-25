@@ -407,6 +407,8 @@ h3{font:600 17px var(--fb);letter-spacing:-.02em;color:var(--text);margin:28px 2
 .crs.crash .crri{animation:crsh .06s linear infinite}
 @keyframes crdie{0%{opacity:1}85%{opacity:1}100%{opacity:0}}
 .crs.crash #crx{animation:crbm .6s .35s cubic-bezier(.2,1.4,.4,1) both}
+.tr{cursor:pointer}.tr .top{gap:10px}.tr .tl{flex:1 1 0;min-width:0}.trv{flex:0 1 46%;min-width:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px}.tv{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(12px,3.6vw,16px)}.tbar{display:block;width:100%;height:4px;border-radius:4px;background:var(--bg);overflow:hidden}.tbar i{display:block;height:100%;background:var(--accent)}
+.pvw{max-width:420px!important;max-height:86vh;overflow-y:auto;align-items:stretch!important;text-align:left!important}.pvh{display:flex;gap:12px;align-items:center}.pvg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pvg>div{padding:10px;border-radius:12px;border:2px solid var(--line);background:var(--p2);min-width:0}.pvg small{display:block;color:var(--muted);font-size:11px}.pvg b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis}.pvs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px}
 </style>
 <script>
 function isLight(){var a=document.documentElement.getAttribute("data-theme");return a?a==="light":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)}
@@ -786,12 +788,13 @@ document.head.appendChild(Object.assign(document.createElement("style"),{textCon
 
 const MODS=[{id:"nofee",i:"🏷️",n:"Без комиссии",d:"Карты продаются за 100% цены, без комиссии рынка",g:6},{id:"cheap",i:"🎟️",n:"Скидка на дропы",d:"Все дропы дешевле на 15%",g:4},{id:"gem2",i:"◈",n:"Токеновый дождь",d:"Токены из дропов выпадают чаще и ×2",g:3},{id:"luck",i:"🍀",n:"Удача",d:"Из дропа выпадает лучшая из двух карт",g:8},{id:"gxd",i:"💱",n:"Выгодный обмен",d:"Курс токенов −30%",g:3}];
 const MODMS=864e5,modOn=id=>!!(S.mods&&S.mods[id]>Date.now()),modLeft=id=>Math.max(0,(S.mods&&S.mods[id]||0)-Date.now()),fmtT=ms=>{const m=Math.ceil(ms/6e4);return Math.floor(m/60)+":"+String(m%60).padStart(2,"0")};
+function kxNorm(s){if(!s||typeof s!=="object")return s;const A=x=>Array.isArray(x)?x:x&&typeof x==="object"?Object.values(x):[];["inv","list","ord","codes","col","biz"].forEach(k=>{if(s[k]!=null)s[k]=A(s[k]).filter(x=>x!=null)});s.prof=s.prof&&typeof s.prof==="object"?s.prof:{};s.prof.show=A(s.prof.show);if(!s.prof.nick)s.prof.nick="Игрок";if(s.prof.av==null)s.prof.av="😎";["lp","cases","mods","st","cost"].forEach(k=>{if(!s[k]||typeof s[k]!=="object")s[k]={}});return s}
 const def=()=>({season:SEASON,bal:START,gem:0,lp:{},lang:LANG,taxTs:Date.now(),taxPaid:0,snd:true,cases:{},mods:{},ord:[],codes:[],inv:[],list:[],nid:1,ts:Date.now(),st:{},cost:{},biz:[],out:[],seen:[],uid:Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4),prof:{nick:tt("Игрок")+(100+Math.floor(Math.random()*900)),av:"😎",show:[]}});
 let invTab="c",S=def(),M=[],busy=false,cnt=0,cur="cases",IN={},inBusy=0;
 const $=id=>document.getElementById(id);
 const NU=()=>LANG==="en"?[[1e33,"Dc"],[1e30,"No"],[1e27,"Oc"],[1e24,"Sp"],[1e21,"Sx"],[1e18,"Qi"],[1e15,"Qa"],[1e12,"T"],[1e9,"B"],[1e6,"M"]]:[[1e33,"дец"],[1e30,"нон"],[1e27,"окт"],[1e24,"септ"],[1e21,"секст"],[1e18,"квинт"],[1e15,"квадр"],[1e12,"трлн"],[1e9,"млрд"],[1e6,"млн"]];
 /* v3.7: от 1 млн числа всегда сокращаются: 1.6млн, 2.5млрд, 19.9квадр */
-const fmt=n=>{n=+n;if(!isFinite(n))return"∞";const a=Math.abs(n),r=Math.round(a),s=n<0&&r>0?"-":"";if(a<1e6)return s+r.toLocaleString(LOC);const U=NU();let i=U.findIndex(u=>a>=u[0]);if(i<0)i=U.length-1;let v=Math.round(a/U[i][0]*100)/100;if(v>=1000&&i>0){i--;v=Math.round(a/U[i][0]*100)/100}return s+String(v)+U[i][1]};
+const fmt=n=>{n=+n;if(!isFinite(n))return"∞";const a=Math.abs(n),r=Math.round(a),s=n<0&&r>0?"-":"";if(a<1e6)return s+r.toLocaleString(LOC);if(a>=1e36)return s+a.toExponential(2).replace("e+","e");const U=NU();let i=U.findIndex(u=>a>=u[0]);if(i<0)i=U.length-1;let v=Math.round(a/U[i][0]*100)/100;if(v>=1000&&i>0){i--;v=Math.round(a/U[i][0]*100)/100}return s+String(v)+U[i][1]};
 const fmtC=fmt,fl2=x=>Math.floor(x*100+1e-6)/100,ce2=x=>Math.ceil(x*100-1e-6)/100,fmtB=n=>{n=+n;if(!isFinite(n)||Math.abs(n)>=1e5)return fmt(n);const r=Math.round(n*100)/100;return r.toLocaleString(LOC,{minimumFractionDigits:2,maximumFractionDigits:2})};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 /* Состояние карт: cn = % на момент ct (только у карт в инвентаре износ идёт со временем) */
@@ -825,7 +828,7 @@ function cardHTML(c){const k=CARDS[c.c],b=BGS[c.g],p=val(c);return `<div class="
 function avHTML(av,s){let ic=av,bg="var(--panel)";if(typeof av==="object"){ic=art(av.c);bg=BGS[av.g].css}else if(AVM[av])ic=avSvg(av);return `<div class="avt" style="width:${s}px;height:${s}px;font-size:${s*.55}px;background:${bg}">${ic}</div>`}
 function toast(t){const el=$("toast"),bad=/😕|Нет связи|Ошибка|Not enough|No connection|Error/i.test(t);el.textContent=t;el.classList.remove("err");if(bad){void el.offsetWidth;el.classList.add("err")}el.classList.add("show");try{sfx(bad?"err":"pop")}catch(e){}clearTimeout(toast.h);toast.h=setTimeout(()=>el.classList.remove("show"),2800)}
 function save(){if(!AUTH)return;S.ts=Date.now();S.ac=acSum(S);DIRTY=1;try{localStorage.setItem("kx2_save",JSON.stringify(S))}catch(e){}}
-function load(){try{const d=JSON.parse(localStorage.getItem("kx2_save")||"null");if(d&&typeof d.bal==="number"&&Array.isArray(d.inv)&&d.prof&&d.season===SEASON){if(d.ac&&d.ac!==acSum(d))ACF=1;S=Object.assign(def(),d);if(S.biz&&S.biz.length){S.bal+=Math.round(S.biz.reduce((t,b)=>t+(b.inv||0)*.5+Math.max(0,b.cash||0),0));S.biz=[]}}}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem("kx2_save")||"null");if(d&&typeof d.bal==="number"&&(d.inv==null||typeof d.inv==="object")&&d.prof&&d.season===SEASON){if(d.ac&&d.ac!==acSum(d))ACF=1;S=kxNorm(Object.assign(def(),d));if(S.biz&&S.biz.length){S.bal+=Math.round(S.biz.reduce((t,b)=>t+(b.inv||0)*.5+Math.max(0,b.cash||0),0));S.biz=[]}}}catch(e){}}
 function upd(){if(isFinite(S.bal))S.bal=Math.round(S.bal*100)/100;$("bal").textContent=fmtB(S.bal);$("gem").textContent=fmt(S.gem);$("gem2").textContent=fmt(S.gem);rHead();rCases();if(cur==="st")rSt();save()}
 function rHead(){$("head").innerHTML=avHTML(S.prof.av,36)+`<span>${esc(S.prof.nick||tt("Игрок"))}</span>`}
 
@@ -1050,7 +1053,7 @@ function tick(){
 /* Профиль */
 function rProf(){
   const stv=STK.reduce((a,x)=>a+(S.st[x.k]||0)*MK.p[x.k],0);
-  S.prof.show=S.prof.show.filter(id=>S.inv.some(x=>x.id===id));
+  S.prof.show=(S.prof.show||[]).filter(id=>S.inv.some(x=>x.id===id));
   $("bigAv").innerHTML=avHTML(S.prof.av,72);$("nick").value=S.prof.nick;
   const tot=S.inv.reduce((s,c)=>s+val(c),0)+S.list.reduce((s,c)=>s+val(c),0);
   $("stats").textContent=`${tt("Карточек")}: ${S.inv.length+S.list.length} · ${tt("капитал")} ${fmt(tot+S.bal+stv)} $`;$("myid").textContent=S.uid;rOffers();
@@ -1185,6 +1188,11 @@ const ALLV=(()=>{const a=[];CARDS.forEach((k,c)=>BGS.forEach((b,g)=>a.push({c,g,
 let UPSEL=0,UPCH=70,upBusy=false,UPMODE=0,UPT=null,PKL=60;
 const upMult=ch=>1+(100-ch)/100,upTarget=(P,ch)=>Math.round(P*upMult(ch));
 const tChance=(P,T)=>T>P?Math.min(95,Math.round(P/T*9500)/100):0,fmtCh=n=>(+n.toFixed(2))+"%",MINCH=.1;
+function upMake(P,ch,fix){const t=fix?nfv(fix.c,fix.g):upTarget(P,ch);let n=S.nid;while(S.inv.some(x=>x.id===n))n++;const im=idm(n),pool=fix?[{c:fix.c,g:fix.g}]:ALLV,all=[];
+  pool.forEach(x=>varsOf(x.c).forEach((vr,vi)=>{const v=Math.round(nfv(x.c,x.g)*im*vr[2]);if(v>P)all.push({c:x.c,g:x.g,v:vi,val:v})}));
+  let pick=null;for(const tol of[.03,.06,.12,.25]){const ok=all.filter(x=>Math.abs(x.val-t)<=Math.max(1,t*tol));if(ok.length){pick=ok[rn(ok.length)];break}}
+  if(!pick)pick=all.reduce((b,x)=>!b||Math.abs(x.val-t)<Math.abs(b.val-t)?x:b,null)||{c:pool[0].c,g:pool[0].g,v:0};
+  return newItem({c:pick.c,g:pick.g,cn:100,v:pick.v},nid())}
 function upResult(P,ch){const t=upTarget(P,ch);let lo=0,hi=ALLV.length-1;while(lo<hi){const m=(lo+hi)>>1;if(ALLV[m].v<t)lo=m+1;else hi=m}
   let i=lo;if(i>0&&Math.abs(ALLV[i-1].v-t)<Math.abs(ALLV[i].v-t))i--;
   while(i<ALLV.length-1&&ALLV[i].v<=P)i++;
@@ -1234,12 +1242,12 @@ BA.upgo=()=>{const c=upCard(),tm=UPMODE===1;if(!c||upBusy)return;
   const P=val(c);let ch=UPCH;
   if(tm){if(!UPT||val(UPT)<=P)return;ch=tChance(P,val(UPT));if(ch<MINCH)return}
   upBusy=true;$("upGo").disabled=true;
-  const win=rigHit(ch)||Math.random()*100<ch,res=win?(tm?UPT:upResult(P,ch)):null;
+  const win=rigHit(ch)||Math.random()*100<ch,res=win?(tm?UPT:1):null;
   /* зелёная зона: от середины низа круга в обе стороны */
   const dp=Math.max(ch,.8),ang=dp*3.6,m=Math.min(6,ang*.1),lo=180-ang/2,hi=180+ang/2;
   const a=win?rnd(lo+m,hi-m):hi+m+rnd(0,360-ang-2*m);
   S.inv=S.inv.filter(x=>x.id!==c.id);S.prof.show=S.prof.show.filter(id=>id!==c.id);
-  let nit=null;if(win){nit=newItem({c:res.c,g:res.g,cn:100});S.inv.push(nit);UPSEL=nit.id}else UPSEL=0;
+  let nit=null;if(win){nit=upMake(P,ch,tm?UPT:null);S.inv.push(nit);UPSEL=nit.id}else UPSEL=0;
   save();
   const nd=$("upNeedle");nd.style.transition="none";nd.style.transform="rotate(0deg)";void nd.offsetWidth;
   nd.style.transition="transform 3.2s cubic-bezier(.15,.7,.1,1)";nd.style.transform=`rotate(${360*4+a}deg)`;
@@ -1543,8 +1551,9 @@ let lastSend=0;
 const okId=x=>/^\d{1,9}$/.test(String(x));
 async function db(p,m,b){if(LOCK)throw 0;const[a,q]=p.split("?");const r=await fetch(`${DB_URL}/${a}.json${q?"?"+q:""}`,{method:m||"GET",body:b===undefined?undefined:JSON.stringify(b)});if(!r.ok)throw 0;return r.json()}
 async function detectDb(){const c=["https://kxgame-default-rtdb.firebaseio.com","https://kxgame-default-rtdb.europe-west1.firebasedatabase.app","https://kxgame-default-rtdb.asia-southeast1.firebasedatabase.app"];
-  const res=await Promise.all(c.map(u=>fetch(u+"/.json?shallow=true",{signal:AbortSignal.timeout(12000)}).then(r=>r.status).catch(()=>0)));
-  const i=res.findIndex(x=>x===200||x===401||x===403);if(i>=0)DB_URL=c[i];else toast(tt("Онлайн недоступен: проверь URL базы"))}
+  try{const u=localStorage.getItem("kx_dburl");if(u&&c.includes(u)&&!DB_URL)DB_URL=u}catch(e){}
+  const pr=u=>fetch(u+"/.json?shallow=true",{signal:AbortSignal.timeout(8000)}).then(r=>r.status===200||r.status===401||r.status===403?u:Promise.reject(0));
+  try{const u=await Promise.any(c.map(pr));DB_URL=u;try{localStorage.setItem("kx_dburl",u)}catch(e){}return true}catch(e){if(!DB_URL)toast(tt("Нет связи 😕"));return !!DB_URL}}
 function rBdg(){const n=Object.keys(IN).length;for(const id of["bdg","bdg2"]){const b=$(id);b.hidden=!n;b.textContent=n}}
 function rTrade(){const sel=$("tsel"),v=sel.value;
   sel.innerHTML=S.inv.length?S.inv.slice().sort((a,b)=>val(b)-val(a)).map(c=>`<option value="${c.id}">${CARDS[c.c].n} · ${BGS[c.g].n} · ${fmt(val(c))}</option>`).join(""):`<option value="">${tt("Нет карточек")}</option>`;
@@ -1605,7 +1614,9 @@ async function pullAnn(){if(!DB_URL||ANNB)return;ANNB=1;
         if(seen!==String(a.id)){try{localStorage.setItem("kx_ann",String(a.id))}catch(e){}
           $("modal").innerHTML=`<div class="mb"><b>📢 ${tt("Объявление")}</b><p style="margin:0;line-height:1.45;white-space:pre-wrap;word-break:break-word">${esc(String(a.text).slice(0,300))}</p><button class="btn" data-a="close" style="width:100%">OK</button></div>`;$("modal").classList.add("on");sfx("gem")}}}}catch(e){}
   ANNB=0}
-DBP=detectDb();DBP.then(async()=>{await Promise.race([syncTime(),new Promise(r=>setTimeout(r,3000))]);await authBoot();if(LOCK)return;pollIn();pollMarket();pullStocks();pullAnn()});
+let KXB=0;function kxOnline(){if(KXB||!DB_URL)return;KXB=1;(async()=>{await Promise.race([syncTime(),new Promise(r=>setTimeout(r,3000))]);await authBoot();if(LOCK)return;pollIn();pollMarket();pullStocks();pullAnn();pullMint()})()}
+DBP=detectDb();DBP.then(kxOnline);
+setInterval(()=>{if(!DB_URL||!KXB)detectDb().then(kxOnline)},15000);addEventListener("online",()=>detectDb().then(kxOnline));
 setInterval(tick,1000);setInterval(modTick,1000);
 
 /* Крафт */
@@ -1711,7 +1722,8 @@ async function mintSerial(e){const t=e[5],p="mint/"+e[0];for(let i=0;i<25&&!DB_U
   if(DB_URL&&!LOCK){for(let k=0;k<6;k++){try{const g=await fetch(`${DB_URL}/${p}.json`,{headers:{"X-Firebase-ETag":"true"}});if(!g.ok)break;const et=g.headers.get("ETag"),n=(+(await g.json())||0)+1;if(n>rsCap(e))return 0;
     const w=await fetch(`${DB_URL}/${p}.json`,{method:"PUT",headers:{"if-match":et},body:JSON.stringify(n)});if(w.ok)return n}catch(x){break}}}
   const m=V().mint;m[e[0]]=(m[e[0]]||0)+1;return m[e[0]]>rsCap(e)?0:m[e[0]]}
-async function pullMint(){for(let i=0;i<25&&!DB_URL;i++)await new Promise(r=>setTimeout(r,300));if(DB_URL){try{const r=await fetch(`${DB_URL}/mint.json`);if(r.ok){MINT=(await r.json())||{};MINTL=1}}catch(e){}}if(cur==="vip")rVip()}
+setInterval(()=>{if(!MINTL&&DB_URL&&["vip","editions"].includes(cur))pullMint()},6000);
+async function pullMint(){for(let i=0;i<25&&!DB_URL;i++)await new Promise(r=>setTimeout(r,300));if(DB_URL){try{const r=await fetch(`${DB_URL}/mint.json`);if(r.ok){MINT=(await r.json())||{};MINTL=1}}catch(e){}}if(cur==="vip"||cur==="editions")rVip()}
 async function vbuy(id){const e=edOf(id);if(!e||VB)return;if(S.bal<e[4]){toast(tt("Не хватает $ 😕"));return}
   VB=1;toast("⏳ Чеканка…");const n=await mintSerial(e);VB=0;
   if(!n){toast("«"+e[3]+"»: всё разобрали, жди рестока");pullMint();return}
@@ -1733,7 +1745,7 @@ function bet(f){const amt=Math.max(1,Math.floor(S.bal*Math.min(f==="all"?BET_CAP
 function rVip(){const V_=V(),rk=rank();
   $("vip").innerHTML=`<div class="stk"><div class="top"><b>🏅 ${rk[1]}</b><b>${fmtC(V_.spent)} $</b></div><p class="hint" style="margin:6px 0 0">Потрачено в Лимиткие. Чем больше — тем выше титул.</p></div>
 <h3>🎴 Коллекционные издания</h3><p class="hint">Ограниченные тиражи с рестоком: чем меньше тираж, тем реже и меньше докидывают. У каждой карты свой ID и номер: #1 — ×10, #2–9 — ×4, красивые номера — ×3. Продажа — 70% ценности.</p>
-<div class="grid">${ED.map(e=>{const used=Math.max(MINT[e[0]]||0,V_.mint[e[0]]||0,...V_.col.filter(c=>c.e===e[0]).map(c=>c.n)),left=rsCap(e)-used;return`<div class="item" style="cursor:default"><div class="cc bg-${e[0]}"><i class="ccs"></i><div class="cct">${e[3]}</div><div class="cci">${artE(e)}</div><div class="ccn">в наличии ${MINTL||used?left:"…"}</div></div><button class="btn sm" data-a="vbuy" data-v="${e[0]}" ${S.bal<e[4]||left<=0?"disabled":""}>${left<=0?"Нет в наличии":fmtC(e[4])+" $"}</button><div class="hint rsl" data-rs="${e[0]}" style="margin:0;text-align:center;font-size:11px">⏱ ресток через ${fmtDur(rsNext(e)-nowS())} · +${RSQ(e)}</div><div class="hint" style="margin:0;text-align:center;font-size:11px">каждые ${fmtCd(RSCD(e))}</div></div>`}).join("")}</div>
+<div class="grid">${ED.map(e=>{const used=Math.max(MINT[e[0]]||0,V_.mint[e[0]]||0,...V_.col.filter(c=>c.e===e[0]).map(c=>c.n)),left=rsCap(e)-used;return`<div class="item" style="cursor:default"><div class="cc bg-${e[0]}"><i class="ccs"></i><div class="cct">${e[3]}</div><div class="cci">${artE(e)}</div><div class="ccn">в наличии ${MINTL?left:"~"+left}</div></div><button class="btn sm" data-a="vbuy" data-v="${e[0]}" ${S.bal<e[4]||left<=0?"disabled":""}>${left<=0?"Нет в наличии":fmtC(e[4])+" $"}</button><div class="hint rsl" data-rs="${e[0]}" style="margin:0;text-align:center;font-size:11px">⏱ ресток через ${fmtDur(rsNext(e)-nowS())} · +${RSQ(e)}</div><div class="hint" style="margin:0;text-align:center;font-size:11px">каждые ${fmtCd(RSCD(e))}</div></div>`}).join("")}</div>
 <h3>🏝️ Престиж-активы</h3><p class="hint">Покупаются один раз и приносят 0,5% цены в сутки (копится до 7 дней).</p>
 ${AS.map(a=>{const own=V_.ast[a[0]],inc=aInc(a);return`<div class="stk"><div class="top"><b>${a[1]} ${a[2]}</b>${own?`<button class="btn sm" data-a="acol" data-v="${a[0]}" ${inc?"":"disabled"}>Собрать ${fmtC(inc)} $</button><button class="btn alt sm" data-a="aup" data-v="${a[0]}">⬆ ур.${(S.lvl||{})[a[0]]||0}/5</button>`:`<button class="btn sm" data-a="abuy" data-v="${a[0]}" ${S.bal<a[3]?"disabled":""}>${fmtC(a[3])} $</button>`}</div></div>`}).join("")}
 <h3>🎰 Высокие ставки</h3><p class="hint">Множители от ×0 до ×500. Ставка — доля твоего баланса.</p>
@@ -1915,14 +1927,16 @@ function badNick(v){let n=String(v||"").toLowerCase().replace(/ё/g,"е").replac
   const m=n.replace(/[abcehkmoptxy]/g,c=>CLK[c]),q=x=>x.replace(/(.)\1+/g,"$1"),l=n.replace(/[авсенкмортху]/g,c=>({"а":"a","в":"b","с":"c","е":"e","н":"h","к":"k","м":"m","о":"o","р":"p","т":"t","х":"x","у":"y"})[c]),F=[n,m,l,q(n),q(m),q(l)];return BADL.some(w=>F.some(x=>x.includes(w)))}
 {const _h=rHead;rHead=function(){if(S.prof&&badNick(S.prof.nick||"")){S.prof.nick=tt("Игрок")+S.uid;save()}_h()}}
 const TP=[["c","💰","Капитал"],["k","🎴","Коллекции"],["s","💸","Траты"],["q","🃏","Карточек"]];let TB=null,TT="c";
-const myTop=()=>{const V_=V(),tot=S.inv.reduce((t,c)=>t+val(c),0)+S.list.reduce((t,c)=>t+val(c),0);return{n:String(S.prof.nick||"Игрок").slice(0,16),a:S.prof.av,c:Math.round(tot+S.bal),k:Math.round(V_.col.reduce((t,c)=>t+ccVal(c),0)),s:Math.round(V_.spent),q:S.inv.length+S.list.length,r:rank()[1],ti:String(S.cos&&S.cos.t||"").slice(0,16),f:((FR.find(x=>x[0]===(S.cos||{}).f)||[])[1])||"",se:SEASON,t:Date.now()}};
+const myTop=()=>{const V_=V(),tot=S.inv.reduce((t,c)=>t+val(c),0)+S.list.reduce((t,c)=>t+val(c),0);return{n:String(S.prof.nick||"Игрок").slice(0,16),a:S.prof.av,c:Math.round(tot+S.bal),k:Math.round(V_.col.reduce((t,c)=>t+ccVal(c),0)),s:Math.round(V_.spent),q:S.inv.length+S.list.length,r:rank()[1],ti:String(S.cos&&S.cos.t||"").slice(0,16),f:((FR.find(x=>x[0]===(S.cos||{}).f)||[])[1])||"",se:SEASON,t:Date.now(),fi:String((S.cos||{}).f||""),mn:S.mon||0,vl:S.vl||0,bc:S.inv.reduce((m,c)=>Math.max(m,val(c)),0),sh:(S.prof.show||[]).map(id=>S.inv.find(x=>x.id===id)).filter(Boolean).slice(0,5).map(c=>({c:c.c,g:c.g,v:c.v|0,cn:Math.round(cond(c)*10)/10,id:c.id}))}};
 async function tpush(){if(!DB_URL||LOCK||!AUTH)return;try{await fetch(`${DB_URL}/top/${S.uid}.json`,{method:"PUT",body:JSON.stringify(myTop())})}catch(e){}}
 async function tpull(){await tpush();try{const r=await fetch(`${DB_URL}/top.json`);if(r.ok)TB=(await r.json())||{}}catch(e){}if(cur==="tops")rTops()}
 const tAv=a=>a&&typeof a==="object"&&CARDS[+a.c]&&BGS[+a.g]?{c:+a.c,g:+a.g}:typeof a==="string"?esc(a.slice(0,8)):"🙂";
+const tFr=(a,fi)=>{let h=avHTML(tAv(a),38);return fi?h.replace('class="avt"','class="avt fr-'+fi+'"'):h};
+const tRows=()=>Object.entries(TB||{}).filter(([k,v])=>v&&typeof v==="object"&&v.se===SEASON);
 function rTops(){let h=`<h3>🏆 Рейтинг игроков</h3><div class="stk"><div class="r2">${TP.map(t=>`<button class="btn ${t[0]===TT?"":"alt"} sm" data-a="ttab" data-v="${t[0]}">${t[1]} ${t[2]}</button>`).join("")}</div></div>`;
-  if(!TB)h+='<p class="hint">Загрузка…</p>';else{const me=String(S.uid),rows=Object.entries(TB).filter(([k,v])=>v&&typeof v==="object"&&v.se===SEASON).map(([k,v])=>({k,n:String(v.n||"Игрок").slice(0,16),a:v.a,r:String(v.r||"").slice(0,30),ti:String(v.ti||"").replace(/[<>&"'`]/g,"").slice(0,16),v:Math.max(0,+v[TT]||0)})).filter(r=>r.v>0||r.k===me).sort((a,b)=>b.v-a.v),mi=rows.findIndex(r=>r.k===me);
-    h+=rows.slice(0,25).map((r,i)=>{const sub=[r.r,r.ti||""].filter(Boolean).join(" · ");return `<div class="stk tr${r.k===me?" me":""}${i<3?" p"+(i+1):""}" style="animation-delay:${i*35}ms"><div class="top"><span class="tl"><i class="tm">${["🥇","🥈","🥉"][i]||"#"+(i+1)}</i>${avHTML(tAv(r.a),34)}<span class="tn"><b>${esc(r.n)}</b>${sub?`<small>${esc(sub)}</small>`:""}</span></span><b class="tv">${fmtC(r.v)}${TT==="q"?"":" $"}</b></div></div>`}).join("")||'<p class="hint">Пока никого</p>';
-    if(mi>=0)h+=`<p class="hint" style="text-align:center">${tt("Твоё место: #{0} из {1}",mi+1,rows.length)}</p>`}
+  if(!TB)h+='<p class="hint">Загрузка…</p>';else{const me=String(S.uid),rows=tRows().map(([k,v])=>({k,n:String(v.n||"Игрок").slice(0,16),a:v.a,r:String(v.r||"").slice(0,30),ti:String(v.ti||"").replace(/[<>&"'`]/g,"").slice(0,16),fi:String(v.fi||"").replace(/[^a-z]/g,"").slice(0,2),v:Math.max(0,+v[TT]||0)})).filter(r=>r.v>0||r.k===me).sort((a,b)=>b.v-a.v),mi=rows.findIndex(r=>r.k===me),lg=rows.length?Math.log10(rows[0].v+1)||1:1;
+    h+=rows.slice(0,50).map((r,i)=>{const sub=[r.r,r.ti].filter(Boolean).join(" · "),pc=Math.max(3,Math.min(100,Math.log10(r.v+1)/lg*100));return `<div class="stk tr${r.k===me?" me":""}${i<3?" p"+(i+1):""}" data-a="tprof" data-v="${esc(r.k)}" style="animation-delay:${i*35}ms"><div class="top"><span class="tl"><i class="tm">${["🥇","🥈","🥉"][i]||"#"+(i+1)}</i>${tFr(r.a,r.fi)}<span class="tn"><b>${esc(r.n)}</b>${sub?`<small>${esc(sub)}</small>`:""}</span></span><span class="trv"><b class="tv">${fmtC(r.v)}${TT==="q"?"":" $"}</b><span class="tbar"><i style="width:${pc.toFixed(0)}%"></i></span></span></div></div>`}).join("")||'<p class="hint">Пока никого</p>';
+    if(mi>=0)h+=`<p class="hint" style="text-align:center">${tt("Твоё место: #{0} из {1}",mi+1,rows.length)}</p>`;h+='<p class="hint" style="text-align:center">Нажми на игрока, чтобы открыть его профиль</p>'}
   $("tops").innerHTML=h}
 (()=>{const s=document.createElement("section");s.id="tops";s.className="sec";document.body.insertBefore(s,$("prof"));const b=document.createElement("button");Object.assign(EN,{"Рейтинг":"Top players"});b.className="tb";b.innerHTML='<span><i class="ico" data-i="top"></i> '+tt("Рейтинг")+'</span>';b.dataset.a="tab";b.dataset.v="tops";$("dp").insertBefore(b,$("dp").querySelector(".sp"));setTimeout(tpush,15000);setInterval(tpush,12e4)})();
 {const _t=tab;tab=function(v){_t(v);if(v==="tops"){rTops();tpull()}}}
@@ -1977,12 +1991,26 @@ function vSplit(){const vip=$("vip");if(!vip)return;
   for(const k of Object.keys(VTABS)){const box=$("vb_"+k);if(box){box.replaceChildren(...(g[k]||[]));if(VG.includes(k))box.insertAdjacentHTML("beforeend",`<button class="btn alt" data-a="tab" data-v="casino" style="width:100%;margin-top:10px">← ${tt("Казино")}</button>`)}}
   vip.insertAdjacentHTML("beforeend",`<h3>🗺️ Разделы</h3><div class="grid" style="grid-template-columns:1fr 1fr">${VT5.map(k=>`<button class="stk" style="text-align:left;cursor:pointer" data-a="tab" data-v="${k}"><b>${tt(VTABS[k].n)}</b><small class="hint" style="display:block;margin-top:4px">${tt(VTABS[k].d)}</small></button>`).join("")}</div>`)}
 {const _r=rVip;rVip=function(){_r();vSplit()}}
-{const _t=tab;tab=function(v){_t(v);if(VT5.includes(v)||VG.includes(v)||v==="cases"||v==="quests")rVip();if(VG.includes(v))document.querySelectorAll('.dp .tb[data-v="casino"]').forEach(x=>x.classList.add("on"))}}
+{const _t=tab;tab=function(v){_t(v);if(VT5.includes(v)||VG.includes(v)||v==="cases"||v==="quests")rVip();if(v==="editions")pullMint();if(VG.includes(v))document.querySelectorAll('.dp .tb[data-v="casino"]').forEach(x=>x.classList.add("on"))}}
 CHANGELOG.unshift({v:"3.11",d:"20.11.2026",t:["Лимитки разнесены по вкладкам 🗂️","Limited shop split into tabs 🗂️"],it:[
   ["Казино, Издания, Активы, VIP-клубы и Престиж теперь отдельные вкладки","Casino, Editions, Assets, VIP clubs and Prestige are now separate tabs"],
   ["Ежедневный сундук — в «Задания», оптовая закупка — в «Дропы»","Daily chest moved to Quests, bulk case buying moved to Drops"]]});
+/* ===== v3.12: профили игроков ===== */
+async function tprof(k){const me=String(S.uid);if(k==="me")k=me;if(!TB){await tpull();if(!TB){toast(tt("Онлайн недоступен"));return}}
+  let v=TB[k];if(k===me)v=Object.assign({},v||{},myTop());if(!v||typeof v!=="object"){toast("Профиль не найден");return}
+  const rows=tRows(),pl=key=>{const arr=rows.map(([id,x])=>({id,v:+x[key]||0})).sort((a,b)=>b.v-a.v),i=arr.findIndex(x=>x.id===k);return i<0?"—":"#"+(i+1)+" / "+arr.length},num=x=>fmtC(Math.max(0,+x||0)),fi=String(v.fi||"").replace(/[^a-z]/g,"").slice(0,2),mn=Math.max(0,Math.min(10,+v.mn||0)),vl=Math.max(0,Math.min(5,+v.vl||0));
+  const ago=v.t?Math.max(0,Math.round((nowS()-(+v.t||0))/6e4)):null,seen=k===me?"онлайн":ago==null?"":ago<3?"онлайн":ago<60?ago+" мин назад":ago<1440?Math.round(ago/60)+" ч назад":Math.round(ago/1440)+" дн назад";
+  const chips=[v.r&&"🏅 "+v.r,v.ti&&"🏷️ "+v.ti,vl>0&&VT[vl-1]&&"👑 "+VT[vl-1][1],mn>0&&"🗿 "+MN[mn]+" · "+mn+"/10",v.f&&v.f+" рамка"].filter(Boolean).map(x=>`<span class="tc">${esc(String(x).slice(0,40))}</span>`).join("");
+  const sh=(Array.isArray(v.sh)?v.sh:[]).filter(x=>x&&CARDS[+x.c]&&BGS[+x.g]).slice(0,5).map(x=>`<div>${cardHTML({c:+x.c|0,g:+x.g|0,v:+x.v|0,cn:Math.max(0,Math.min(100,+x.cn||0)),id:Math.floor(+x.id)||0})}</div>`).join("");
+  $("modal").innerHTML=`<div class="mb pvw"><div class="pvh">${tFr(v.a,fi).replace('width:38px;height:38px','width:64px;height:64px')}<div class="tn" style="min-width:0"><b style="font-size:18px">${esc(String(v.n||"Игрок").slice(0,16))}</b><small>ID: ${esc(k)}${seen?" · "+seen:""}</small></div></div>
+  <div class="tchips">${chips}</div>
+  <div class="pvg"><div><small>💰 Капитал</small><b>${num(v.c)} $</b><small>${pl("c")}</small></div><div><small>🎴 Коллекции</small><b>${num(v.k)} $</b><small>${pl("k")}</small></div><div><small>💸 Траты</small><b>${num(v.s)} $</b><small>${pl("s")}</small></div><div><small>🃏 Карточек</small><b>${num(v.q)}</b><small>${pl("q")}</small></div><div style="grid-column:1/3"><small>⭐ Самая дорогая карта</small><b>${num(v.bc)} $</b></div></div>
+  <div class="tsub" style="align-self:flex-start">Витрина</div>${sh?`<div class="pvs">${sh}</div>`:'<div class="hint" style="margin:0">Витрина пуста</div>'}
+  <button class="btn" data-a="close" style="width:100%">Закрыть</button></div>`;$("modal").classList.add("on")}
+{const _s=SDA;SDA=function(a,v){if(a==="tprof"){tprof(v);return 1}return _s(a,v)}}
+{const _p=rProf;rProf=function(){_p();const st=$("stats");if(st&&!$("myview"))st.insertAdjacentHTML("afterend",'<button class="btn alt sm" id="myview" data-a="tprof" data-v="me" style="margin-top:8px">👁 Мой публичный профиль</button>')}}
 $("qk").innerHTML=`<button class="btn alt qb" data-a="tab" data-v="tops"><i class="ico" data-i="top"></i><span>${tt("Рейтинг")}</span></button><button class="btn alt qb" data-a="tab" data-v="vip"><i class="ico" data-i="vip"></i><span>${tt("Лимитки")}</span></button>`;
-rHead();rProf();
+try{rHead();rProf()}catch(e){console.error(e)}
 CHANGELOG.unshift({v:"3.7",d:"19.11.2026",t:["Баг-фикс и полировка 🛠️","Bug fixes & polish 🛠️"],it:[
  ["Фикс: кривые аватарки — на краю круга больше нет «обрезанного» куска фона, размеры в шапке, профиле и топах выровнены","Fix: broken avatars — no more cut-off background strip on the circle edge, sizes aligned in header, profile and tops"],
  ["Фикс: кнопки в карточках дропов вылезали за край экрана — теперь «Купить» на всю ширину, 🔍 и ×5 ровно под ней","Fix: buttons in case cards overflowed the screen — Buy is now full width with 🔍 and ×5 evenly below"],
@@ -2045,7 +2073,7 @@ async function doReg(lg,pw,p2){if(badNick(lg))return{err:"Недопустимы
     const h=await hpw(pw,id);if((await dbr("pw/"+id,"PUT",h)).s!==200)continue;
     if((await dbr("names/"+lg,"PUT",id)).s!==200)return{err:"Логин занят"};return{id,h,n:lg}}
   return{err:"Не удалось создать аккаунт, попробуй ещё раз"}}
-function finishAuth(r){const cl=r.cloud&&typeof r.cloud==="object"?r.cloud:null,ok=!!(cl&&cl.season===SEASON);const n=Object.assign(def(),ok?cl:{});
+function finishAuth(r){const cl=r.cloud&&typeof r.cloud==="object"?r.cloud:null,ok=!!(cl&&cl.season===SEASON);const n=kxNorm(Object.assign(def(),ok?cl:{}));
   if(cl&&!ok&&cl.prof){n.prof.nick=String(cl.prof.nick||n.prof.nick).slice(0,16);if(cl.prof.av!=null)n.prof.av=cl.prof.av;if(cl.lang)n.lang=cl.lang}
   n.uid=String(r.id);n.season=SEASON;if(!cl){n.prof.nick=(r.n||tt("Игрок")+r.id).slice(0,16);n.lang=LANG}
   n.ts=Date.now();n.ac=acSum(n);
@@ -2089,6 +2117,7 @@ if("serviceWorker"in navigator&&/^https?:/.test(location.protocol))navigator.ser
   const st=()=>{n++;$("acS").textContent=tt("Анти-чит: активен")+" · "+tt("проверок")+": "+(n*7+120)+" · "+tt("угроз")+": 0"};st();setInterval(st,5000);
   setInterval(()=>{if(AUTH&&(outerWidth-innerWidth>200||outerHeight-innerHeight>260))warn()},4000);
   if(ACF)setTimeout(warn,5000)})();
+window.__KX_OK=1;
 </script>
 <script>
 (()=>{const P={logo:'<path fill="currentColor" stroke="none" d="M12 2A10 10 0 0 0 2 12h10V2zM12 22a10 10 0 0 0 10-10H12v10z"/>',
@@ -2212,5 +2241,6 @@ CHANGELOG.unshift({v:"5.1",d:"25.11.2026",t:["Казино с анимациям
  ["Три новые игры: Плинко, Мины и Колесо удачи","Three new games: Plinko, Mines and Wheel of Fortune"]]});
 })();
 </script>
+<script>setTimeout(function(){if(window.__KX_OK)return;try{if(sessionStorage.getItem("kx_fix"))return;sessionStorage.setItem("kx_fix","1");var d=JSON.parse(localStorage.getItem("kx2_save")||"null");if(d&&typeof kxNorm==="function")localStorage.setItem("kx2_save",JSON.stringify(kxNorm(d)));location.reload()}catch(e){}},2500)</script>
 </body>
 </html>
