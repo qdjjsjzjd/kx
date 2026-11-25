@@ -2194,7 +2194,8 @@ const mnU=()=>{const st=ST.mine,on=MN&&MN.on,m=on?mnM(MN.k):1;st.querySelector("
 const mnEnd=()=>{MN.on=0;ST.mine.querySelectorAll(".mt").forEach((b,i)=>{if(MN.mines.has(i)){b.classList.add("bomb");b.textContent="💣"}else if(!MN.open.has(i))b.classList.add("dim")})};
 function mstart(){if(MN&&MN.on)return;const inp=$("cam_mine"),amt=Math.floor(+(inp?inp.value:cbv("mine")));CB.mine=amt;if(!chk(amt))return;
  S.bal-=amt;gEv("bet",1);save();const mines=new Set;while(mines.size<3)mines.add(rn(16));MN={on:1,amt,mines,open:new Set,k:0};
- ST.mine.querySelectorAll(".mt").forEach(b=>{b.className="mt";b.textContent=""});ST.mine.classList.remove("win","lose");CRS.mine="";mnU();upd();rVip()}
+ ST.mine.querySelectorAll(".mt").(b,i)=>{b.dataset.bomb=MN.mines.has(i)?"1":"0";}
+forEach(b=>{b.className="mt";b.textContent=""});ST.mine.classList.remove("win","lose");CRS.mine="";mnU();upd();rVip()}
 function mpick(i){if(!MN||!MN.on)return;i=+i;if(MN.open.has(i))return;MN.open.add(i);
  if(MN.mines.has(i)){mnEnd();V().spent+=MN.amt;sfx("err");CRS.mine=`💥 Мина · −${fmtC(MN.amt)} $`;fx(ST.mine,0);mnU();upd();rVip();return}
  const b=ST.mine.querySelectorAll(".mt")[i];MN.k++;b.classList.add("gem");b.textContent="💎";sfx("coin");MN.k>=13?mcash():mnU()}
