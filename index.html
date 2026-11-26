@@ -424,6 +424,16 @@ h3{font:600 17px var(--fb);letter-spacing:-.02em;color:var(--text);margin:28px 2
 .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}.ci{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px 6px 10px;min-width:0;border-radius:14px;border:2px solid var(--line);background:var(--p2);color:var(--text);cursor:pointer;font:inherit;text-align:center}
 .ci b{font:700 12px var(--fb);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}.ci small{color:var(--muted);font-size:11px}.ci.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--p2))}.bsw{display:block;width:100%;height:34px;border-radius:10px}
 .cems{display:flex;flex-wrap:wrap;gap:8px}.cem{width:42px;height:42px;border-radius:12px;border:2px solid var(--line);background:var(--p2);font-size:20px;cursor:pointer;color:var(--text)}.cem.on{border-color:var(--accent)}
+@keyframes cdShift{to{background-position:300% 0}}@keyframes ccShine{to{transform:translateX(130%)}}@keyframes ccPop{0%{transform:scale(1)}35%{transform:scale(1.07) translateY(-10px)}100%{transform:scale(1)}}
+.cstage{perspective:1100px;padding:8px 16px 18px;overflow-x:clip}.ccw{max-width:400px;margin:0 auto}.ccw.pop{animation:ccPop .9s cubic-bezier(.2,.9,.25,1)}
+.cc{position:relative;width:100%;aspect-ratio:1.586;cursor:pointer;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.2,.9,.25,1.08)}.cc.flip{transform:rotateY(180deg)}.cstage .cc{overflow:visible;background:none;border:0;box-shadow:none}
+.ccf{position:absolute;inset:0;border-radius:22px;padding:18px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;color:var(--cfg,#f3f3f6);background:var(--cbg);border:1px solid var(--cbd);box-shadow:var(--cfx)}
+.cc-back{transform:rotateY(180deg)}.ccf::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,#ffffff66 50%,transparent 65%);transform:translateX(-130%);pointer-events:none}.cc.kxsw .ccf::after{animation:ccShine .9s ease-out}
+.cc-top{display:flex;justify-content:space-between;align-items:baseline}.cc-top b{font-size:18px;letter-spacing:.5px}.cc-top span{font-size:12px;opacity:.65}.cc-chip{width:44px;height:32px;border-radius:7px;background:var(--cchip)}.cc-num{font-size:20px;letter-spacing:3px}
+.cc-bot{display:flex;justify-content:space-between;align-items:flex-end}.cc-bot small{display:block;font-size:11px;opacity:.65}.cc-bot b{font-size:22px}.cc-bot>span{font-size:11px;opacity:.55}
+.cc-mag{height:38px;margin:2px -18px 0;background:#000a}.cc-bk{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}.cc-bk small{display:block;font-size:11px;opacity:.65}.cc-bk b{font-size:15px;overflow-wrap:anywhere}.cc-sig{display:flex;justify-content:space-between;gap:8px;font-size:10px;opacity:.55}
+.kxdz{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px;scroll-snap-type:x proximity}.kxdt{flex:none;width:104px;display:flex;flex-direction:column;gap:6px;align-items:stretch;padding:8px;border-radius:14px;border:2px solid var(--line);background:var(--p2);color:var(--text);font:inherit;text-align:center;cursor:pointer;scroll-snap-align:start}.kxdt.on{border-color:var(--accent)}.kxdt b{font:700 12px var(--fb);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.kxdt small{color:var(--muted);font-size:11px}
+.kxdp{display:block;position:relative;aspect-ratio:1.586;border-radius:9px;background:var(--cbg);border:1px solid var(--cbd);box-shadow:var(--cfx)}.kxdp u{position:absolute;left:9px;top:11px;width:16px;height:12px;border-radius:3px;background:var(--cchip)}
 </style>
 <script>
 function isLight(){var a=document.documentElement.getAttribute("data-theme");return a?a==="light":!!(window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)}
@@ -517,6 +527,7 @@ try{applyTheme(localStorage.getItem("kx_theme")||"auto")}catch(e){}
 <button class="tb" data-a="tab" data-v="mods"><i data-i="mods"></i><span data-t="Подписки"></span></button>
 <button class="tb" data-a="tab" data-v="quests"><i data-i="vip"></i><span data-t="Задания"></span></button>
 <button class="tb" data-a="tab" data-v="card"><i data-i="inv"></i><span data-t="Карта"></span></button>
+<button class="tb" data-a="tab" data-v="cshop"><i data-i="mk"></i><span data-t="Магазин карты"></span></button>
 <button class="tb" data-a="tab" data-v="prof"><i data-i="prof"></i><span data-t="Профиль"></span><span class="bdg" id="bdg2" hidden></span></button>
 <button class="tb" data-a="tab" data-v="set"><i data-i="set"></i><span data-t="Настройки"></span></button>
 <button class="tb" data-a="log"><i data-i="log"></i><span data-t="Что нового"></span><i class="nwd" id="nwd" hidden></i></button>
@@ -595,7 +606,7 @@ try{applyTheme(localStorage.getItem("kx_theme")||"auto")}catch(e){}
 </section>
 
 <div class="pk" id="pk"><div class="pkh"><input type="text" id="pkq" data-tp="Поиск карты" placeholder="Поиск карты"><select id="pkb"></select><label class="chk"><input type="checkbox" id="pkr"><span data-t="Только раритет"></span></label><button class="btn alt sm" data-a="pkx" data-v="0" data-t="Закрыть"></button></div><div class="hint" id="pkInfo"></div><div class="grid" id="pkGrid"></div><button class="btn alt" id="pkMore" data-a="pkmore" data-v="0" data-t="Показать ещё"></button></div>
-<section id="card" class="sec"><div id="cBox"></div></section>
+<section id="card" class="sec"><div id="cBox"></div></section> <section id="cshop" class="sec"><div id="csBox"></div></section>
 <section id="quests" class="sec"><div id="qBox"></div></section>
 <section id="set" class="sec">
   <h3 data-t="Обновления"></h3><button class="btn alt" data-a="log" style="width:100%">📜 <span data-t="Список изменений"></span></button>
@@ -2095,6 +2106,49 @@ function rCust(){let box=$("cust");if(!box){box=document.createElement("div");bo
 document.addEventListener("change",e=>{if(e.target.id!=="bioIn")return;const v=e.target.value.replace(/[<>&"'`]/g,"").trim().slice(0,40);if(v&&badNick(v)){toast("Недопустимый текст");e.target.value=(S.cos||{}).bio||"";return}(S.cos=S.cos||{}).bio=v;save();setTimeout(tpush,400);rCust()});
 {const _s=SDA;SDA=function(a,v){if(a==="tprof"){tprof(v);return 1}if(a==="cbuy"){const p=String(v).split("|");cbuy(p[0],p[1]);return 1}if(a==="cem"){cem(v);return 1}return _s(a,v)}}
 {const _p=rProf;rProf=function(){_p();const st=$("stats");if(st&&!$("myview"))st.insertAdjacentHTML("afterend",'<button class="btn alt sm" id="myview" data-a="tprof" data-v="me" style="margin-top:8px">👁 Мой публичный профиль</button>');rCust()}}
+/* ===== v3.13: дизайны карты, переворот по клику, магазин карты отдельной вкладкой ===== */
+const CDZ=[
+{id:"cl",n:"Классика",p:0,bg:"linear-gradient(135deg,#343a4d,#11131b 60%,#1b1f2b)",bd:"#3a3f52"},
+{id:"on",n:"Оникс",p:0,bg:"linear-gradient(135deg,#232323,#000)",bd:"#2c2c2c"},
+{id:"oc",n:"Океан",p:0,bg:"linear-gradient(135deg,#1f6fd0,#07203f)",bd:"#3a7fd0"},
+{id:"fr",n:"Лес",p:0,bg:"linear-gradient(135deg,#27a068,#06241a)",bd:"#2f9a6a"},
+{id:"rs",n:"Роза",p:0,bg:"linear-gradient(135deg,#c2538a,#2a0f1f)",bd:"#c2538a"},
+{id:"vi",n:"Фиалка",p:0,bg:"linear-gradient(135deg,#7a4be0,#160a33)",bd:"#7a4be0"},
+{id:"gd",n:"Золото",p:5e4,bg:"linear-gradient(135deg,#ffe27a,#d9a62a 50%,#8a6414)",bd:"#ffe27a",fg:"#2a1d00",chip:"linear-gradient(135deg,#fff3b0,#b8860b)"},
+{id:"pl",n:"Платина",p:15e4,bg:"linear-gradient(135deg,#f4f4f8,#a6a6b4 55%,#6c6c7a)",bd:"#ffffff",fg:"#16161c"},
+{id:"ss",n:"Закат",p:4e5,bg:"linear-gradient(135deg,#ff5c7a,#ffa43d 50%,#6a3dd0)",bd:"#ffb36b"},
+{id:"ng",n:"Неон",p:1e6,bg:"linear-gradient(135deg,#0b0b22,#050510)",bd:"#5cf2ff",fx:"0 0 22px #5cf2ff77,0 0 40px #ff2fd044,inset 0 0 18px #5cf2ff33"},
+{id:"ho",n:"Голограмма",p:3e6,bg:"linear-gradient(115deg,#ff5cc8,#ffc83d,#5cff9a,#5cc8ff,#a566ff,#ff5cc8)",bd:"#ffffff",fg:"#101018",anim:1},
+{id:"cb",n:"Карбон",p:5e6,bg:"repeating-linear-gradient(45deg,#1a1a1d 0 3px,#101012 3px 6px)",bd:"#3a3a40"},
+{id:"gx",n:"Галактика",p:15e6,bg:"radial-gradient(circle at 20% 25%,#7a4be0aa,transparent 45%),radial-gradient(circle at 80% 70%,#ff5cc888,transparent 45%),radial-gradient(#fff 1px,transparent 1.5px) 0 0/22px 22px,#0a0618",bd:"#7a4be0"},
+{id:"bk",n:"Black Card",p:1e8,bg:"linear-gradient(135deg,#1d1d1f,#050505)",bd:"#e6c875",fg:"#e6c875",chip:"linear-gradient(135deg,#f6dc8c,#9a7c2e)",fx:"0 0 0 1px #e6c87555,0 30px 60px -20px #000"}];
+(()=>{let c="";CDZ.forEach(d=>{c+=`.cd-${d.id}{--cbg:${d.bg};--cbd:${d.bd};--cfg:${d.fg||"#f3f3f6"};--cchip:${d.chip||"linear-gradient(135deg,#d9c58a,#8c7a45)"};--cfx:${d.fx?d.fx+",0 30px 60px -20px #000":"0 30px 60px -20px #000,inset 0 1px 0 #ffffff22"}}`;if(d.anim)c+=`.cd-${d.id} .ccf,.cd-${d.id}.kxdp{background-size:300% 300%;animation:cdShift 6s linear infinite}`});
+ const st=document.createElement("style");st.textContent=c;document.head.appendChild(st)})();
+let CCF=false;
+function ccFlip(){const el=$("cc"),w=el&&el.parentElement;if(!el)return;CCF=!CCF;el.classList.toggle("flip",CCF);el.classList.remove("kxsw");w.classList.remove("pop");void el.offsetWidth;el.classList.add("kxsw");w.classList.add("pop");clearTimeout(ccFlip.t);ccFlip.t=setTimeout(()=>{el.classList.remove("kxsw");w.classList.remove("pop")},1000)}
+function cdesign(id){const d=CDZ.find(x=>x.id===id);if(!d)return;const c=S.card||(S.card={b:0}),own=oA(c.do);if(c.d===id)return;
+  if(d.p===0||own.includes(id))c.d=id;
+  else{if(c.b<d.p){toast(tt("Не хватает денег на карте"));return}c.b-=d.p;c.do=own.concat(id);c.d=id;cLog("buy",d.p,"Дизайн карты: "+d.n);sfx("buy");toast("🎴 "+tt(d.n))}
+  upd();rCard()}
+rCard=function(){const el=$("cBox");if(!el)return;const c=S.card||(S.card={b:0}),h=c.h||[],d=CDZ.find(x=>x.id===c.d)||CDZ[0],own=oA(c.do),sum=k=>h.filter(e=>e.k===k).reduce((a,e)=>a+(+e.a||0),0);
+  const dz=CDZ.map(x=>{const on=x.id===d.id,has=x.p===0||own.includes(x.id);return `<button class="kxdt${on?" on":""}" data-a="cdz" data-v="${x.id}"><i class="kxdp cd-${x.id}"><u></u></i><b>${tt(x.n)}</b><small>${on?tt("выбрано"):has?tt("выбрать"):fmt(x.p)+" $"}</small></button>`}).join("");
+  el.innerHTML=`<div class="cstage"><div class="ccw"><div class="cc cd-${d.id}${CCF?" flip":""}" id="cc">
+<div class="ccf cc-front"><div class="cc-top"><b>KX Pay</b><span>${tt("игровая карта")}</span></div><div class="cc-chip"></div><div class="cc-num">•••• •••• •••• 0000</div><div class="cc-bot"><div><small>${tt("Баланс карты")}</small><b>${fmt(c.b)} $</b></div><span>${tt("только для игры")}</span></div></div>
+<div class="ccf cc-back"><div class="cc-mag"></div><div class="cc-bk"><div><small>${tt("Владелец")}</small><b>${esc(S.prof.nick||"Игрок")}</b></div><div><small>${tt("Пополнено")}</small><b>${fmt(sum("in"))} $</b></div><div><small>${tt("Потрачено")}</small><b>${fmt(sum("buy"))} $</b></div><div><small>${tt("Выведено")}</small><b>${fmt(sum("out"))} $</b></div></div><div class="cc-sig"><span>${tt("по последним операциям")}</span><span>${tt("нажми, чтобы вернуть")}</span></div></div></div></div></div>
+<p class="hint" style="text-align:center;margin:0 0 6px">${tt("Нажми на карту")} · ${tt("Внутриигровая валюта, реальных денег нет")}</p>
+<div class="stk"><div class="top"><b>${tt("Баланс игры")}</b><b>${fmtB(S.bal)} $</b></div></div>
+<h3>${tt("Дизайн карты")}</h3><div class="kxdz">${dz}</div>
+<button class="btn alt" data-a="tab" data-v="cshop" style="width:100%;margin-top:12px">🛍 ${tt("Игровой магазин")} →</button>
+<h3>${tt("Пополнить карту")}</h3><div class="stk"><div style="display:flex;gap:8px"><input id="cAm" type="number" min="1" placeholder="${tt("Сумма")}" style="flex:1;min-width:0"><button class="btn" data-a="cin">${tt("Пополнить")}</button></div><div class="r2" style="margin-top:8px"><button class="btn sm alt" data-a="cardin" data-v="1000">+1 000</button><button class="btn sm alt" data-a="cardin" data-v="100000">+100 000</button><button class="btn sm alt" data-a="cardin" data-v="max">${tt("Всё")}</button></div></div>
+<h3>${tt("Вывод")}</h3><div class="stk"><button class="btn" data-a="cardout" data-v="0" style="width:100%" ${c.b>0?"":"disabled"}>${tt("Вывести на баланс")} · ${fmt(c.b)} $</button></div>
+<h3>${tt("История")}</h3><div class="stk">${h.length?h.slice(0,30).map(e=>`<div class="hint" style="display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--line)"><span>${new Date(e.t).toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"})} · ${tt(e.l)}</span><b>${e.k==="in"?"+":"−"}${fmt(e.a)} $</b></div>`).join(""):`<p class="hint">${tt("Операций пока нет")}</p>`}</div>`;
+  const e=$("cc");if(e)e.onclick=ccFlip;if(cur==="cshop")rCShop()}
+function rCShop(){const el=$("csBox");if(!el)return;const c=S.card||(S.card={b:0}),
+  sh=SHOP.map((it,k)=>`<div style="display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)"><span style="flex:1">${tt(it.n)}</span><button class="btn sm" data-a="shop" data-v="${k}" ${c.b>=it.p?"":"disabled"}>${fmt(it.p)} $</button></div>`).join("");
+  el.innerHTML=`<div class="stk"><div class="top"><b>💳 ${tt("Баланс карты")}</b><b>${fmt(c.b)} $</b></div><button class="btn alt sm" data-a="tab" data-v="card" style="margin-top:10px;width:100%">${tt("Пополнить карту")} →</button></div>
+<h3>${tt("Игровой магазин")}</h3><div class="stk">${sh}</div>${goodsHTML(c)}`}
+{const _t=tab;tab=function(v){_t(v);if(v==="cshop")rCShop()}}
+{const _s=SDA;SDA=function(a,v){if(a==="cdz"){cdesign(v);return 1}return _s(a,v)}}
 $("qk").innerHTML=`<button class="btn alt qb" data-a="tab" data-v="tops"><i class="ico" data-i="top"></i><span>${tt("Рейтинг")}</span></button><button class="btn alt qb" data-a="tab" data-v="vip"><i class="ico" data-i="vip"></i><span>${tt("Лимитки")}</span></button>`;
 try{rHead();rProf()}catch(e){console.error(e)}
 CHANGELOG.unshift({v:"3.7",d:"19.11.2026",t:["Баг-фикс и полировка 🛠️","Bug fixes & polish 🛠️"],it:[
@@ -2213,7 +2267,7 @@ mods:'<path d="M3 18h18M4 18L3 7l5 4 4-6 4 6 5-4-1 11"/>',prof:'<path d="M20 21v
 set:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><path d="M16 4v4M10 10v4M18 16v4"/>',log:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9 8h6M9 12h6"/>',vip:'<path d="M6 3h12l4 6-10 12L2 9l4-6z"/><path d="M2 9h20"/>',top:'<path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',chev:'<path d="M9 6l6 6-6 6"/>'};
 const fill=()=>document.querySelectorAll("i[data-i]:not([data-f])").forEach(e=>{const p=P[e.dataset.i];if(p){e.dataset.f=1;e.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+p+"</svg>"}});
 fill();new MutationObserver(fill).observe(document.body,{childList:true,subtree:true});
-const T={casino:"Казино",editions:"Издания",assets:"Активы",club:"VIP-клубы",prestige:"Престиж",card:"Карта",quests:"Задания",cases:"Дропы",mk:"Рынок",trd:"Обмен",st:"Биржа",inv:"Коллекция",up:"Апгрейд",mods:"Подписки",prof:"Профиль",set:"Настройки",vip:"Лимитки",tops:"Рейтинг",...Object.fromEntries(VG.map(k=>[k,VTABS[k].n]))};
+const T={casino:"Казино",editions:"Издания",assets:"Активы",club:"VIP-клубы",prestige:"Престиж",card:"Карта",cshop:"Магазин карты",quests:"Задания",cases:"Дропы",mk:"Рынок",trd:"Обмен",st:"Биржа",inv:"Коллекция",up:"Апгрейд",mods:"Подписки",prof:"Профиль",set:"Настройки",vip:"Лимитки",tops:"Рейтинг",...Object.fromEntries(VG.map(k=>[k,VTABS[k].n]))};
 const pt=v=>{const n=tt(T[v]||v),el=document.getElementById("ptb");if(el)el.innerHTML='<div class="crumb"><i data-i="'+(P[v]?v:"cases")+'"></i><span>KX Market</span><i data-i="chev"></i><b>'+n+'</b></div><h1 class="pth">'+n+" <span>"+new Date().getFullYear()+"</span></h1>";fill()};
 {const _t=tab;tab=function(v){_t(v);pt(v)}}pt(cur||"cases");
 document.addEventListener("click",e=>{const b=e.target.closest('[data-a="sub"]');if(b)buySub(+b.dataset.v)});
