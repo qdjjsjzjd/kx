@@ -151,6 +151,14 @@ input[type=range]{padding:0;accent-color:var(--accent);background:none;border:0}
 .uppair{display:flex;align-items:center;justify-content:center;gap:8px}.uparr{font-size:22px;color:var(--muted)}.upslot{flex:1;min-width:0;padding:6px 0;text-align:center;font-size:12px;color:var(--muted)}.upslot .card{width:110px;margin:0 auto;padding:8px 4px}.upslot .card .ic{font-size:30px}
 .uprange{display:flex;gap:12px;align-items:center}.uprange b{min-width:52px;text-align:right;font:700 14px var(--fd)}.uptabs{display:flex;gap:6px}.uptabs .btn{flex:1}
 .mres{display:flex;flex-direction:column;gap:12px}.mres .grid{max-height:420px;overflow:auto;padding:2px}.mres .grid .card{width:auto;margin:0;animation:none}.mres .sum{text-align:center;line-height:1.5}
+.upstat{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.upchip{padding:5px 10px;border-radius:999px;background:var(--p2);border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--muted)}.upchip b{color:var(--text)}.upchip.hot2{border-color:var(--ok);color:var(--ok)}.upchip.hot2 b{color:var(--ok)}.upchip.good{color:var(--ok)}.upchip.bad{color:var(--bad)}
+.uprange input[type=range]{flex:1;min-width:0}
+.upq{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.upq .btn{flex:1 1 52px;padding:8px 2px;font-size:12px}
+.upopt{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center}
+.uphist{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;min-height:10px;margin-top:2px}.uphist i{width:10px;height:10px;border-radius:50%}.uphist i.w{background:var(--ok)}.uphist i.l{background:var(--bad)}
+.upstack{display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center;padding:14px 4px;border-radius:12px;background:var(--p2);border:1px solid var(--line);font-size:13px}.upstack b{font-size:20px}
+.upwheel.w{animation:upGlow .9s}.upwheel.l{animation:shk .6s}@keyframes upGlow{0%,100%{box-shadow:0 0 0 0 transparent}40%{box-shadow:0 0 34px 6px var(--ok)}}
+.upcf{position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:2px;z-index:5;pointer-events:none;animation:upcf .85s ease-out forwards}@keyframes upcf{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(var(--x),var(--y)) rotate(300deg) scale(.4);opacity:0}}
 .shake{animation:shk .6s}.hot{position:relative;overflow:hidden}.hot .ico{display:inline-block;font-style:normal;animation:icoWob 3s ease-in-out infinite}.dk.hot .ico{animation:icoBob 2.1s ease-in-out infinite}.hot:not(.on):not(:disabled):not(.dk){animation:hotPulse 2.6s ease-out infinite}
 
 
@@ -595,11 +603,15 @@ try{applyTheme(localStorage.getItem("kx_theme")||"auto")}catch(e){}
 
 <section id="up" class="sec">
   <div class="upbox">
+    <div class="upstat" id="upStat"></div>
     <div class="upwheel" id="upWheel"><div class="upneedle" id="upNeedle"></div><div class="upmid" id="upMid">?</div></div>
     <div class="uppair"><div id="upFrom" class="upslot"></div><div class="uparr">➜</div><div id="upTo" class="upslot">—</div></div>
-    <div class="uptabs"><button class="btn sm" id="upM0" data-a="upmode" data-v="0" data-t="🎲 Случайный"></button><button class="btn sm alt" id="upM1" data-a="upmode" data-v="1" data-t="🎯 Конкретная карта"></button></div><div id="upTgt" hidden><button class="btn alt" id="upPick" data-a="uppick" data-v="0" style="width:100%"></button></div><div class="uprange" id="upRg"><input type="range" id="upCh" min="5" max="95" value="70" step="1"><b id="upChv">70%</b></div>
+    <div class="uptabs"><button class="btn sm" id="upM0" data-a="upmode" data-v="0" data-t="🎲 Случайный"></button><button class="btn sm alt" id="upM1" data-a="upmode" data-v="1" data-t="🎯 Конкретная карта"></button></div><div id="upTgt" hidden><button class="btn alt" id="upPick" data-a="uppick" data-v="0" style="width:100%"></button></div>
+    <div id="upRg"><div class="uprange"><input type="range" id="upCh" min="2" max="90" value="50" step="1"><b id="upChv">50%</b></div><div class="upq" id="upQc"></div></div>
+    <div class="upopt"><label class="chk"><input type="checkbox" id="upMu"><span data-t="🧺 Несколько карт"></span></label><label class="chk"><input type="checkbox" id="upIn"><span data-t="🛡 Страховка"></span></label><label class="chk"><input type="checkbox" id="upFs"><span data-t="⚡ Быстро"></span></label></div>
     <div class="hint" id="upInfo" style="text-align:center;margin:4px 0 10px"></div>
     <button class="btn" id="upGo" style="width:100%" data-a="upgo" data-v="0" disabled data-t="Апгрейд"></button>
+    <div class="uphist" id="upHist"></div>
     <div class="res" id="upRes"></div>
   </div>
   <h3 data-t="Твои карты"></h3><div class="grid" id="upGrid"></div>
@@ -644,6 +656,7 @@ const LOC=LANG==="en"?"en-US":"ru-RU";
 const EN={"Токен-дроп": "Token Case", "Игрок": "Player", "Все дропы −7%": "All cases −7%", "Скупка: карточки продаются на 10% дороже": "Buyout: cards sell for 10% more", "Курс токенов: 1 ◈ = {0} $": "Token rate: 1 ◈ = {0} $", "🔥 Новая акция: {0}": "🔥 New deal: {0}", "Акция:": "Deal:", "осталось {0}": "{0} left", "Купить": "Buy", "Не хватает токенов ◈": "Not enough tokens ◈", "Не хватает $ 😕": "Not enough $ 😕", "{0} ×{1} → в Инвентаре": "{0} ×{1} → in Inventory", "Введи код": "Enter a code", "Ты уже активировал этот код": "You already used this code", "Код не найден (онлайн недоступен)": "Code not found (offline)", "Нет связи 😕": "No connection 😕", "Такого кода нет": "No such code", "Срок действия кода истёк": "This code has expired", "Код только для игроков с балансом до {0} $": "Code only for players with balance up to {0} $", "Лимит активаций исчерпан": "Activation limit reached", "Не удалось активировать": "Could not activate", "Активирован ✅ Получено: {0}": "Activated ✅ Received: {0}", "ничего": "nothing", "Промокод активирован 🎟": "Promo code activated 🎟", "🔊 Звук: вкл": "🔊 Sound: on", "🔇 Звук: выкл": "🔇 Sound: off", "Ежедневный бонус": "Daily bonus", "серия: {0} дн.": "streak: {0} d.", "Забрать бонус": "Claim bonus", "Следующий бонус завтра": "Next bonus tomorrow", "День": "Day", "Налог на богатство": "Wealth tax", "в сутки": "per day", "уплачено всего": "paid in total", "Открыть": "Open", "Все": "All", "Нет дропов": "No cases", "Дропы": "Cases", "Карты": "Cards", "Выпало:": "You got:", "фон": "background", "Продать за": "Sell for", "Продано ✅": "Sold ✅", "Карточек": "Cards", "общая стоимость": "total value", "Пока пусто": "Nothing here yet", "Продать": "Sell", "На рынок": "List", "Твоя цена:": "Your price:", "Снять": "Remove", "Пусто": "Empty", "Пока нет лотов": "No lots yet", "Онлайн недоступен": "Online unavailable", "Лот уже купили": "Lot already sold", "Куплено: {0}": "Bought: {0}", "Рыночная цена ≈ {0} $": "Market price ≈ {0} $", "Выставить": "List", "Отмена": "Cancel", "Укажи цену от 10 $": "Set a price from 10 $", "Максимум {0} лотов": "Max {0} lots", "Карточка выставлена на рынок": "Card listed on the market", "Обновление через {0} с · портфель ≈ {1} $": "Next update in {0} s · portfolio ≈ {1} $", "капитал": "net worth", "Витрина пуста": "Showcase is empty", "Нет карточек": "No cards", "Максимум 5 карточек": "Max 5 cards", "В портфеле: {0} шт · ≈ {1} $": "Holding: {0} · ≈ {1} $", "Нечего продавать": "Nothing to sell", "плохая 📉": "poor 📉", "средняя": "average", "хорошая": "good", "отличная 📈": "excellent 📈", "игрок": "player", "фонд": "fund", "динамика:": "trend:", "в фонд": "to fund", "Твоя акция:": "Your stock:", "Открыть свою акцию": "Launch your own stock", "Своя акция": "Your own stock", "Тикер (2–6 букв/цифр)": "Ticker (2–6 letters/digits)", "Название": "Name", "Эмодзи (📈)": "Emoji (📈)", "Начальная цена 10–1 000 000": "Starting price 10–1 000 000", "Открыть за {0} $": "Launch for {0} $", "Проверь тикер, название и цену 1–100 000": "Check the ticker, name and price 10–1 000 000", "У тебя уже есть акция": "You already have a stock", "Тикер занят": "Ticker is taken", "Не удалось создать акцию": "Could not create the stock", "Акция {0} создана 🚀": "Stock {0} created 🚀", "Не удалось пополнить": "Could not top up", "Фонд {0}: +{1} $": "Fund {0}: +{1} $", "Акция {0} снята с биржи, позиция продана": "Stock {0} was delisted, position sold", "Выдано карточек: {0} 🎁": "Cards granted: {0} 🎁", "авария: {0}. Ремонт {1} $": "breakdown: {0}. Repair {1} $", "забастовка, работа стоит": "strike, work stopped", "проверка, штраф {0} $": "inspection, fine {0} $", "кража на складе −{0} $": "warehouse theft −{0} $", "спрос вырос: доход ×1.5 на 45 мин": "demand surge: income ×1.5 for 45 min", "Выбери точку на карте": "Pick a spot on the map", "ч": "h", "море": "sea", "суша": "land", "Богатство региона": "Region wealth", "курс": "rate", "Доход": "Income", "содержание": "upkeep", "чистыми": "net", "Риск аварии": "Breakdown risk", "ремонт": "repair", "окупаемость": "payback", "никогда 😬": "never 😬", "Морская платформа: дороже и аварии чаще": "Offshore platform: pricier, more breakdowns", "Лимит {0} бизнесов": "Limit of {0} businesses", "Построить за {0} $": "Build for {0} $", "Бизнесов: {0}/{1} · в кассах {2} $ · вложено {3} $": "Businesses: {0}/{1} · in registers {2} $ · invested {3} $", "Пока нет бизнесов": "No businesses yet", "Забрать всё из касс": "Collect from all registers", "🔧 авария": "🔧 broken", "✊ забастовка": "✊ strike", "🔥 бум": "🔥 boom", "✅ работает": "✅ running", "ур.": "lvl ", "регион": "region", "обслужено": "serviced", "Касса:": "Register:", "из": "of", "склад полон!": "storage full!", "Покрыть долг": "Cover debt", "Забрать": "Collect", "Починить {0}": "Repair {0}", "Обслуживание {0}": "Service {0}", "Макс. уровень": "Max level", "Улучшить {0}": "Upgrade {0}", "Максимум {0} бизнесов": "Max {0} businesses", "Здесь так нельзя": "Can't build that here", "Здесь уже есть такой бизнес": "You already have this business here", "построено": "built", "{0} {1}: {2}, открыто": "{0} {1}: {2}, opened", "Не хватает $ на покрытие убытков": "Not enough $ to cover losses", "Долг покрыт: −{0} $": "Debt covered: −{0} $", "+{0} $ из касс": "+{0} $ from registers", "ремонт выполнен −{0} $": "repair done −{0} $", "Оборудование отремонтировано 🔧": "Equipment repaired 🔧", "плановое обслуживание: аварии реже на 12 ч": "scheduled service: fewer breakdowns for 12 h", "Обслуживание: риск аварий ниже на 12 ч 🛠": "Service: lower breakdown risk for 12 h 🛠", "улучшено до уровня {0}": "upgraded to level {0}", "Уровень {0} ⬆️": "Level {0} ⬆️", "Продать бизнес? Вернётся 50% вложенного плюс касса.": "Sell the business? You get back 50% of the investment plus the register.", "Бизнес продан": "Business sold", "Вокруг города": "Around a city", "Выбрать город…": "Pick a city…", "Открыто:": "Opened:", "Выпало на": "Worth", "цена дропов": "cases cost", "Лучшая:": "Best:", "Продать всё за": "Sell all for", "Продано {0} карт за {1} $ ✅": "Sold {0} cards for {1} $ ✅", "Выбери карту ниже": "Pick a card below", "цель ≈": "target ≈", "Шанс": "Chance", "прирост": "gain", "Успех!": "Success!", "Неудача 💥 карта сгорела": "Failed 💥 card burned", "Сбросить весь прогресс?": "Reset all progress?", "Прогресс сброшен": "Progress reset", "Налог на богатство: −{0} $": "Wealth tax: −{0} $", "Онлайн недоступен: проверь URL базы": "Online unavailable: check the database URL", "Введи корректный ID игрока": "Enter a valid player ID", "Нельзя обмениваться с собой": "You can't trade with yourself", "Выбери карточку": "Pick a card", "Максимум 5 открытых предложений": "Max 5 open offers", "Приглашение отправлено": "Invitation sent", "{0} принял предложение: +{1} $": "{0} accepted the offer: +{1} $", "{0} купил твою карточку: +{1} $": "{0} bought your card: +{1} $", "Предложение отклонено, карточка вернулась": "Offer declined, card returned", "Новое приглашение на обмен 🔁": "New trade invitation 🔁", "Приглашения на обмен": "Trade invitations", "предлагает карточку:": "offers a card:", "Купить за {0} $": "Buy for {0} $", "Взять даром": "Take for free", "Отклонить": "Decline", "Мои предложения": "My offers", "подарок": "gift", "Отозвать": "Withdraw", "Предложение уже отозвано": "Offer already withdrawn", "Получено: {0}": "Received: {0}", "Уже обработано, жди ответ": "Already handled, wait for the reply", "ID скопирован": "ID copied", "Дропы": "Shop", "Рынок": "Market", "Обмен": "Trade", "Карта": "Map", "Биржа": "Stocks", "Коллекция": "Inventory", "Апгрейд": "Upgrade", "Профиль": "Profile", "Обмен валюты": "Currency exchange", "Промокоды": "Promo codes", "Введи промокод": "Enter promo code", "Мои лоты": "My lots", "Лоты игроков": "Player lots", "ID игрока": "Player ID", "Цена в $ (0 = подарок)": "Price in $ (0 = gift)", "Отправить приглашение": "Send invitation", "Мои бизнесы": "My businesses", "Твои карты": "Your cards", "Ник": "Nickname", "Витрина": "Showcase", "Аватарка": "Avatar", "Выбери до 5 карточек в витрину": "Pick up to 5 cards for the showcase", "Сбросить прогресс": "Reset progress", "Купить 1": "Buy 1", "Купить 10": "Buy 10", "Продать 1": "Sell 1", "Всё": "All", "Ферма пшеницы": "Wheat farm", "Рыболовный флот": "Fishing fleet", "Лесозаготовка": "Logging", "Отель": "Hotel", "Майнинг BTC": "BTC mining", "Нефтяная скважина": "Oil well", "Золотой рудник": "Gold mine", "Алмазная шахта": "Diamond mine", "сломался комбайн": "the combine broke down", "порвало сети и сломало лебёдку": "nets torn and winch broken", "сломалась лесопилка": "the sawmill broke down", "прорвало трубы": "pipes burst", "сгорела майнинг-ферма": "the mining farm burned down", "сломался буровой станок": "the drilling rig broke down", "обрушилась шахта": "the mine collapsed", "сломался экскаватор": "the excavator broke down", "Рим": "Rome", "Москва": "Moscow", "Бишкек": "Bishkek", "Лондон": "London", "Париж": "Paris", "Берлин": "Berlin", "Стамбул": "Istanbul", "Дубай": "Dubai", "Эр-Рияд": "Riyadh", "Каир": "Cairo", "Лагос": "Lagos", "Йоханнесбург": "Johannesburg", "Мумбаи": "Mumbai", "Пекин": "Beijing", "Шанхай": "Shanghai", "Токио": "Tokyo", "Сингапур": "Singapore", "Сидней": "Sydney", "Нью-Йорк": "New York", "Хьюстон": "Houston", "Лос-Анджелес": "Los Angeles", "Мехико": "Mexico City", "Рио-де-Жанейро": "Rio de Janeiro", "Буэнос-Айрес": "Buenos Aires", "Якутск": "Yakutsk", "Норильск": "Norilsk", "Весь мир": "Whole world", "Европа": "Europe", "Азия": "Asia", "Африка": "Africa", "Северная Америка": "North America", "Южная Америка": "South America", "Австралия и Океания": "Australia & Oceania", "Летний дроп": "Summer Case", "Зимний дроп": "Winter Case", "Лесной дроп": "Forest Case", "Пиратский дроп": "Pirate Case", "Неоновый дроп": "Neon Case", "Космический дроп": "Space Case", "Королевский дроп": "Royal Case", "Огненный дроп": "Fire Case", "Мифический дроп": "Mythic Case", "Легендарный дроп": "Legendary Case", "Элитный дроп": "Elite Case", "Абсолютный дроп": "Absolute Case", "Кристальный дроп": "Crystal Case", "(+ещё {0})": "(+{0} more)", "Золото": "Gold", "Нефть": "Oil"};
 Object.assign(EN,{"Раритет": "Rarity", "🎲 Случайный": "🎲 Random", "🎯 Конкретная карта": "🎯 Specific card", "Выбрать цель": "Choose target", "Сменить цель": "Change target", "Выбери цель": "Pick a target", "Цель не дороже твоей карты": "Target isn't worth more than your card", "Шанс слишком мал (< 0.1%)": "Chance is too low (< 0.1%)", "Твоя карта": "Your card", "Найдено": "Found", "Ничего не найдено": "Nothing found", "Только раритет": "Rarity only", "Закрыть": "Close", "Показать ещё": "Show more", "Поиск карты": "Search card", "Смайловый дроп": "Smiley Case", "Мемный дроп": "Meme Case", "Вайбовый дроп": "Vibe Case", "Шальной дроп": "Wild Case", "Хайповый дроп": "Hype Case", "Звёздный дроп": "Stellar Case", "Ультра дроп": "Ultra Case", "Эпичный дроп": "Epic Case"});
 const tt=(s,...a)=>{let r=LANG==="en"&&EN[s]!==undefined?EN[s]:s;a.forEach((v,i)=>{r=r.split("{"+i+"}").join(v)});return r};
+Object.assign(EN,{"Серия":"Streak","Рекорд":"Best","шанс":"chance","🧺 Несколько карт":"🧺 Multiple cards","🛡 Страховка":"🛡 Insurance","Страховка":"Insurance","⚡ Быстро":"⚡ Fast","вернёт":"refunds","Максимум {0} карт":"Max {0} cards","Слишком дорого для случайного режима — выбери конкретную карту":"Too expensive for random mode — pick a specific card","Неудача 💥 карты сгорели":"Failed 💥 cards burned","Чуть-чуть! Промах всего на {0}%":"So close! Missed by just {0}%","Страховка вернула {0} $":"Insurance refunded {0} $","Серия побед":"Win streak","Серия побед ":"Win streak","Выиграй 5 апгрейдов подряд":"Win 5 upgrades in a row","Рисковый":"Risk taker","Выиграй апгрейд с шансом 10% или ниже":"Win an upgrade at 10% chance or lower","Апгрейдер":"Upgrader","Выиграй 50 апгрейдов":"Win 50 upgrades"});
 const SEASON=6;let AUTH=null;try{AUTH=JSON.parse(localStorage.getItem("kx3_auth")||"null")}catch(e){}let LOCK=!AUTH,DIRTY=0,DBP=null,ACF=0,LASTJ="";
 Object.assign(EN,{"Вход":"Log in","Регистрация":"Sign up","Пароль":"Password","Повтори пароль":"Repeat password","Войти":"Log in","Создать аккаунт":"Create account","Логин или ID":"Login or ID","Логин (a-z, 0-9, _)":"Login (a-z, 0-9, _)","Подождите…":"Please wait…","Открой игру по https://":"Open the game via https://","Неверный логин/ID или пароль":"Wrong login/ID or password","Логин: 3–16 символов a-z, 0-9, _ (хотя бы одна буква)":"Login: 3–16 chars a-z, 0-9, _ (at least one letter)","Пароль: минимум 6 символов":"Password: 6+ characters","Пароли не совпадают":"Passwords don't match","Логин занят":"Login is taken","Не удалось создать аккаунт, попробуй ещё раз":"Could not create account, try again","🚫 Вы забанены":"🚫 You are banned","Причина:":"Reason:","Аккаунт":"Account","Выйти из аккаунта":"Log out","Выйти из аккаунта?":"Log out?","Ярлык":"Shortcut","📲 Создать ярлык":"📲 Create shortcut","Ярлык создан ✓":"Shortcut created ✓","Меню браузера ⋮ → «Установить приложение» или «Добавить на главный экран»":"Browser menu ⋮ → “Install app” or “Add to Home screen”","Safari: Поделиться → «На экран Домой»":"Safari: Share → “Add to Home Screen”","Вы вошли как":"Signed in as","Анти-чит: активен":"Anti-cheat: active","проверок":"scans","угроз":"threats","🛡️ Anti-Cheat зафиксировал подозрительную активность. Событие записано.":"🛡️ Anti-Cheat detected suspicious activity. The event has been logged.","Снежный дроп":"Snow Case","Новогодний дроп":"New Year Case","Морозный дроп":"Frost Case","Метельный дроп":"Blizzard Case","Дроп северного сияния":"Aurora Case","Рождественский дроп":"Christmas Case","Квинтиллионный дроп":"Quintillion Case"});
 Object.assign(EN,{"Настройки":"Settings","Цвет акцента":"Accent color","Сбросить цвет":"Reset color","Тема":"Theme","Авто":"Auto","Тёмная":"Dark","Светлая":"Light","4 мин":"4 min","15 мин":"15 min","50 мин":"50 min","½ баланса":"½ balance","Макс":"Max","Мин":"Min","Среднее":"Average","За период":"Period","Ср. цена":"Avg price","P/L":"P/L","Продать всё":"Sell all","Продать":"Sell","сейчас":"now","{0} назад":"{0} ago","Купить: {0} $ · Продать: {1} $ (комиссия 3%)":"Buy: {0} $ · Sell: {1} $ (3% fee)"});
@@ -1256,8 +1269,8 @@ function openMany(cs,n){
 
 /* Апгрейдер */
 const ALLV=(()=>{const a=[];CARDS.forEach((k,c)=>BGS.forEach((b,g)=>a.push({c,g,v:Math.round(k.p*b.b)})));return a.sort((x,y)=>x.v-y.v)})();
-let UPSEL=0,UPCH=70,upBusy=false,UPMODE=0,UPT=null,PKL=60;
-const upMult=ch=>1+(100-ch)/100,upTarget=(P,ch)=>Math.round(P*upMult(ch));
+let UPS=[],UPCH=50,upBusy=false,UPMODE=0,UPT=null,PKL=60,UPMU=false,UPIN=false,UPFS=false,UPINIT=0;
+const UPHE=95,upMult=ch=>UPHE/ch,upTarget=(P,ch)=>Math.round(P*upMult(ch)),TMAX=ALLV[ALLV.length-1].v,upLo=P=>Math.max(2,Math.ceil(UPHE*P/TMAX));
 const tChance=(P,T)=>T>P?Math.min(95,Math.round(P/T*9500)/100):0,fmtCh=n=>(+n.toFixed(2))+"%",MINCH=.1;
 function upMake(P,ch,fix){const t=fix?nfv(fix.c,fix.g):upTarget(P,ch);let n=S.nid;while(S.inv.some(x=>x.id===n))n++;const im=idm(n),pool=fix?[{c:fix.c,g:fix.g}]:ALLV,all=[];
   pool.forEach(x=>varsOf(x.c).forEach((vr,vi)=>{const v=Math.round(nfv(x.c,x.g)*im*vr[2]);if(v>P)all.push({c:x.c,g:x.g,v:vi,val:v})}));
@@ -1269,64 +1282,94 @@ function upResult(P,ch){const t=upTarget(P,ch);let lo=0,hi=ALLV.length-1;while(l
   while(i<ALLV.length-1&&ALLV[i].v<=P)i++;
   const c=ALLV[i].v,ok=[];for(let j=Math.max(0,i-60);j<Math.min(ALLV.length,i+60);j++){const v=ALLV[j].v;if(v>P&&Math.abs(v-c)<=Math.max(30,c*.03))ok.push(ALLV[j])}
   return ok.length?ok[rn(ok.length)]:ALLV[i]}
-const upCard=()=>S.inv.find(x=>x.id===UPSEL);
-function rUp(){if(!upCard())UPSEL=0;
-  $("upGrid").innerHTML=S.inv.slice().sort((a,b)=>val(b)-val(a)).map(c=>`<div class="item ${c.id===UPSEL?"pick2":""}" data-a="upsel" data-v="${c.id}">${cardHTML(c)}</div>`).join("")||`<span class="hint">${tt("Нет карточек")}</span>`;
+const upCards=()=>UPS.map(id=>S.inv.find(x=>x.id===id)).filter(Boolean),upP=()=>upCards().reduce((a,c)=>a+val(c),0),upCard=()=>upCards()[0];
+/* статистика, бонус серии и страховка */
+const UX=()=>S.upx||(S.upx={w:0,l:0,st:0,bs:0,net:0,bw:0,h:[]}),upSB=()=>Math.min(5,UX().st||0),upRP=ch=>Math.min(99,+(ch*(1+.01*upSB())).toFixed(2)),upIns=(P,rp)=>Math.max(1,Math.ceil(P*.4*(1-rp/100)*1.12)),upInsL=(P,prem)=>`<br>🛡 ${tt("Страховка")}: −${fmt(prem)} $ · ${tt("вернёт")} ${fmt(Math.floor(P*.4))} $`;
+function rUpStat(){const u=UX(),n=u.w+u.l,wr=n?Math.round(u.w/n*100):0,sb=upSB();
+  $("upStat").innerHTML=`<span class="upchip${sb?" hot2":""}">🔥 ${tt("Серия")}: <b>${u.st||0}</b>${sb?` · ${tt("шанс")} +${sb}%`:""}</span><span class="upchip">🏆 ${tt("Рекорд")}: <b>${u.bs||0}</b></span><span class="upchip">📊 <b>${wr}%</b> · ${u.w}/${n}</span><span class="upchip ${u.net>=0?"good":"bad"}">${u.net>0?"+":""}${fmt(u.net)} $</span>`;
+  $("upHist").innerHTML=(u.h||[]).map(x=>`<i class="${x?"w":"l"}"></i>`).join("")}
+function rUp(){
+  if(!UPINIT){UPINIT=1;UPMU=ls("kx_upmu","")==="1";UPIN=ls("kx_upin","")==="1";UPFS=ls("kx_upfs","")==="1";$("upMu").checked=UPMU;$("upIn").checked=UPIN;$("upFs").checked=UPFS;
+    $("upQc").innerHTML=[10,25,50,75,90].map(x=>`<button class="btn alt sm" data-a="upq" data-v="c${x}">${x}%</button>`).join("")+[2,3,5,10].map(x=>`<button class="btn alt sm" data-a="upq" data-v="x${x}">×${x}</button>`).join("")}
+  if(!UPMU&&UPS.length>1)UPS=UPS.slice(0,1);
+  UPS=UPS.filter(id=>S.inv.some(x=>x.id===id));
+  $("upGrid").innerHTML=S.inv.slice().sort((a,b)=>val(b)-val(a)).map(c=>`<div class="item ${UPS.includes(c.id)?"pick2":""}" data-a="upsel" data-v="${c.id}">${cardHTML(c)}</div>`).join("")||`<span class="hint">${tt("Нет карточек")}</span>`;
   rUpInfo()}
-function rUpInfo(){const c=upCard(),tm=UPMODE===1,P=c?val(c):0;
+function rUpInfo(){const cs=upCards(),c=cs[0],tm=UPMODE===1,P=upP(),sb=upSB();
   $("upM0").classList.toggle("alt",tm);$("upM1").classList.toggle("alt",!tm);$("upRg").hidden=tm;$("upTgt").hidden=!tm;
-  $("upPick").textContent=UPT?tt("Сменить цель"):tt("Выбрать цель");
+  $("upPick").textContent=UPT?tt("Сменить цель"):tt("Выбрать цель");rUpStat();
+  const lo=c?upLo(P):2,tooBig=!tm&&!!c&&lo>90;
+  if(!tm){$("upCh").min=Math.min(lo,90);if(UPCH<lo&&!tooBig)UPCH=lo;$("upCh").value=UPCH}
   let ch=UPCH;if(tm)ch=c&&UPT?tChance(P,val(UPT)):0;
-  $("upWheel").style.setProperty("--p",ch?Math.max(ch,.8):0);
-  $("upChv").textContent=UPCH+"%";$("upMid").textContent=ch?fmtCh(ch):"?";
+  const rp=ch?upRP(ch):0;
+  $("upWheel").style.setProperty("--p",rp?Math.max(rp,.8):0);
+  $("upChv").textContent=UPCH+"%";$("upMid").textContent=rp?fmtCh(rp):"?";
   if(!c){$("upFrom").innerHTML=tt("Выбери карту ниже");$("upTo").textContent="—";$("upInfo").textContent="";$("upGo").disabled=true;return}
-  $("upFrom").innerHTML=cardHTML(c);
+  $("upFrom").innerHTML=cs.length>1?`<div class="upstack"><b>🧺 ×${cs.length}</b><div>${fmt(P)} $</div></div>`:cardHTML(c);
+  const bn=sb?` · 🔥 +${sb}%`:"",prem=UPIN&&rp?upIns(P,rp):0,il=UPIN?upInsL(P,prem):"";
   if(tm){
     if(!UPT){$("upTo").textContent="—";$("upInfo").textContent=tt("Выбери цель");$("upGo").disabled=true;return}
     const T=val(UPT);$("upTo").innerHTML=cardHTML(UPT);
     if(T<=P){$("upInfo").innerHTML=`<span class="bad">${tt("Цель не дороже твоей карты")}</span>`;$("upGo").disabled=true;return}
     if(ch<MINCH){$("upInfo").innerHTML=`<span class="bad">${tt("Шанс слишком мал (< 0.1%)")}</span>`;$("upGo").disabled=true;return}
-    $("upInfo").innerHTML=`${tt("Шанс")} <b>${fmtCh(ch)}</b> · ×${(T/P).toFixed(2)}`;$("upGo").disabled=upBusy;return}
+    $("upInfo").innerHTML=`${tt("Шанс")} <b>${fmtCh(rp)}</b> · ×${(T/P).toFixed(2)}${bn}${il}`;$("upGo").disabled=upBusy||prem>S.bal;return}
+  if(tooBig){$("upTo").textContent="—";$("upInfo").innerHTML=`<span class="bad">${tt("Слишком дорого для случайного режима — выбери конкретную карту")}</span>`;$("upGo").disabled=true;return}
   const t=upTarget(P,ch);
   $("upTo").innerHTML=`<div style="font-size:12px;color:var(--muted)">${tt("цель ≈")}</div><div style="font-family:var(--fd);font-size:15px;color:var(--text)">${fmt(t)} $</div><div style="font-size:12px;color:var(--ok)">×${upMult(ch).toFixed(2)}</div>`;
-  $("upInfo").innerHTML=`${tt("Шанс")} <b>${ch}%</b> · ${tt("прирост")} <b>+${100-ch}%</b>`;$("upGo").disabled=upBusy}
+  $("upInfo").innerHTML=`${tt("Шанс")} <b>${fmtCh(rp)}</b> · ×${upMult(ch).toFixed(2)}${bn}${il}`;$("upGo").disabled=upBusy||prem>S.bal}
 /* выбор конкретной карты */
-function rPick(){const c=upCard();if(!c)return;const P=val(c),q=$("pkq").value.trim().toLowerCase(),g=+$("pkb").value,ro=$("pkr").checked,bb=BGS[g].b,L=[];
+function rPick(){if(!upCard())return;const P=upP(),q=$("pkq").value.trim().toLowerCase(),g=+$("pkb").value,ro=$("pkr").checked,bb=BGS[g].b,L=[];
   CARDS.forEach((k,i)=>{const v=Math.round(k.p*bb);if(v<=P||(ro&&!k.rare))return;if(q&&!(k.e+" "+k.r+" "+k.i).toLowerCase().includes(q))return;L.push({i,v})});
   L.sort((a,b)=>a.v-b.v);
   $("pkInfo").textContent=`${tt("Твоя карта")}: ${fmt(P)} $ · ${tt("Найдено")}: ${L.length}`;
   $("pkGrid").innerHTML=L.slice(0,PKL).map(x=>{const ch=tChance(P,x.v);return `<div class="item" data-a="pkset" data-v="${x.i}">${cardHTML({c:x.i,g})}<div class="sub ${ch<MINCH?"bad":"good"}">${tt("Шанс")} ${fmtCh(ch)}</div></div>`}).join("")||`<span class="hint">${tt("Ничего не найдено")}</span>`;
   $("pkMore").hidden=L.length<=PKL}
 $("pkb").innerHTML=BGS.map((b,i)=>`<option value="${i}">${b.n} · ×${b.b.toFixed(2)}</option>`).join("");
-BA.upsel=id=>{if(upBusy)return;UPSEL=id;$("upRes").innerHTML="";rUp()};
+BA.upsel=id=>{if(upBusy)return;if(UPMU){const i=UPS.indexOf(id);if(i>=0)UPS.splice(i,1);else if(UPS.length<8)UPS.push(id);else{toast(tt("Максимум {0} карт",8));return}}else UPS=[id];$("upRes").innerHTML="";rUp()};
 BA.upmode=m=>{if(upBusy)return;UPMODE=m;rUpInfo()};
+BA.upq=v=>{if(upBusy)return;const n=+v.slice(1),ch=v[0]==="c"?n:Math.round(UPHE/n);UPCH=Math.max(2,Math.min(90,ch));UPMODE=0;rUpInfo()};
+document.addEventListener("change",e=>{const i=e.target.id;if(i==="upMu"){UPMU=e.target.checked;lset("kx_upmu",UPMU?"1":"0");if(!UPMU&&UPS.length>1)UPS=UPS.slice(0,1);rUp()}else if(i==="upIn"){UPIN=e.target.checked;lset("kx_upin",UPIN?"1":"0");rUpInfo()}else if(i==="upFs"){UPFS=e.target.checked;lset("kx_upfs",UPFS?"1":"0")}});
 BA.uppick=()=>{if(upBusy)return;if(!upCard()){toast(tt("Выбери карту ниже"));return}PKL=60;$("pk").classList.add("on");rPick()};
 BA.pkx=()=>$("pk").classList.remove("on");
 BA.pkmore=()=>{PKL+=60;rPick()};
-BA.pkset=i=>{const c=upCard(),g=+$("pkb").value;if(!c)return;if(tChance(val(c),nfv(i,g))<MINCH){toast(tt("Шанс слишком мал (< 0.1%)"));return}UPT={c:i,g};$("pk").classList.remove("on");rUpInfo()};
+BA.pkset=i=>{const c=upCard(),g=+$("pkb").value;if(!c)return;if(tChance(upP(),nfv(i,g))<MINCH){toast(tt("Шанс слишком мал (< 0.1%)"));return}UPT={c:i,g};$("pk").classList.remove("on");rUpInfo()};
 document.addEventListener("input",e=>{if(e.target.id==="upCh"){UPCH=+e.target.value;rUpInfo()}else if(e.target.id==="pkq"){PKL=60;rPick()}});
 document.addEventListener("change",e=>{if(e.target.id==="pkb"||e.target.id==="pkr"){PKL=60;rPick()}});
 function rigHit(ch){let r=null;try{r=JSON.parse(localStorage.getItem("kx2_rig")||"null")}catch(e){}
   if(!r||!(r.n>0)||!(ch<=+r.ch))return false;
   r.n--;try{r.n>0?localStorage.setItem("kx2_rig",JSON.stringify(r)):localStorage.removeItem("kx2_rig")}catch(e){}return true}
-BA.upgo=()=>{const c=upCard(),tm=UPMODE===1;if(!c||upBusy)return;
-  const P=val(c);let ch=UPCH;
+function upConf(){if(NOFX)return;const w=$("upWheel");for(let i=0;i<22;i++){const e=document.createElement("b"),a=Math.random()*6.283,d=70+Math.random()*80;e.className="upcf";e.style.cssText=`--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d}px;background:hsl(${Math.random()*360},85%,62%)`;w.appendChild(e);setTimeout(()=>e.remove(),900)}}
+BA.upgo=()=>{const cs=upCards(),c=cs[0],tm=UPMODE===1;if(!c||upBusy)return;
+  const P=upP();let ch=UPCH;
   if(tm){if(!UPT||val(UPT)<=P)return;ch=tChance(P,val(UPT));if(ch<MINCH)return}
+  else{const lo=upLo(P);if(lo>90)return;ch=Math.max(ch,lo)}
+  const rp=upRP(ch),prem=UPIN?upIns(P,rp):0;
+  if(prem>S.bal){toast(tt("Не хватает $ 😕"));return}
   upBusy=true;$("upGo").disabled=true;
-  const win=rigHit(ch)||Math.random()*100<ch,res=win?(tm?UPT:1):null;
+  const win=rigHit(ch)||Math.random()*100<rp,fast=UPFS,dur=fast?900:3200;
   /* зелёная зона: от середины низа круга в обе стороны */
-  const dp=Math.max(ch,.8),ang=dp*3.6,m=Math.min(6,ang*.1),lo=180-ang/2,hi=180+ang/2;
-  const a=win?rnd(lo+m,hi-m):hi+m+rnd(0,360-ang-2*m);
-  S.inv=S.inv.filter(x=>x.id!==c.id);S.prof.show=S.prof.show.filter(id=>id!==c.id);
-  let nit=null;if(win){nit=upMake(P,ch,tm?UPT:null);S.inv.push(nit);UPSEL=nit.id}else UPSEL=0;
-  save();
+  const dp=Math.max(rp,.8),ang=dp*3.6,m=Math.min(6,ang*.1),lo2=180-ang/2,hi=180+ang/2;
+  const a=win?rnd(lo2+m,hi-m):hi+m+rnd(0,360-ang-2*m);
+  const near=win?0:Math.min(a-hi,lo2+360-a),nm=!win&&near<=14?+(near/3.6).toFixed(1):0;
+  const ids=cs.map(x=>x.id),ref=!win&&UPIN?Math.floor(P*.4):0;
+  S.bal+=ref-prem;
+  S.inv=S.inv.filter(x=>!ids.includes(x.id));S.prof.show=S.prof.show.filter(id=>!ids.includes(id));
+  let nit=null;if(win){nit=upMake(P,ch,tm?UPT:null);S.inv.push(nit);UPS=[nit.id]}else UPS=[];
+  const u=UX(),vN=win?val(nit):0,q=S.qs||(S.qs={});
+  u.h=(u.h||[]).concat(win?1:0).slice(-14);
+  if(win){u.w++;u.st=(u.st||0)+1;u.bs=Math.max(u.bs||0,u.st);u.bw=Math.max(u.bw||0,vN);u.net+=vN-P-prem;q.upw=(q.upw||0)+1;if(ch<=10)q.uplow=(q.uplow||0)+1}
+  else{u.l++;u.st=0;u.net+=ref-P-prem}
+  q.upbs=Math.max(q.upbs||0,u.st||0);
+  gEv("up",1);save();
   const nd=$("upNeedle");nd.style.transition="none";nd.style.transform="rotate(0deg)";void nd.offsetWidth;
-  nd.style.transition="transform 3.2s cubic-bezier(.15,.7,.1,1)";nd.style.transform=`rotate(${360*4+a}deg)`;
-  sfx("init");for(let i=1;i<=24;i++)setTimeout(()=>sfx("tick"),3200*(1-Math.pow(1-i/24,1/3)));
-  setTimeout(()=>{upBusy=false;
-    if(win){const tr=tier(val(nit));sfx("win",tr);winFx(tr);$("upRes").innerHTML=`<div class="good" style="font-size:18px;font-weight:800">${tt("Успех!")} ${fmt(P)} → ${fmt(val(nit))} $</div>${cardHTML(nit)}`}
-    else{sfx("coin");$("upRes").innerHTML=`<div class="bad" style="font-size:18px;font-weight:800">${tt("Неудача 💥 карта сгорела")}</div>${cardHTML(c)}`}
-    upd();rInv();rProf();rUp()},3300)};
+  nd.style.transition=`transform ${dur/1000}s cubic-bezier(.15,.7,.1,1)`;nd.style.transform=`rotate(${360*4+a}deg)`;
+  sfx("init");const nt=fast?10:24;for(let i=1;i<=nt;i++)setTimeout(()=>sfx("tick"),dur*(1-Math.pow(1-i/nt,1/3)));
+  setTimeout(()=>{upBusy=false;const wh=$("upWheel");wh.classList.remove("w","l");void wh.offsetWidth;wh.classList.add(win?"w":"l");
+    if(win){const tr=tier(vN);sfx("win",tr);winFx(tr);upConf();
+      $("upRes").innerHTML=`<div class="good" style="font-size:18px;font-weight:800">${tt("Успех!")} ${fmt(P)} → ${fmt(vN)} $ · ×${(vN/P).toFixed(2)}</div>${u.st>1?`<div class="hint" style="margin:4px 0">🔥 ${tt("Серия побед")}: ${u.st}</div>`:""}${cardHTML(nit)}`}
+    else{sfx("coin");
+      $("upRes").innerHTML=`<div class="bad" style="font-size:18px;font-weight:800">${tt(cs.length>1?"Неудача 💥 карты сгорели":"Неудача 💥 карта сгорела")}</div>${nm?`<div class="hint" style="margin:4px 0">😬 ${tt("Чуть-чуть! Промах всего на {0}%",nm)}</div>`:""}${ref?`<div class="hint good" style="margin:4px 0">🛡 ${tt("Страховка вернула {0} $",fmt(ref))}</div>`:""}${cs.length>1?`<div class="mres"><div class="grid">${cs.map(x=>cardHTML(x)).join("")}</div></div>`:cardHTML(c)}`}
+    upd();rInv();rProf();rUp()},dur+100)};
 
 /* Навигация и события */
 function tab(v){
@@ -1478,6 +1521,9 @@ const ACH=[
 ["w1","Работяга","Подработай 20 раз",s=>(s.work||0)>=20],
 ["c1","Постоянный гость","Забери 7 дневных сундуков",s=>(s.chest||0)>=7],
 ["u1","Мастер апгрейда","Сделай 25 апгрейдов",s=>(s.up||0)>=25],
+["u2","Серия побед","Выиграй 5 апгрейдов подряд",s=>(s.upbs||0)>=5],
+["u3","Рисковый","Выиграй апгрейд с шансом 10% или ниже",s=>(s.uplow||0)>=1],
+["u4","Апгрейдер","Выиграй 50 апгрейдов",s=>(s.upw||0)>=50],
 ["t1","Биржевик","Сделай 10 сделок на бирже",s=>(s.trade||0)>=10],
 ["k1","Коллекция","Собери 10 разных карт",s=>uqN(s)>=10],
 ["k2","Энциклопедия","Собери 50 разных карт",s=>uqN(s)>=50],
@@ -2379,6 +2425,15 @@ CHANGELOG.unshift({v:"5.1",d:"25.11.2026",t:["Казино с анимациям
  ["Монетка подбрасывается, рулетка крутится с шариком, барабаны слотов вращаются, кости катятся, карты переворачиваются","Coin toss, spinning roulette with a ball, rolling slot reels, tumbling dice and flipping cards"],
  ["Высокие ставки: лента множителей, как в открытии кейсов","High stakes: a multiplier reel like case opening"],
  ["Три новые игры: Плинко, Мины и Колесо удачи","Three new games: Plinko, Mines and Wheel of Fortune"]]});
+CHANGELOG.unshift({v:"5.2",d:"27.11.2026",t:["Апгрейдер 2.0 ⚡","Upgrader 2.0 ⚡"],it:[
+["Честные шансы: везде одинаковый запас 5%, шанс от 2% до 90%, множитель до ×47 и выше","Fair odds: the same 5% edge everywhere, chance from 2% to 90%, multipliers up to ×47 and beyond"],
+["Быстрый выбор: кнопки шанса 10–90% и множителя ×2, ×3, ×5, ×10","Quick pick: chance buttons 10–90% and multiplier buttons ×2, ×3, ×5, ×10"],
+["🧺 Несколько карт: кидай в апгрейд до 8 карт сразу — их цены складываются","🧺 Multiple cards: put up to 8 cards into one upgrade — their values add up"],
+["🛡 Страховка: платишь взнос, а при проигрыше возвращается 40% ставки","🛡 Insurance: pay a premium and get 40% of the stake back on a loss"],
+["🔥 Серия побед: каждая победа подряд даёт +1% к шансу, максимум +5%","🔥 Win streak: every win in a row gives +1% chance, up to +5%"],
+["Статистика: серия, рекорд, процент побед, прибыль и история последних 14 апгрейдов","Stats: streak, best streak, win rate, profit and the last 14 upgrades"],
+["Эффекты: конфетти на победе, свечение колеса, подсказка «чуть-чуть», режим ⚡ Быстро","Effects: confetti on a win, wheel glow, a “so close” hint and ⚡ Fast mode"],
+["Апгрейды теперь считаются в заданиях, плюс три новых достижения","Upgrades now count towards quests, plus three new achievements"]]});
 })();
 </script>
 <script>setTimeout(function(){if(window.__KX_OK)return;try{if(sessionStorage.getItem("kx_fix"))return;sessionStorage.setItem("kx_fix","1");var d=JSON.parse(localStorage.getItem("kx2_save")||"null");if(d&&typeof kxNorm==="function")localStorage.setItem("kx2_save",JSON.stringify(kxNorm(d)));location.reload()}catch(e){}},2500)</script>
