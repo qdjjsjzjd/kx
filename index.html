@@ -532,6 +532,8 @@ try{applyTheme(localStorage.getItem("kx_theme")||"auto")}catch(e){}
 <button class="tb" data-a="tab" data-v="st"><i data-i="st"></i><span data-t="Биржа"></span></button>
 <button class="tb" data-a="tab" data-v="inv"><i data-i="inv"></i><span data-t="Коллекция"></span></button>
 <button class="tb" data-a="tab" data-v="up"><i data-i="up"></i><span data-t="Апгрейд"></span></button>
+<button class="tb" data-a="tab" data-v="repair"><i data-i="mods"></i><span data-t="Реставрация"></span></button>
+<button class="tb" data-a="tab" data-v="wheel"><i data-i="vip"></i><span data-t="Колесо фортуны"></span><i class="nwd" id="whDot" hidden></i></button>
 <button class="tb" data-a="tab" data-v="mods"><i data-i="mods"></i><span data-t="Подписки"></span></button>
 <button class="tb" data-a="tab" data-v="quests"><i data-i="vip"></i><span data-t="Задания"></span></button>
 <button class="tb" data-a="tab" data-v="card"><i data-i="inv"></i><span data-t="Карта"></span></button>
@@ -588,17 +590,34 @@ try{applyTheme(localStorage.getItem("kx_theme")||"auto")}catch(e){}
 </section>
 
 <section id="inv" class="sec">
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px"><button class="btn" data-a="itab" data-v="c" id="itc"></button><button class="btn alt" data-a="itab" data-v="k" id="itk"></button><button class="btn alt" data-a="itab" data-v="f" id="itf">🔨 Крафт</button></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px"><button class="btn" data-a="itab" data-v="c" id="itc"></button><button class="btn alt" data-a="itab" data-v="k" id="itk"></button><button class="btn alt" data-a="itab" data-v="f" id="itf">🧩 Сеты</button></div>
   <div id="invC"><div class="cases" id="ownCases"></div>
     <div class="rw" id="rw" style="display:none"><div class="strip" id="strip"></div></div>
     <div class="res" id="res"></div></div>
   <div id="invK" hidden><p class="hint" id="invInfo"></p><button class="btn alt" id="sellEvery" data-a="sellall" data-v="0" hidden style="margin-bottom:10px"></button><div class="grid" id="invGrid"></div></div>
   <div id="invF" hidden>
-    <div class="stk"><b>🔨 Крафт</b><p class="hint">Выбери 2–6 карт с одним фоном: получишь одну карту на сумму их цен, но с фоном круче на 1.</p>
-      <div class="grid" id="crList"></div><div class="hint" id="crInfo" style="text-align:center;margin:8px 0"></div>
-      <button class="btn" data-a="craft" id="crBtn" style="width:100%" disabled>Скрафтить</button><div class="res" id="crRes"></div></div>
-    <h3>🧩 Сеты</h3><p class="hint" id="setInfo"></p><div id="setList"></div>
+    <h3 data-t="🧩 Сеты"></h3><p class="hint" id="setInfo"></p><div id="setList"></div>
   </div>
+</section>
+
+<section id="repair" class="sec">
+  <div class="stk"><b data-t="🛠 Реставрация"></b>
+    <p class="hint" data-t="Состояние карточек со временем падает, а цена падает вместе с ним. Здесь можно вернуть всё до выбранного уровня."></p>
+    <div class="uprange"><input type="range" id="rpT" min="10" max="90" value="90" step="1"><b id="rpTv">90%</b></div>
+    <div class="hint" id="rpInfo" style="margin:8px 0"></div>
+    <button class="btn" id="rpAll" data-a="rpall" style="width:100%"></button>
+  </div>
+  <h3 data-t="Нужен ремонт"></h3><div class="grid" id="rpGrid"></div>
+</section>
+
+<section id="wheel" class="sec">
+  <div class="stk" style="text-align:center">
+    <div class="whw" id="whW"><div class="whd" id="whD"></div><div class="whp"></div><div class="whc">🎡</div></div>
+    <div class="hint" id="whI"></div>
+    <button class="btn" id="whGo" data-a="whgo" style="width:100%"></button>
+    <div class="res" id="whRes"></div>
+  </div>
+  <h3 data-t="Призы"></h3><div class="stk"><div class="hint" id="whL" style="margin:0"></div></div>
 </section>
 
 <section id="up" class="sec">
@@ -617,7 +636,7 @@ try{applyTheme(localStorage.getItem("kx_theme")||"auto")}catch(e){}
   <h3 data-t="Твои карты"></h3><div class="grid" id="upGrid"></div>
 </section>
 
-<div class="pk" id="pk"><div class="pkh"><input type="text" id="pkq" data-tp="Поиск карты" placeholder="Поиск карты"><select id="pkb"></select><label class="chk"><input type="checkbox" id="pkr"><span data-t="Только раритет"></span></label><button class="btn alt sm" data-a="pkx" data-v="0" data-t="Закрыть"></button></div><div class="hint" id="pkInfo"></div><div class="grid" id="pkGrid"></div><button class="btn alt" id="pkMore" data-a="pkmore" data-v="0" data-t="Показать ещё"></button></div>
+<div class="pk" id="pk"><div class="pkh"><input type="text" id="pkq" data-tp="Поиск карты" placeholder="Поиск карты"><select id="pkb"></select><button class="btn alt sm" data-a="pkx" data-v="0" data-t="Закрыть"></button></div><div class="hint" id="pkInfo"></div><div class="grid" id="pkGrid"></div><button class="btn alt" id="pkMore" data-a="pkmore" data-v="0" data-t="Показать ещё"></button></div>
 <section id="card" class="sec"><div id="cBox"></div></section> <section id="cshop" class="sec"><div id="csBox"></div></section>
 <section id="quests" class="sec"><div id="qBox"></div></section>
 <section id="set" class="sec">
@@ -657,7 +676,7 @@ const EN={"Токен-дроп": "Token Case", "Игрок": "Player", "Все �
 Object.assign(EN,{"Раритет": "Rarity", "🎲 Случайный": "🎲 Random", "🎯 Конкретная карта": "🎯 Specific card", "Выбрать цель": "Choose target", "Сменить цель": "Change target", "Выбери цель": "Pick a target", "Цель не дороже твоей карты": "Target isn't worth more than your card", "Шанс слишком мал (< 0.1%)": "Chance is too low (< 0.1%)", "Твоя карта": "Your card", "Найдено": "Found", "Ничего не найдено": "Nothing found", "Только раритет": "Rarity only", "Закрыть": "Close", "Показать ещё": "Show more", "Поиск карты": "Search card", "Смайловый дроп": "Smiley Case", "Мемный дроп": "Meme Case", "Вайбовый дроп": "Vibe Case", "Шальной дроп": "Wild Case", "Хайповый дроп": "Hype Case", "Звёздный дроп": "Stellar Case", "Ультра дроп": "Ultra Case", "Эпичный дроп": "Epic Case"});
 const tt=(s,...a)=>{let r=LANG==="en"&&EN[s]!==undefined?EN[s]:s;a.forEach((v,i)=>{r=r.split("{"+i+"}").join(v)});return r};
 Object.assign(EN,{"Серия":"Streak","Рекорд":"Best","шанс":"chance","🧺 Несколько карт":"🧺 Multiple cards","🛡 Страховка":"🛡 Insurance","Страховка":"Insurance","⚡ Быстро":"⚡ Fast","вернёт":"refunds","Максимум {0} карт":"Max {0} cards","Слишком дорого для случайного режима — выбери конкретную карту":"Too expensive for random mode — pick a specific card","Неудача 💥 карты сгорели":"Failed 💥 cards burned","Чуть-чуть! Промах всего на {0}%":"So close! Missed by just {0}%","Страховка вернула {0} $":"Insurance refunded {0} $","Серия побед":"Win streak","Серия побед ":"Win streak","Выиграй 5 апгрейдов подряд":"Win 5 upgrades in a row","Рисковый":"Risk taker","Выиграй апгрейд с шансом 10% или ниже":"Win an upgrade at 10% chance or lower","Апгрейдер":"Upgrader","Выиграй 50 апгрейдов":"Win 50 upgrades"});
-const SEASON=6;let AUTH=null;try{AUTH=JSON.parse(localStorage.getItem("kx3_auth")||"null")}catch(e){}let LOCK=!AUTH,DIRTY=0,DBP=null,ACF=0,LASTJ="";
+const SEASON=7;let AUTH=null;try{AUTH=JSON.parse(localStorage.getItem("kx3_auth")||"null")}catch(e){}let LOCK=!AUTH,DIRTY=0,DBP=null,ACF=0,LASTJ="";
 Object.assign(EN,{"Вход":"Log in","Регистрация":"Sign up","Пароль":"Password","Повтори пароль":"Repeat password","Войти":"Log in","Создать аккаунт":"Create account","Логин или ID":"Login or ID","Логин (a-z, 0-9, _)":"Login (a-z, 0-9, _)","Подождите…":"Please wait…","Открой игру по https://":"Open the game via https://","Неверный логин/ID или пароль":"Wrong login/ID or password","Логин: 3–16 символов a-z, 0-9, _ (хотя бы одна буква)":"Login: 3–16 chars a-z, 0-9, _ (at least one letter)","Пароль: минимум 6 символов":"Password: 6+ characters","Пароли не совпадают":"Passwords don't match","Логин занят":"Login is taken","Не удалось создать аккаунт, попробуй ещё раз":"Could not create account, try again","🚫 Вы забанены":"🚫 You are banned","Причина:":"Reason:","Аккаунт":"Account","Выйти из аккаунта":"Log out","Выйти из аккаунта?":"Log out?","Ярлык":"Shortcut","📲 Создать ярлык":"📲 Create shortcut","Ярлык создан ✓":"Shortcut created ✓","Меню браузера ⋮ → «Установить приложение» или «Добавить на главный экран»":"Browser menu ⋮ → “Install app” or “Add to Home screen”","Safari: Поделиться → «На экран Домой»":"Safari: Share → “Add to Home Screen”","Вы вошли как":"Signed in as","Анти-чит: активен":"Anti-cheat: active","проверок":"scans","угроз":"threats","🛡️ Anti-Cheat зафиксировал подозрительную активность. Событие записано.":"🛡️ Anti-Cheat detected suspicious activity. The event has been logged.","Снежный дроп":"Snow Case","Новогодний дроп":"New Year Case","Морозный дроп":"Frost Case","Метельный дроп":"Blizzard Case","Дроп северного сияния":"Aurora Case","Рождественский дроп":"Christmas Case","Квинтиллионный дроп":"Quintillion Case"});
 Object.assign(EN,{"Настройки":"Settings","Цвет акцента":"Accent color","Сбросить цвет":"Reset color","Тема":"Theme","Авто":"Auto","Тёмная":"Dark","Светлая":"Light","4 мин":"4 min","15 мин":"15 min","50 мин":"50 min","½ баланса":"½ balance","Макс":"Max","Мин":"Min","Среднее":"Average","За период":"Period","Ср. цена":"Avg price","P/L":"P/L","Продать всё":"Sell all","Продать":"Sell","сейчас":"now","{0} назад":"{0} ago","Купить: {0} $ · Продать: {1} $ (комиссия 3%)":"Buy: {0} $ · Sell: {1} $ (3% fee)"});
 Object.assign(EN,{"Бонус новичка":"Newbie bonus","к продаже карт":"on card sales","Действует, пока баланс меньше {0} $. Чем меньше денег — тем выше бонус.":"Active while your balance is below {0} $. The less money you have, the bigger the bonus."});
@@ -666,14 +685,14 @@ Object.assign(EN,{"Подписки на 24 часа":"24-hour modifiers","Бе�
 Object.assign(EN,{"Ордера":"Orders","Количество берётся из поля выше. Ордера срабатывают, пока игра открыта.":"Quantity is taken from the field above. Orders run only while the game is open.","Купить, когда цена ≤":"Buy when price ≤","Продать (тейк), цена ≥":"Sell (take profit), price ≥","Продать (стоп), цена ≤":"Sell (stop loss), price ≤","Цена":"Price","Создать ордер":"Create order","Укажи цену ордера":"Enter an order price","Максимум 8 ордеров на акцию":"Max 8 orders per stock","Ордер создан ✓":"Order created ✓","Ордер выполнен":"Order filled","Нет ордеров":"No orders","шт":"pcs","Купить":"Buy","Продать (тейк)":"Sell (take profit)","Продать (стоп)":"Sell (stop loss)"});
 Object.assign(EN,{"Инспект":"Inspect","Пока нет карт":"No cards yet","Карт в дропе":"Cards in case","цена":"price"});
 Object.assign(EN,{"Подписки": "Modifiers", "Подписки за токены": "Token modifiers", "Твои токены": "Your tokens", "Токены выпадают из дропов и оплачивают модификаторы на 24 часа. Токены можно купить за $ в Дропые.": "Tokens drop from cases and pay for 24-hour modifiers. You can also buy tokens for $ in the Shop.", "🛒 В магазин (обмен $ на токены)": "🛒 To the Shop (exchange $ for tokens)", "Токенопад: токены из дропов выпадают в 2 раза чаще": "Token fall: tokens drop from cases twice as often", "Свежая поставка: карты выпадают в лучшем состоянии": "Fresh delivery: cards drop in better condition", "Яркие фоны: редкие фоны выпадают чаще": "Bright backgrounds: rare backgrounds drop more often", "Реставрация −30%": "Restoration −30%", "Налоговые каникулы: налог на богатство не списывается": "Tax holiday: wealth tax is not charged", "Подарок: бесплатный дроп — забери!": "Gift: a free case — grab it!", "Подарок получен ✓": "Gift claimed ✓", "🎁 Забрать дроп": "🎁 Claim case", "🎁 Подарок: {0} → в Инвентаре": "🎁 Gift: {0} → in Inventory", "Редкость": "Rarity", "Шанс карты": "Card chance", "Шанс фона": "Background chance", "Общая редкость": "Overall rarity", "Обычная": "Common", "Необычная": "Uncommon", "Редкая": "Rare", "Эпическая": "Epic", "Легендарная": "Legendary", "Мифическая": "Mythic", "Абсолют": "Absolute", "Шрифт": "Font", "Классика": "Classic", "Техно": "Tech", "Мягкий": "Soft", "Строгий": "Strict", "Элегантный": "Elegant", "Ретро": "Retro", "Неон": "Neon", "Полночь": "Midnight", "Закат": "Sunset", "Океан": "Ocean", "Лес": "Forest", "Графит": "Graphite", "Аврора": "Aurora", "Цвета фона подстраиваются под выбранную тему (светлую или тёмную).": "Background colors adapt to the selected theme (light or dark)."});
-const NFTL=[["🍬", "Candy Cane", "Леденцовая трость", 1], ["🍭", "Lol Pop", "Лол Поп", 2], ["🐰", "Jelly Bunny", "Желейный кролик", 3], ["🍪", "Ginger Cookie", "Имбирное печенье", 4], ["🎇", "Party Sparkler", "Бенгальский огонь", 5], ["❄️", "Snow Globe", "Снежный шар", 7], ["🕯️", "B-Day Candle", "Свеча на торт", 9], ["🥚", "Easter Egg", "Пасхальное яйцо", 12], ["🎅", "Santa Hat", "Шапка Санты", 15], ["🍰", "Homemade Cake", "Домашний торт", 20], ["🍷", "Spiced Wine", "Глинтвейн", 25], ["🧦", "Xmas Stocking", "Новогодний носок", 30], ["🧿", "Evil Eye", "Сглаз", 40], ["🐍", "Lunar Snake", "Лунная змея", 55], ["🍄", "Spy Agaric", "Шпионский мухомор", 75], ["⚔️", "Light Sword", "Световой меч", 100], ["💋", "Kissed Frog", "Поцелованная лягушка", 140], ["🪆", "Voodoo Doll", "Кукла вуду", 200], ["🃏", "Jester Hat", "Шутовской колпак", 280], ["🐱", "Neko Helmet", "Шлем Неко", 400], ["🙀", "Scared Cat", "Испуганный кот", 550], ["🎩", "Top Hat", "Цилиндр", 800], ["🪔", "Genie Lamp", "Лампа джинна", 1200], ["⌚", "Swiss Watch", "Швейцарские часы", 2000], ["🧴", "Perfume Bottle", "Флакон духов", 3000], ["🧪", "Magic Potion", "Волшебное зелье", 4500], ["💀", "Electric Skull", "Электрочереп", 7000], ["🏆", "Mini Oscar", "Мини-Оскар", 11000], ["🐕", "Snoop Dogg", "Snoop Dogg", 17000], ["💠", "Astral Shard", "Астральный осколок", 26000], ["💎", "Ion Gem", "Ионный кристалл", 40000], ["💍", "Diamond Ring", "Бриллиантовое кольцо", 60000], ["📿", "Nail Bracelet", "Браслет-гвоздь", 90000], ["🌹", "Eternal Rose", "Вечная роза", 130000], ["💪", "Mighty Arm", "Могучая рука", 180000], ["🪖", "Heroic Helmet", "Шлем героя", 250000], ["💝", "Heart Locket", "Медальон-сердце", 280000], ["🐸", "Plush Pepe", "Plush Pepe", 400000]];
+const NFTL=[["🍬", "Candy Cane", "Леденцовая трость", 1.22], ["🍭", "Lol Pop", "Лол Поп", 1.85], ["🐰", "Jelly Bunny", "Желейный кролик", 2.4], ["🍪", "Ginger Cookie", "Имбирное печенье", 3.15], ["🎇", "Party Sparkler", "Бенгальский огонь", 3.9], ["❄️", "Snow Globe", "Снежный шар", 4.6], ["🕯️", "B-Day Candle", "Свеча на торт", 5.35], ["🥚", "Easter Egg", "Пасхальное яйцо", 6.2], ["🎅", "Santa Hat", "Шапка Санты", 7.1], ["🍰", "Homemade Cake", "Домашний торт", 8.45], ["🍷", "Spiced Wine", "Глинтвейн", 9.8], ["🧦", "Xmas Stocking", "Новогодний носок", 11.4], ["🧿", "Evil Eye", "Сглаз", 14.9], ["🐍", "Lunar Snake", "Лунная змея", 18.5], ["🍄", "Spy Agaric", "Шпионский мухомор", 23.7], ["⚔️", "Light Sword", "Световой меч", 30.4], ["💋", "Kissed Frog", "Поцелованная лягушка", 37.2], ["🪆", "Voodoo Doll", "Кукла вуду", 45.5], ["🃏", "Jester Hat", "Шутовской колпак", 68], ["🐱", "Neko Helmet", "Шлем Неко", 95], ["🙀", "Scared Cat", "Испуганный кот", 135], ["🎩", "Top Hat", "Цилиндр", 190], ["🪔", "Genie Lamp", "Лампа джинна", 270], ["⌚", "Swiss Watch", "Швейцарские часы", 380], ["🧴", "Perfume Bottle", "Флакон духов", 510], ["🧪", "Magic Potion", "Волшебное зелье", 680], ["💀", "Electric Skull", "Электрочереп", 900], ["🏆", "Mini Oscar", "Мини-Оскар", 1250], ["🐕", "Snoop Dogg", "Snoop Dogg", 1500], ["💠", "Astral Shard", "Астральный осколок", 1750], ["💎", "Ion Gem", "Ионный кристалл", 2000], ["💍", "Diamond Ring", "Бриллиантовое кольцо", 2300], ["📿", "Nail Bracelet", "Браслет-гвоздь", 2650], ["🌹", "Eternal Rose", "Вечная роза", 3000], ["💪", "Mighty Arm", "Могучая рука", 3350], ["🪖", "Heroic Helmet", "Шлем героя", 3650], ["💝", "Heart Locket", "Медальон-сердце", 3900], ["🐸", "Plush Pepe", "Plush Pepe", 7650]];
 /* v5.0: каталог в духе NFT-подарков Telegram: самый дорогой — 400 000 $ × фон до ×1,25 = 500 000 $ */
 const CARDS=NFTL.map(a=>({i:a[0],e:a[1],r:a[2],get n(){return LANG==="en"?this.e:this.r},p:a[3]})).sort((a,b)=>a.p-b.p);
-CARDS.forEach(k=>{if(k.p>=280000)k.top=true});
+CARDS.forEach(k=>{if(k.p>=3900)k.top=true});
 const BGN=o=>1+.25*Math.pow(o/8e4,1.2);
-const BGS=("Серый мел|Gray Chalk,#555a66,#3c404a,0,28;Песочный|Sandy,#d2b27a,#8f6f3c,300,20;Небесный|Sky,#5db2ff,#2a5db0,800,13;Мята|Mint,#6fe3c1,#1f8f77,1200,11;Нефрит|Jade,#2fbf8f,#0f6b50,1800,9;Лаванда|Lavender,#b79cff,#6a4fc4,2300,8;Закат|Sunset,#ff9a5c,#c2406a,2700,7;Золотая роза|Gold Rose,#f7c873,#b8505e,3000,6;Янтарь|Amber,#ffc14d,#b36a00,3500,5;Рубин|Ruby,#ff4d6d,#7a0f2b,4200,4.2;Сапфир|Sapphire,#3d7bff,#0a1f66,5000,3.6;Изумруд|Emerald,#20e08a,#02593a,6000,3;Океан|Ocean,#00d0ff,#003a6b,7000,2.4;Чёрный нефрит|Black Nephrite,#1c1c1c,#050505,8000,2;Космос|Cosmos,#7b4dff,#0a0630,9500,1.6;Неон|Neon,#ff2bd6,#00a5c4,11000,1.2;Огонь|Fire,#ffb800,#ff2d2d,13000,.9;Платина|Platinum,#c9cde0,#7b8099,15000,.6;Аврора|Aurora,#4dffb8,#b84dff,18000,.35;Бриллиант|Diamond,#9fe8ff,#5a9fff,20000,.2;Бордо|Bordeaux,#7a1f3d,#3a0a1c,900,2.7;Индиго|Indigo,#5b5bd6,#1a1a66,1400,2.25;Бирюза|Turquoise,#40e0d0,#0f8b8d,2000,1.8;Сакура|Sakura,#ffc2d6,#e0709a,2600,1.53;Лайм|Lime,#c6ff3d,#3b9b0a,3200,1.35;Мандарин|Tangerine,#ffa940,#e8590c,3800,1.17;Мрамор|Marble,#f4f4f6,#b9bccb,4500,0.99;Карбон|Carbon,#2b2b33,#101015,5500,0.81;Лёд|Ice,#e0f7ff,#6ec1ff,6500,0.675;Лава|Lava,#ff7a00,#8a0f00,8000,0.54;Токсик|Toxic,#b6ff00,#00a86b,9500,0.45;Розовое золото|Rose Gold,#f6c1b2,#c77d6d,11000,0.36;Глубина|Abyss,#0b3d91,#000814,13000,0.293;Хром|Chrome,#ffffff,#6b7280,16000,0.225;Кибер|Cyber,#00f0ff,#ff00aa,20000,0.18;Галактика|Galaxy,#1b0b3b,#6a00f4,#ff2bd6,25000,0.135;Голограмма|Hologram,#8ff7ff,#ff9ff3,#fffb8f,32000,0.09;Радуга|Rainbow,#ff5c5c,#5cff8a,#5c7cff,40000,0.054;Королевское золото|Royal Gold,#fff1a8,#d4a017,#7a5200,55000,0.032;Абсолют|Absolute,#ffffff,#00e5ff,#7a00ff,80000,0.013").split(";").map(s=>{const a=s.split(","),nm=a[0].split("|"),q=a.length;return{r:nm[0],e:nm[1],get n(){return LANG==="en"?this.e:this.r},css:`linear-gradient(135deg,${a.slice(1,q-2).join(",")})`,o:+a[q-2],b:BGN(+a[q-2]),w:+a[q-1]}});
+const BGS=("Серый мел|Gray Chalk,#555a66,#3c404a,0,28;Песочный|Sandy,#d2b27a,#8f6f3c,300,20;Небесный|Sky,#5db2ff,#2a5db0,800,13;Мята|Mint,#6fe3c1,#1f8f77,1200,11;Нефрит|Jade,#2fbf8f,#0f6b50,1800,9;Лаванда|Lavender,#b79cff,#6a4fc4,2300,8;Закат|Sunset,#ff9a5c,#c2406a,2700,7;Золотая роза|Gold Rose,#f7c873,#b8505e,3000,6;Янтарь|Amber,#ffc14d,#b36a00,3500,5;Рубин|Ruby,#ff4d6d,#7a0f2b,4200,4.2;Сапфир|Sapphire,#3d7bff,#0a1f66,5000,3.6;Изумруд|Emerald,#20e08a,#02593a,6000,3;Океан|Ocean,#00d0ff,#003a6b,7000,2.4;Чёрный нефрит|Black Nephrite,#1c1c1c,#050505,8000,2;Космос|Cosmos,#7b4dff,#0a0630,9500,1.6;Неон|Neon,#ff2bd6,#00a5c4,11000,1.2;Огонь|Fire,#ffb800,#ff2d2d,13000,.9;Платина|Platinum,#c9cde0,#7b8099,15000,.6;Аврора|Aurora,#4dffb8,#b84dff,18000,.35;Бриллиант|Diamond,#9fe8ff,#5a9fff,20000,.2;Бордо|Bordeaux,#7a1f3d,#3a0a1c,900,2.7;Индиго|Indigo,#5b5bd6,#1a1a66,1400,2.25;Бирюза|Turquoise,#40e0d0,#0f8b8d,2000,1.8;Сакура|Sakura,#ffc2d6,#e0709a,2600,1.53;Лайм|Lime,#c6ff3d,#3b9b0a,3200,1.35;Мандарин|Tangerine,#ffa940,#e8590c,3800,1.17;Мрамор|Marble,#f4f4f6,#b9bccb,4500,0.99;Карбон|Carbon,#2b2b33,#101015,5500,0.81;Лёд|Ice,#e0f7ff,#6ec1ff,6500,0.675;Лава|Lava,#ff7a00,#8a0f00,8000,0.54;Токсик|Toxic,#b6ff00,#00a86b,9500,0.45;Розовое золото|Rose Gold,#f6c1b2,#c77d6d,11000,0.36;Глубина|Abyss,#0b3d91,#000814,13000,0.293;Хром|Chrome,#ffffff,#6b7280,16000,0.225;Кибер|Cyber,#00f0ff,#ff00aa,20000,0.18;Галактика|Galaxy,#1b0b3b,#6a00f4,#ff2bd6,25000,0.135;Голограмма|Hologram,#8ff7ff,#ff9ff3,#fffb8f,32000,0.09;Радуга|Rainbow,#ff5c5c,#5cff8a,#5c7cff,40000,0.054;Королевское золото|Royal Gold,#fff1a8,#d4a017,#7a5200,55000,0.032;Абсолют|Absolute,#ffffff,#00e5ff,#7a00ff,80000,0.013;Паутина|Cobweb,#8fb07a,#5e8a52,300,8;Тёмная роза|Dusty Mauve,#9a6676,#6e3f50,300,8;Терракота|Terracotta,#d9795b,#b04c36,300,8").split(";").map(s=>{const a=s.split(","),nm=a[0].split("|"),q=a.length;return{r:nm[0],e:nm[1],get n(){return LANG==="en"?this.e:this.r},css:`linear-gradient(135deg,${a.slice(1,q-2).join(",")})`,o:+a[q-2],b:BGN(+a[q-2]),w:+a[q-1]}});
 const AB=(()=>{let s=0,w=0;BGS.forEach(b=>{const x=Math.pow(b.w,1.5);s+=x*b.b;w+=x});return s/w})();
-const nfv=(ci,g)=>Math.round(CARDS[ci].p*BGS[g].b);
+const nfv=(ci,g)=>r2(CARDS[ci].p*BGS[g].b);
 /* Редкость: шанс карты и фона по всей игре (в %) */
 let SWC=CARDS.reduce((s,k)=>s+Math.pow(1/k.p,1.5),0),SWB=BGS.reduce((s,b)=>s+Math.pow(b.w,1.5),0),chC=i=>100*Math.pow(1/CARDS[i].p,1.5)/SWC,chB=g=>100*Math.pow(BGS[g].w,1.5)/SWB;
 const fmtPct=x=>{if(!(x>0))return"0%";if(x>=10)return x.toFixed(1)+"%";if(x>=1)return x.toFixed(2)+"%";if(x<1e-5){const q=x.toExponential(1).split("e");return q[0]+"·10"+q[1].replace("-","⁻").replace(/\d/g,d=>"⁰¹²³⁴⁵⁶⁷⁸⁹"[d])+"%"}const d=Math.min(15,3-Math.floor(Math.log10(x)));return x.toFixed(d).replace(/0+$/,"")+"%"};
@@ -681,12 +700,12 @@ const RTI=[[.05,"Обычная","#9aa0ad"],[.005,"Необычная","#4aa3ff"
 const rarOf=c=>{const k=CARDS[c.c],a=chC(c.c),b=chB(c.g),x=a*b/100;let n,col;if(k.top){n="Абсолют";col="#f5b400"}else if(k.rare){n="Раритет";col="#ff5cc8"}else{const r=RTI.find(q=>x>=q[0])||RTI[5];n=r[1];col=r[2]}return{a,b,t:x,n,col}};
 const rg=(a,b)=>{const r=[];for(let i=a;i<b;i++)r.push(i);return r};
 /* v5.0: шесть дропов вместо тридцати шести + токен-дроп */
-const NFC=[["Стартовый дроп","🎒",1,5],["Бронзовый дроп","🥉",3,40],["Серебряный дроп","🥈",12,300],["Золотой дроп","🥇",75,2e3],["Алмазный дроп","💎",800,3e4],["Джекпот дроп","🎰",4500,5e5]];
-const nfNice=x=>x<20?Math.max(1,Math.round(x)):x<200?Math.round(x/5)*5:x<2e3?Math.round(x/50)*50:Math.round(x/500)*500;
+const NFC=[["Стартовый дроп","🎒",1,5],["Бронзовый дроп","🥉",3,30],["Серебряный дроп","🥈",10,150],["Золотой дроп","🥇",45,600],["Алмазный дроп","💎",300,2500],["Джекпот дроп","🎰",1500,8000]];
+const r2=x=>Math.round(x*100)/100;const nfNice=x=>x<20?Math.max(.5,r2(x)):x<200?Math.round(x*2)/2:x<2e3?Math.round(x/5)*5:Math.round(x/25)*25;
 const nfSel=(lo,hi)=>CARDS.map((k,i)=>k.p>=lo&&k.p<=hi?i:-1).filter(i=>i>=0);
 const nfEv=cs=>{let s=0,w=0;cs.forEach(i=>{const x=Math.pow(1/CARDS[i].p,1.5);s+=x*CARDS[i].p*AB;w+=x});return s/w};
 const CASES=NFC.map((x,k)=>{const cards=nfSel(x[2],x[3]);return{id:k,get n(){return tt(x[0])},i:x[1],cards,price:nfNice(nfEv(cards)*1.12)}});
-CASES.push({id:CASES.length,get n(){return tt("Токен-дроп")},i:"◈",cards:nfSel(5,150),price:0,gem:4});
+CASES.push({id:CASES.length,get n(){return tt("Токен-дроп")},i:"◈",cards:nfSel(3,150),price:0,gem:4});
 const byPrice=L=>L.slice().sort((a,b)=>(a.gem?1e18:a.price)-(b.gem?1e18:b.price));
 const DAV=["😎","🤠","🥷","🧑‍🚀","🦸","🧙","👾","🐱","🐺","🦊","🤖","👑"];
 /* ===== Аватарки v7: маскоты в стиле карт — плоская графитовая плитка, цветной персонаж, тёмные черты ===== */
@@ -720,7 +739,7 @@ let DB_URL="";
 /* Единое серверное время: шаги цены акций и события считаются от него, а не от часов устройства */
 let TOFF=0,TSYNC=0,TBUSY=0;const nowS=()=>Date.now()+TOFF;
 Object.assign(EN,{"🎁 Подарок от админа: +{0} $":"🎁 Gift from admin: +{0} $","Объявление":"Announcement"});
-const START=2,SELL=.8,FEE=.95;
+const START=5,SELL=.8,FEE=.95;
 /* ===== v5: подписки KX, NFT-арт карт ===== */
 const SUBS=[null,{n:"KX Plus",g:60,cd:.05,sl:.04,fe:.01,tx:.1,gx:.05,ch:1.5,hd:"Старт для тех, кто играет каждый день",pk:["Сундук дня ×1.5"]},{n:"KX Pro",g:150,cd:.1,sl:.08,fe:.02,tx:.2,gx:.1,ch:2,qm:1.5,hd:"Для тех, кто охотится за наградами",pk:["Сундук дня ×2","Награды заданий ×1.5"]},{n:"KX Elite",g:360,cd:.15,sl:.12,fe:.03,tx:.3,gx:.15,ch:3,qm:2,xp:1.5,wk:2,hd:"Для тех, кому нужно всё и сразу",pk:["Сундук дня ×3","Награды заданий ×2","XP батлпасса ×1.5","Подработка ×2"]}],SUBZ={cd:0,sl:0,fe:0,tx:0,gx:0},SUBMS=30*864e5;const subT=()=>S&&S.sub&&S.sub.exp>Date.now()?S.sub.t:0,SUB=()=>SUBS[subT()]||SUBZ,subX=k=>SUB()[k]||1,fmtD=ms=>Math.ceil(ms/864e5)+" "+tt("дн.");
 function subHTML(){const t=subT(),left=t?S.sub.exp-Date.now():0,P=v=>Math.round(v*100);
@@ -781,7 +800,8 @@ const _hx=h=>{h=h.slice(1);if(h.length<6)h=h.replace(/./g,"$&$&");return[0,2,4].
 const _gid=h=>{h=h.toLowerCase();const id="nf"+h.slice(1);if(!_gr[id]){const c=_hx(h);_gr[id]=`<radialGradient id="${id}" cx=".34" cy=".26" r=".95"><stop offset="0" stop-color="${_mx(c,255,.5)}"/><stop offset=".5" stop-color="${h}"/><stop offset="1" stop-color="${_mx(c,0,.4)}"/></radialGradient>`;let e=document.getElementById("nfdefs");if(!e){e=document.createElement("div");e.id="nfdefs";e.style.cssText="position:absolute;width:0;height:0;overflow:hidden";(document.body||document.documentElement).appendChild(e)}e.innerHTML='<svg width="0" height="0"><defs>'+Object.values(_gr).join("")+"</defs></svg>"}return"url(#"+id+")"};
 /* Модели (варианты) карт */
 const PEPEV=[["Классический",70,1],["Красный",20,1.6],["Золотой",8,3.5],["Галактика",2,8]],GENV=[["Обычная",78,1],["Золотая",16,1.8],["Ледяная",6,3]],GVF=["","sepia(1) saturate(2.4) hue-rotate(-8deg) brightness(1.12)","hue-rotate(150deg) saturate(1.15) brightness(1.08)"];
-const varsOf=ci=>CARDS[ci]&&CARDS[ci].e==="Plush Pepe"?PEPEV:GENV,vIdx=(ci,v)=>varsOf(ci)[v|0]?v|0:0,vn=c=>varsOf(c.c)[vIdx(c.c,c.v)][0],vm=c=>varsOf(c.c)[vIdx(c.c,c.v)][2];
+const VOODV=[["Имбирная",60,1],["Жёлтая",25,1.032],["Синяя",15,1.053]],VGF=["","hue-rotate(22deg) saturate(2.4) brightness(1.3)","hue-rotate(185deg) saturate(1.7) brightness(.95)"];
+const varsOf=ci=>CARDS[ci]&&CARDS[ci].e==="Plush Pepe"?PEPEV:CARDS[ci]&&CARDS[ci].e==="Voodoo Doll"?VOODV:GENV,vIdx=(ci,v)=>varsOf(ci)[v|0]?v|0:0,vn=c=>varsOf(c.c)[vIdx(c.c,c.v)][0],vm=c=>varsOf(c.c)[vIdx(c.c,c.v)][2];
 const rollVar=ci=>{const L=varsOf(ci);return L.indexOf(wpick(L,a=>a[1]))};
 const PEPP=[{b:["#86c93f","#4a9a2b"],o:"#1b5a12",l:["#ee5a4a","#b52a22"],lo:"#7a1812",e:"#1f5a68",h:["#f59af2","#a93cba"],a:"#5aa530",d:0},
 {b:["#f04a3a","#a81818"],o:"#5a0a0a",l:["#8cd04a","#3a8a22"],lo:"#1f5a12",e:"#1f5a68",h:["#ff8aea","#b83cc0"],a:"#c02020",d:1},
@@ -800,7 +820,7 @@ const PEPE=v=>{const q=PEPP[v]||PEPP[0],n=PEPP[v]?v:0,G=(id,a,b,r)=>`<${r?"radia
 ${q.g?"<circle cx='52' cy='66' r='24' fill='url(#pg)' stroke='none'/>":""}<path d='M52 86C27 69 27 48 41 48C47 48 51 51 52 56C53 51 57 48 63 48C77 48 77 69 52 86z' fill='url(#ph${n})' stroke='${q.h[1]}' stroke-width='1.4'/>
 <path d='M26 56C36 71 52 77 65 68' fill='none' stroke='${q.o}' stroke-width='9.5' stroke-linecap='round'/><path d='M26 56C36 71 52 77 65 68' fill='none' stroke='${q.a}' stroke-width='6' stroke-linecap='round'/>
 <path d='M79 54C71 67 60 73 47 71' fill='none' stroke='${q.o}' stroke-width='9.5' stroke-linecap='round'/><path d='M79 54C71 67 60 73 47 71' fill='none' stroke='${q.g?"#ffd23a":q.a}' stroke-width='6' stroke-linecap='round'/>${sp}`};
-const nftArt=(ci,v)=>{const k=CARDS[ci];if(!k)return"";v=vIdx(ci,v);const key="n"+ci+"_"+v;return _ac[key]||(_ac[key]=`<svg class="art" viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="90" rx="27" ry="4.5" fill="#000" opacity=".3"/>${k.e==="Plush Pepe"?`<g stroke="rgba(0,0,0,.3)" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round">${PEPE(v)}</g>`:`<g${v&&GVF[v]?` style="filter:${GVF[v]}"`:""}>${NA[k.e]?`<g stroke="rgba(0,0,0,.3)" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" style="filter:drop-shadow(0 4px 3px rgba(0,0,0,.3))">${NA[k.e].replace(/fill='(#[0-9a-fA-F]{3,6})'/g,(m,h)=>"fill='"+_gid(h)+"'")}</g>`:`<text x="50" y="52" font-size="62" text-anchor="middle" dominant-baseline="central" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif">${k.i}</text>`}</g>`}</svg>`)};
+const nftArt=(ci,v)=>{const k=CARDS[ci];if(!k)return"";v=vIdx(ci,v);const key="n"+ci+"_"+v;return _ac[key]||(_ac[key]=`<svg class="art" viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="90" rx="27" ry="4.5" fill="#000" opacity=".3"/>${k.e==="Plush Pepe"?`<g stroke="rgba(0,0,0,.3)" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round">${PEPE(v)}</g>`:`<g${v&&(k.e==="Voodoo Doll"?VGF:GVF)[v]?` style="filter:${(k.e==="Voodoo Doll"?VGF:GVF)[v]}"`:""}>${NA[k.e]?`<g stroke="rgba(0,0,0,.3)" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" style="filter:drop-shadow(0 4px 3px rgba(0,0,0,.3))">${NA[k.e].replace(/fill='(#[0-9a-fA-F]{3,6})'/g,(m,h)=>"fill='"+_gid(h)+"'")}</g>`:`<text x="50" y="52" font-size="62" text-anchor="middle" dominant-baseline="central" font-family="'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif">${k.i}</text>`}</g>`}</svg>`)};
 const art=(ci,v)=>nftArt(ci,v),artE=e=>`<span class="emo" style="font-size:46px;line-height:1;display:block;padding-top:4px">${e[2]}</span>`;
 /* ===== v6: арты-маскоты остаются, названия подобраны под нарисованное; новые ящики для дропов ===== */
 Object.assign(EN,{"{0} карт · {1} – {2} $":"{0} cards · {1} – {2} $","С возвращением! Войди, чтобы продолжить":"Welcome back! Sign in to continue","Создай аккаунт и открой свой первый дроп":"Create an account and open your first case","Прогресс хранится в облаке — заходи с любого устройства":"Progress is stored in the cloud — sign in from any device"});
@@ -833,7 +853,7 @@ let invTab="c",S=def(),M=[],busy=false,cnt=0,cur="cases",IN={},inBusy=0;
 const $=id=>document.getElementById(id);
 const NU=()=>LANG==="en"?[[1e33,"Dc"],[1e30,"No"],[1e27,"Oc"],[1e24,"Sp"],[1e21,"Sx"],[1e18,"Qi"],[1e15,"Qa"],[1e12,"T"],[1e9,"B"],[1e6,"M"]]:[[1e33,"дец"],[1e30,"нон"],[1e27,"окт"],[1e24,"септ"],[1e21,"секст"],[1e18,"квинт"],[1e15,"квадр"],[1e12,"трлн"],[1e9,"млрд"],[1e6,"млн"]];
 /* v3.7: от 1 млн числа всегда сокращаются: 1.6млн, 2.5млрд, 19.9квадр */
-const fmt=n=>{n=+n;if(!isFinite(n))return"∞";const a=Math.abs(n),r=Math.round(a),s=n<0&&r>0?"-":"";if(a<1e6)return s+r.toLocaleString(LOC);if(a>=1e36)return s+a.toExponential(2).replace("e+","e");const U=NU();let i=U.findIndex(u=>a>=u[0]);if(i<0)i=U.length-1;let v=Math.round(a/U[i][0]*100)/100;if(v>=1000&&i>0){i--;v=Math.round(a/U[i][0]*100)/100}return s+String(v)+U[i][1]};
+const fmt=n=>{n=+n;if(!isFinite(n))return"∞";const a=Math.abs(n),r=Math.round(a),s=n<0&&r>0?"-":"";if(a<1e4){const q=Math.round(a*100)/100;return s+q.toLocaleString(LOC,{minimumFractionDigits:Number.isInteger(q)?0:2,maximumFractionDigits:2})}if(a<1e6)return s+r.toLocaleString(LOC);if(a>=1e36)return s+a.toExponential(2).replace("e+","e");const U=NU();let i=U.findIndex(u=>a>=u[0]);if(i<0)i=U.length-1;let v=Math.round(a/U[i][0]*100)/100;if(v>=1000&&i>0){i--;v=Math.round(a/U[i][0]*100)/100}return s+String(v)+U[i][1]};
 const fmtC=fmt,fl2=x=>Math.floor(x*100+1e-6)/100,ce2=x=>Math.ceil(x*100-1e-6)/100,fmtB=n=>{n=+n;if(!isFinite(n)||Math.abs(n)>=1e5)return fmt(n);const r=Math.round(n*100)/100;return r.toLocaleString(LOC,{minimumFractionDigits:2,maximumFractionDigits:2})};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 /* Состояние карт: cn = % на момент ct (только у карт в инвентаре износ идёт со временем) */
@@ -847,8 +867,8 @@ const idm=id=>{id=Math.floor(+id||0);if(id<1)return 1;if(IDSP[id])return IDSP[id
   let m=id<10?3-(id-2)*.15:id<100?1.8-(id-10)/90*.5:id<1000?1.3-(id-100)/900*.2:id<10000?1.1-(id-1000)/9000*.1:1;
   const t=String(id);if(t.length>1&&/^(\d)\1+$/.test(t))m=Math.max(m,[0,0,2.5,2.2,2,1.8][Math.min(t.length,5)]);
   return Math.round(m*100)/100};
-const bval=c=>Math.round(nfv(c.c,c.g)*idm(c.id)*vm(c));
-const val=c=>Math.round(bval(c)*cmult(cond(c)));
+const bval=c=>r2(nfv(c.c,c.g)*idm(c.id)*vm(c));
+const val=c=>r2(bval(c)*cmult(cond(c)));
 const CST=[[30,"Хлам","#9aa0ad"],[60,"Покоцанный","#ff9a3d"],[90,"Поцарапанный","#ffd43b"],[101,"Прямиком с завода","#19f58f"]];
 const cinfo=x=>CST.find(t=>x<t[0])||CST[3],cname=x=>tt(cinfo(Math.floor(x))[1]);
 const rollCond=()=>{const t=wpick([[0,30,28],[30,60,38],[60,90,26],[90,100,8]],a=>a[2]);const x=Math.round(rnd(t[0],t[1])*10)/10;return evNow().t==="cond"?Math.min(100,x+15):x};
@@ -917,7 +937,7 @@ function upd(){if(isFinite(S.bal))S.bal=Math.round(S.bal*100)/100;$("bal").textC
 function rHead(){$("head").innerHTML=avHTML(S.prof.av,36)+`<span>${esc(S.prof.nick||tt("Игрок"))}</span>`}
 
 /* Акции (общие для всех, каждые 10 минут) */
-const EVT=6e5,GX=50;let evS=-1;
+const EVT=6e5,GX=2.5;let evS=-1;
 function evNow(){const k=Math.floor(nowS()/EVT),r=h32(k*7919+13),q=h32(k*104729+7);let e;
   if(r<.26){const c=Math.floor(q*(CASES.length-1)),p=[10,15,20,25][Math.floor(h32(k+99)*4)];e={t:"c",k:c,pct:p,txt:`${CASES[c].n} −${p}%`}}
   else if(r<.28)e={t:"xp",txt:tt("Батлпасс: XP ×2")};
@@ -935,8 +955,8 @@ function evNow(){const k=Math.floor(nowS()/EVT),r=h32(k*7919+13),q=h32(k*104729+
   else e={t:"free",txt:tt("Подарок: бесплатный дроп — забери!")};
   e.end=(k+1)*EVT;return e}
 function disc(c){if(c.gem)return 0;const e=evNow();return e.t==="all"||(e.t==="c"&&e.k===c.id)?e.pct:0}
-const wtax=()=>1+.35*Math.max(0,Math.log10(Math.max(1,S.bal)/2e5))*(1-.12*(S.vl||0))*(1-SUB().tx);
-const cprice=c=>c.gem?c.price:Math.max(1,Math.round(c.price*wtax()*(1-disc(c)/100)*(modOn("cheap")?.85:1)*(1-SUB().cd)));
+const wtax=()=>1+.35*Math.max(0,Math.log10(Math.max(1,S.bal)/3e4))*(1-.12*(S.vl||0))*(1-SUB().tx);
+const cprice=c=>c.gem?c.price:Math.max(.5,r2(c.price*wtax()*(1-disc(c)/100)*(modOn("cheap")?.85:1)*(1-SUB().cd)));
 const gxRate=()=>GX*(evNow().t==="gx"?.7:1)*(modOn("gxd")?.7:1)*(1-SUB().gx);
 const sellRate=()=>modOn("nofee")?1:Math.min(1,SELL+(evNow().t==="sell"?.1:0)+nbBonus()+SUB().sl);
 function newsAdd(x){S.news=S.news||[];S.news.unshift({t:Date.now(),x:x});if(S.news.length>10)S.news.length=10}
@@ -1027,13 +1047,13 @@ function rSnd(){$("snd").textContent=S.snd?tt("🔊 Звук: вкл"):tt("🔇 
 $("snd").onclick=()=>{S.snd=!S.snd;rSnd();save();sfx("coin")};
 
 /* Бонус новичка: чем меньше баланс, тем выше цена продажи карт */
-const NB_MAX=.25,NB_LIM=25e4;
+const NB_MAX=.25,NB_LIM=3e3;
 const nbBonus=()=>Math.max(0,NB_MAX*(1-S.bal/NB_LIM));
 function rNb(){const b=nbBonus(),p=Math.round(b*100),el=$("nbBox");el.hidden=p<1;if(p<1)return;
   el.innerHTML=`<div class="top"><b>🚀 ${tt("Бонус новичка")}</b><span class="good"><b>+${p}%</b> ${tt("к продаже карт")}</span></div><div class="nbar"><i style="width:${Math.round(b/NB_MAX*100)}%"></i></div><div class="hint" style="margin:6px 0 0">${tt("Действует, пока баланс меньше {0} $. Чем меньше денег — тем выше бонус.",fmt(NB_LIM))}</div>`}
 
 /* Налог на богатство */
-const TAX_FREE=2e5,TAX_HI=5e5,TR1=.02,TR2=.05;
+const TAX_FREE=3e4,TAX_HI=1e5,TR1=.02,TR2=.05;
 const taxDay=b=>Math.max(0,Math.min(b,TAX_HI)-TAX_FREE)*TR1+Math.max(0,b-TAX_HI)*TR2;
 function taxTick(){const m=(Date.now()-S.taxTs)/6e4;if(m<1)return 0;S.taxTs=Date.now();if(evNow().t==="notax")return 0;
   const t=Math.min(Math.floor(taxDay(S.bal)*Math.min(m,4320)/1440),Math.floor(S.bal*.5));if(t>0){S.bal-=t;S.taxPaid+=t}return t}
@@ -1044,7 +1064,7 @@ function rOwn(){const L=byPrice(CASES.filter(c=>S.cases[c.id]>0)),tot=L.reduce((
   $("ownCases").innerHTML=L.map(c=>`<div class="case dc"><div class="cart"><span class="chip dcq">×${S.cases[c.id]}</span>${caseArt(c.id)}</div><div class="cbd"><div class="cnm">${c.n}</div><div class="cmt">${csMeta(c)}</div><button class="btn" data-a="case" data-v="${c.id}" ${busy?"disabled":""}>${tt("Открыть")}</button><button class="btn alt" data-a="cinsp" data-v="${c.id}">${tt("Инспект")}</button>${S.cases[c.id]>100?`<button class="btn" data-a="mall" data-v="${c.id}" ${busy?"disabled":""} style="width:100%;margin-bottom:6px">${tt("Открыть ВСЕ")} (${S.cases[c.id]}) · ${tt("авто-продажа")}</button>`:""}<div class="r2">${S.cases[c.id]>10?`<button class="btn alt" data-a="mopen" data-v="${c.id}|10" ${busy?"disabled":""}>×10</button>`:""}${S.cases[c.id]>1?`<button class="btn alt" data-a="mopen" data-v="${c.id}|100" ${busy?"disabled":""}>${tt("Все")} (${Math.min(100,S.cases[c.id])})</button>`:""}</div></div></div>`).join("")||`<div class="empty">${tt("Нет дропов")}</div>`;
   if(!tot&&!busy)$("rw").style.display="none";
   $("itc").textContent=`${tt("Дропы")} (${tot})`;$("itk").textContent=`${tt("Карты")} (${S.inv.length})`}
-function itab(v){invTab=v;$("invC").hidden=v!=="c";$("invK").hidden=v!=="k";$("invF").hidden=v!=="f";$("itc").classList.toggle("alt",v!=="c");$("itk").classList.toggle("alt",v!=="k");$("itf").classList.toggle("alt",v!=="f");if(v==="f")rCraft()}
+function itab(v){invTab=v;$("invC").hidden=v!=="c";$("invK").hidden=v!=="k";$("invF").hidden=v!=="f";$("itc").classList.toggle("alt",v!=="c");$("itk").classList.toggle("alt",v!=="k");$("itf").classList.toggle("alt",v!=="f");if(v==="f")rSets()}
 function openCase(cs){
   if(busy||!(S.cases[cs.id]>0))return;
   busy=true;S.cases[cs.id]--;sfx("init");$("rw").style.display="";upd();
@@ -1070,7 +1090,7 @@ function sell(id){closeM();const i=S.inv.findIndex(x=>x.id===id);if(i<0)return;c
 function sellEvery(){if(!S.inv.length)return;const t=S.inv.reduce((a,c)=>a+fl2(val(c)*sellRate()),0);
   if(!confirm(tt("Продать все карты ({0}) за {1} $?",S.inv.length,fmtB(t))))return;
   gEv("sell",S.inv.length);S.bal+=t;S.inv=[];S.prof.show=[];sfx("coin");toast(tt("Продано за {0} $",fmtB(t)));upd();rInv();rProf()}
-function rInv(){if(invTab==="f"&&$("crList"))rCraft();
+function rInv(){if(invTab==="f")rSets();
   {const b=$("sellEvery");b.hidden=!S.inv.length;b.textContent=tt("Продать все карты")+" · "+fmtB(S.inv.reduce((a,c)=>a+fl2(val(c)*sellRate()),0))+" $"}
   const tot=S.inv.reduce((s,c)=>s+val(c),0);
   $("invInfo").hidden=!S.inv.length;$("invInfo").textContent=S.inv.length?`${tt("Карточек")}: ${S.inv.length} · ${tt("общая стоимость")} ${fmt(tot)} $`:"";
@@ -1084,8 +1104,8 @@ function rMarket(){
   $("mlots").innerHTML=L.length?L.slice().sort((a,b)=>a.price/val(a)-b.price/val(b)).map(l=>{const r=l.price/val(l);return `<div class="item">${cardHTML(l)}<div class="sub">${esc(l.sn)}</div><button class="btn sm" data-a="buy" data-v="${esc(l.id)}" ${S.bal<l.price?"disabled":""}>${tt("Купить")} ${fmt(l.price)} <span class="${r<1?"good":"bad"}">(${Math.round(r*100)}%)</span></button></div>`}).join(""):`<span class="hint">${DB_URL?tt("Пока нет лотов"):tt("Онлайн недоступен")}</span>`}
 async function pollMarket(){if(!DB_URL||MB)return;MB=1;
   try{const d=await db("market")||{};
-    M=Object.entries(d).map(([k,v])=>{if(!v||typeof v!=="object")return null;const c=safeCard(v),p=Math.round(+v.p);
-      if(!c||!okId(String(v.s||""))||!(p>=10))return null;
+    M=Object.entries(d).map(([k,v])=>{if(!v||typeof v!=="object")return null;const c=safeCard(v),p=r2(+v.p);
+      if(!c||!okId(String(v.s||""))||!(p>=.5))return null;
       return{id:k,c:c.c,g:c.g,cn:c.cn,price:Math.min(p,1e19),s:String(v.s),sn:String(v.sn||"Игрок").slice(0,16)}}).filter(Boolean);
     if(cur==="mk")rMarket()}catch(e){}MB=0}
 /* забрать лот из базы: удаляет только если он ещё там (по возможности атомарно) */
@@ -1101,17 +1121,17 @@ async function buy(k){if(!DB_URL||bBusy)return;const l=M.find(x=>x.id===k);
   if(l.s===S.uid)return;
   if(S.bal<l.price){toast(tt("Не хватает $ 😕"));return}
   bBusy=1;
-  try{const v=await claim("market/"+k),c=v&&safeCard(v),p=v&&Math.round(+v.p);
-    if(!c||!(p>=10)){M=M.filter(x=>x.id!==k);rMarket();toast(tt("Лот уже купили"));bBusy=0;return}
+  try{const v=await claim("market/"+k),c=v&&safeCard(v),p=v&&r2(+v.p);
+    if(!c||!(p>=.5)){M=M.filter(x=>x.id!==k);rMarket();toast(tt("Лот уже купили"));bBusy=0;return}
     S.bal-=p;S.inv.push(newItem(c));M=M.filter(x=>x.id!==k);
     toast(tt("Куплено: {0}",CARDS[c.c].n));upd();rMarket();rInv();
     const to=String(v.s||"");
-    if(okId(to))for(let a=0;a<3;a++){try{await db(`inbox/${to}`,"POST",{t:"sold",lk:k,kx:Math.round(p*FEE),fn:String(S.prof.nick||"Игрок").slice(0,16),ts:Date.now()});break}catch(e){await new Promise(r=>setTimeout(r,800))}}}
+    if(okId(to))for(let a=0;a<3;a++){try{await db(`inbox/${to}`,"POST",{t:"sold",lk:k,kx:r2(p*FEE),fn:String(S.prof.nick||"Игрок").slice(0,16),ts:Date.now()});break}catch(e){await new Promise(r=>setTimeout(r,800))}}}
   catch(e){toast(tt("Нет связи 😕"))}bBusy=0}
 function openList(id){const c=S.inv.find(x=>x.id===id);if(!c)return;
-  $("modal").innerHTML=`<div class="mb">${cardHTML(c)}<div class="hint" style="margin:0">${tt("Рыночная цена ≈ {0} $",fmt(val(c)))}</div><input id="pr" type="number" min="10" value="${val(c)}"><button class="btn" data-a="doList" data-v="${id}" style="width:100%">${tt("Выставить")}</button><button class="btn alt" data-a="close" style="width:100%">${tt("Отмена")}</button></div>`;
+  $("modal").innerHTML=`<div class="mb">${cardHTML(c)}<div class="hint" style="margin:0">${tt("Рыночная цена ≈ {0} $",fmt(val(c)))}</div><input id="pr" type="number" min="0.5" step="0.01" value="${val(c)}"><button class="btn" data-a="doList" data-v="${id}" style="width:100%">${tt("Выставить")}</button><button class="btn alt" data-a="close" style="width:100%">${tt("Отмена")}</button></div>`;
   $("modal").classList.add("on")}
-async function doList(id){const p=Math.round(+$("pr").value);if(!(p>=10)){toast(tt("Укажи цену от 10 $"));return}
+async function doList(id){const p=r2(+$("pr").value);if(!(p>=.5)){toast(tt("Укажи цену от 10 $"));return}
   if(!DB_URL){toast(tt("Онлайн недоступен"));return}
   if(S.list.length>=MAXL){toast(tt("Максимум {0} лотов",MAXL));return}
   if(lBusy)return;const i=S.inv.findIndex(x=>x.id===id);if(i<0)return;const c=S.inv[i];lBusy=1;
@@ -1268,13 +1288,13 @@ function openMany(cs,n){
 }
 
 /* Апгрейдер */
-const ALLV=(()=>{const a=[];CARDS.forEach((k,c)=>BGS.forEach((b,g)=>a.push({c,g,v:Math.round(k.p*b.b)})));return a.sort((x,y)=>x.v-y.v)})();
+const ALLV=(()=>{const a=[];CARDS.forEach((k,c)=>BGS.forEach((b,g)=>a.push({c,g,v:r2(k.p*b.b)})));return a.sort((x,y)=>x.v-y.v)})();
 let UPS=[],UPCH=50,upBusy=false,UPMODE=0,UPT=null,PKL=60,UPMU=false,UPIN=false,UPFS=false,UPINIT=0;
-const UPHE=95,upMult=ch=>UPHE/ch,upTarget=(P,ch)=>Math.round(P*upMult(ch)),TMAX=ALLV[ALLV.length-1].v,upLo=P=>Math.max(2,Math.ceil(UPHE*P/TMAX));
+const UPHE=95,upMult=ch=>UPHE/ch,upTarget=(P,ch)=>r2(P*upMult(ch)),TMAX=ALLV[ALLV.length-1].v,upLo=P=>Math.max(2,Math.ceil(UPHE*P/TMAX));
 const tChance=(P,T)=>T>P?Math.min(95,Math.round(P/T*9500)/100):0,fmtCh=n=>(+n.toFixed(2))+"%",MINCH=.1;
 function upMake(P,ch,fix){const t=fix?nfv(fix.c,fix.g):upTarget(P,ch);let n=S.nid;while(S.inv.some(x=>x.id===n))n++;const im=idm(n),pool=fix?[{c:fix.c,g:fix.g}]:ALLV,all=[];
-  pool.forEach(x=>varsOf(x.c).forEach((vr,vi)=>{const v=Math.round(nfv(x.c,x.g)*im*vr[2]);if(v>P)all.push({c:x.c,g:x.g,v:vi,val:v})}));
-  let pick=null;for(const tol of[.03,.06,.12,.25]){const ok=all.filter(x=>Math.abs(x.val-t)<=Math.max(1,t*tol));if(ok.length){pick=ok[rn(ok.length)];break}}
+  pool.forEach(x=>varsOf(x.c).forEach((vr,vi)=>{const v=r2(nfv(x.c,x.g)*im*vr[2]);if(v>P)all.push({c:x.c,g:x.g,v:vi,val:v})}));
+  let pick=null;for(const tol of[.03,.06,.12,.25]){const ok=all.filter(x=>Math.abs(x.val-t)<=Math.max(.02,t*tol));if(ok.length){pick=ok[rn(ok.length)];break}}
   if(!pick)pick=all.reduce((b,x)=>!b||Math.abs(x.val-t)<Math.abs(b.val-t)?x:b,null)||{c:pool[0].c,g:pool[0].g,v:0};
   return newItem({c:pick.c,g:pick.g,cn:100,v:pick.v},nid())}
 function upResult(P,ch){const t=upTarget(P,ch);let lo=0,hi=ALLV.length-1;while(lo<hi){const m=(lo+hi)>>1;if(ALLV[m].v<t)lo=m+1;else hi=m}
@@ -1318,8 +1338,8 @@ function rUpInfo(){const cs=upCards(),c=cs[0],tm=UPMODE===1,P=upP(),sb=upSB();
   $("upTo").innerHTML=`<div style="font-size:12px;color:var(--muted)">${tt("цель ≈")}</div><div style="font-family:var(--fd);font-size:15px;color:var(--text)">${fmt(t)} $</div><div style="font-size:12px;color:var(--ok)">×${upMult(ch).toFixed(2)}</div>`;
   $("upInfo").innerHTML=`${tt("Шанс")} <b>${fmtCh(rp)}</b> · ×${upMult(ch).toFixed(2)}${bn}${il}`;$("upGo").disabled=upBusy||prem>S.bal}
 /* выбор конкретной карты */
-function rPick(){if(!upCard())return;const P=upP(),q=$("pkq").value.trim().toLowerCase(),g=+$("pkb").value,ro=$("pkr").checked,bb=BGS[g].b,L=[];
-  CARDS.forEach((k,i)=>{const v=Math.round(k.p*bb);if(v<=P||(ro&&!k.rare))return;if(q&&!(k.e+" "+k.r+" "+k.i).toLowerCase().includes(q))return;L.push({i,v})});
+function rPick(){if(!upCard())return;const P=upP(),q=$("pkq").value.trim().toLowerCase(),g=+$("pkb").value,ro=false,bb=BGS[g].b,L=[];
+  CARDS.forEach((k,i)=>{const v=r2(k.p*bb);if(v<=P)return;if(q&&!(k.e+" "+k.r+" "+k.i).toLowerCase().includes(q))return;L.push({i,v})});
   L.sort((a,b)=>a.v-b.v);
   $("pkInfo").textContent=`${tt("Твоя карта")}: ${fmt(P)} $ · ${tt("Найдено")}: ${L.length}`;
   $("pkGrid").innerHTML=L.slice(0,PKL).map(x=>{const ch=tChance(P,x.v);return `<div class="item" data-a="pkset" data-v="${x.i}">${cardHTML({c:x.i,g})}<div class="sub ${ch<MINCH?"bad":"good"}">${tt("Шанс")} ${fmtCh(ch)}</div></div>`}).join("")||`<span class="hint">${tt("Ничего не найдено")}</span>`;
@@ -1387,7 +1407,7 @@ document.addEventListener("click",e=>{
   else if(a==="unlist")unlist(v);else if(a==="buy")buy(v);else if(a==="av")setAv(v);else if(a==="show")toggleShow(+v);else if(a==="trade")trade(v);else if(SDA(a,v)){}
   else if(a==="tsend")sendOffer();else if(a==="tacc")accOffer(v);else if(a==="tdec")decOffer(v);else if(a==="tcan")cancelOut(v);
   else if(a==="lang")setLang(v);else if(a==="copyid")copyId();
-  else if(a==="bc"){const[i,n]=v.split("|");buyCase(+i,+n)}else if(a==="gx")gx(+v);else if(a==="mod")buyMod(v);else if(a==="sellall")sellEvery();else if(a==="promo")promo();else if(a==="itab")itab(v);else if(a==="crp")crPick(+v);else if(a==="craft")doCraft();else if(a==="mkset")mkSet(+v);else if(a==="newst")openNewSt();else if(a==="mkst")createStock();else if(a==="topup")topup(v);else if(a==="mopen"){const[i,n]=v.split("|");openMany(CASES[+i],+n)}else if(BA[a])BA[a](+v)});
+  else if(a==="bc"){const[i,n]=v.split("|");buyCase(+i,+n)}else if(a==="gx")gx(+v);else if(a==="mod")buyMod(v);else if(a==="sellall")sellEvery();else if(a==="promo")promo();else if(a==="itab")itab(v);else if(a==="mkset")mkSet(+v);else if(a==="newst")openNewSt();else if(a==="mkst")createStock();else if(a==="topup")topup(v);else if(a==="mopen"){const[i,n]=v.split("|");openMany(CASES[+i],+n)}else if(BA[a])BA[a](+v)});
 $("reset").onclick=()=>{if(busy||!confirm(tt("Сбросить весь прогресс?")))return;const k=S.codes,u=S.uid,lg=S.lang;S=def();S.codes=k;S.uid=u;S.lang=lg;mkSync();upd();rInv();rMarket();rProf();toast(tt("Прогресс сброшен"))};
 
 /* Экран акции */
@@ -1478,10 +1498,10 @@ function rInsp(){const c=S.inv.find(x=>x.id===INSP);if(!c){closeM();return}
 <div><span>${tt("Состояние")}</span><b style="color:${inf[2]}">${x}% · ${cname(x)}</b></div><div><span>${tt("Ценность")}</span><b>${fmt(val(c))} $</b></div>
 <div><span>${tt("Редкость")}</span><b style="color:${R.col}">${tt(R.n)}</b></div><div><span>${tt("Шанс карты")}</span><b>${fmtPct(R.a)}</b></div><div><span>${tt("Шанс фона")}</span><b>${fmtPct(R.b)}</b></div><div><span>${tt("Общая редкость")}</span><b>${fmtPct(R.t)}</b></div>
 <div class="hint">${tt("Полная цена {0} $ × {1}% за состояние",fmt(bv),Math.round(m*100))} · ${tt("износ −{0}% в час",DECAY)}</div></div>
-${can?`<div class="rst"><div class="top"><b>${tt("Реставрация")}</b><span id="rtv"></span></div><input type="range" id="rsl" min="${x+1}" max="${RMAX}" value="${Math.min(RMAX,Math.max(x+1,Math.round((x+RMAX)/2)))}"><div class="hint" id="rin"></div><button class="btn" id="rgo" data-a="rest" data-v="${c.id}" style="width:100%"></button></div>`:`<div class="hint">${tt("Реставрация доступна до {0}% и ниже",RMAX-1)}</div>`}
+${can?`<button class="btn alt" data-a="rpgo" style="width:100%">🛠 ${tt("Реставрация")} · ${x}%</button>`:`<div class="hint">${tt("Реставрация доступна до {0}% и ниже",RMAX-1)}</div>`}
 <div class="row"><button class="btn alt sm" data-a="sell" data-v="${c.id}">${tt("Продать")}</button><button class="btn sm" data-a="list" data-v="${c.id}">${tt("На рынок")}</button></div>
 <button class="btn alt" data-a="close" style="width:100%">${tt("Закрыть")}</button></div>`;
-  $("modal").classList.add("on");if(can){$("rsl").oninput=()=>rstUI(c.id);rstUI(c.id)}}
+  $("modal").classList.add("on")}
 function rstUI(id){const c=S.inv.find(x=>x.id===id);if(!c||!$("rsl"))return;const T=+$("rsl").value,v=val(c),vt=Math.round(bval(c)*cmult(T)),gain=Math.max(0,vt-v),cost=Math.round(gain*rcost());
   $("rtv").textContent=T+"% · "+cname(T);$("rin").textContent=tt("Ценность")+": "+fmt(v)+" → "+fmt(vt)+" $ (+"+fmt(gain)+")";
   $("rgo").textContent=tt("Реставрировать за {0} $",fmt(cost));$("rgo").disabled=S.bal<cost||T<=cond(c)}
@@ -1736,22 +1756,7 @@ DBP=detectDb();DBP.then(kxOnline);
 setInterval(()=>{if(!DB_URL||!KXB)detectDb().then(kxOnline)},15000);addEventListener("online",()=>detectDb().then(kxOnline));
 setInterval(tick,1000);setInterval(modTick,1000);
 
-/* Крафт */
-const CR=new Set();
-const crSel=()=>S.inv.filter(c=>CR.has(c.id));
-function crRes(){const L=crSel();if(L.length<2)return null;const g=L[0].g;if(g+1>=BGS.length)return{max:1};
-  const tot=L.reduce((s,c)=>s+val(c),0),b=BGS[g+1].b;if(tot<CARDS[0].p*b)return{low:Math.round(CARDS[0].p*b),tot};let best=-1,d=1/0;
-  CARDS.forEach((k,i)=>{if(k.rare)return;const x=Math.abs(Math.round(k.p*b)-tot);if(x<d){d=x;best=i}});return{c:best,g:g+1,tot}}
-function rCraft(){for(const id of[...CR])if(!S.inv.some(c=>c.id===id))CR.delete(id);
-  const L=crSel(),g=L.length?L[0].g:-1,r=crRes();
-  $("crList").innerHTML=S.inv.filter(c=>g<0||c.g===g).sort((a,b)=>a.g-b.g||val(b)-val(a)).slice(0,80).map(c=>`<div class="item ${CR.has(c.id)?"pick":""}" data-a="crp" data-v="${c.id}">${cardHTML(c)}</div>`).join("")||`<span class="hint">${tt("Нет карточек")}</span>`;
-  $("crInfo").innerHTML=!L.length?"Выбери карты с одинаковым фоном":L.length<2?"Нужна ещё хотя бы одна карта":r.max?"Фон уже максимальный":r.low?`Сумма ${fmt(r.tot)} $ — для следующего фона нужно минимум ${fmt(r.low)} $`:`Сумма ${fmt(r.tot)} $ → результат:<div style="width:130px;margin:8px auto">${cardHTML({c:r.c,g:r.g,cn:100})}</div>`;
-  $("crBtn").disabled=!r||!!r.max||!!r.low;rSets()}
-function crPick(id){if(CR.has(id))CR.delete(id);else{if(CR.size>=6){toast("Максимум 6 карт");return}CR.add(id)}sfx("init");rCraft()}
-function doCraft(){const L=crSel(),r=crRes();if(L.length<2||!r||r.max||r.low)return;
-  S.inv=S.inv.filter(c=>!CR.has(c.id));S.prof.show=S.prof.show.filter(x=>!CR.has(x)&&!CR.has(x&&x.id));CR.clear();
-  const it=newItem({c:r.c,g:r.g,cn:100});S.inv.push(it);sfx("win",tier(val(it)));fx(["🔨","✨","💥","⭐"],26,"rgba(255,190,60,.22)");
-  $("crRes").innerHTML=cardHTML(it);toast("Скрафчено: "+CARDS[it.c].n);upd();rInv();rProf();rCraft()}
+function rCraft(){rSets()}
 /* Сеты: рецепты из любых карт. Ингредиенты нужны по одной штуке (любой фон), результат получает лучший фон из них */
 const SETR="🍭🍪>🎇,🎇❄️>🥚,🥚🍬🐰>🎅,🎅🎇>🍰,🍰🍪>🍷,🍷🎇>🧦,🧦🕯️>🧿,🧿🎅>🐍,🐍🍰>🍄,🍄🍷>⚔️,⚔️🧿>💋,💋🍄>🪆,🪆🍄>🃏,🃏💋>🐱,🐱🍄🍰>🙀,🙀🃏>🎩,🎩🐱>🪔,🪔🎩>⌚,⌚🎩🐱>🧴,🧴🪔🎩>🧪,🧪⌚>💀,💀🧪>🏆,🏆💀>🐕,🐕🧪🧴>💠,💠🏆>💎,💎🐕>💍,💍💠>📿,📿💎>🌹,🌹💍>💪,💪💍>🪖,🪖💍>💝,💝🌹>🐸".replace(/\uFE0F/g,"");
 let _SL=null;const ciE=e=>CARDS.findIndex(k=>k.i.replace(/\uFE0F/g,"")===e);
@@ -2313,7 +2318,7 @@ mods:'<path d="M3 18h18M4 18L3 7l5 4 4-6 4 6 5-4-1 11"/>',prof:'<path d="M20 21v
 set:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><path d="M16 4v4M10 10v4M18 16v4"/>',log:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9 8h6M9 12h6"/>',vip:'<path d="M6 3h12l4 6-10 12L2 9l4-6z"/><path d="M2 9h20"/>',top:'<path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',chev:'<path d="M9 6l6 6-6 6"/>'};
 const fill=()=>document.querySelectorAll("i[data-i]:not([data-f])").forEach(e=>{const p=P[e.dataset.i];if(p){e.dataset.f=1;e.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+p+"</svg>"}});
 fill();new MutationObserver(fill).observe(document.body,{childList:true,subtree:true});
-const T={casino:"Казино",editions:"Издания",assets:"Активы",club:"VIP-клубы",prestige:"Престиж",card:"Карта",cshop:"Магазин карты",quests:"Задания",cases:"Дропы",mk:"Рынок",trd:"Обмен",st:"Биржа",inv:"Коллекция",up:"Апгрейд",mods:"Подписки",prof:"Профиль",set:"Настройки",vip:"Лимитки",tops:"Рейтинг",...Object.fromEntries(VG.map(k=>[k,VTABS[k].n]))};
+const T={casino:"Казино",editions:"Издания",assets:"Активы",club:"VIP-клубы",prestige:"Престиж",card:"Карта",cshop:"Магазин карты",quests:"Задания",cases:"Дропы",mk:"Рынок",trd:"Обмен",st:"Биржа",inv:"Коллекция",up:"Апгрейд",mods:"Подписки",prof:"Профиль",set:"Настройки",vip:"Лимитки",tops:"Рейтинг",repair:"Реставрация",wheel:"Колесо фортуны",...Object.fromEntries(VG.map(k=>[k,VTABS[k].n]))};
 const pt=v=>{const n=tt(T[v]||v),el=document.getElementById("ptb");if(el)el.innerHTML='<div class="crumb"><i data-i="'+(P[v]?v:"cases")+'"></i><span>KX Market</span><i data-i="chev"></i><b>'+n+'</b></div><h1 class="pth">'+n+" <span>"+new Date().getFullYear()+"</span></h1>";fill()};
 {const _t=tab;tab=function(v){_t(v);pt(v)}}pt(cur||"cases");
 document.addEventListener("click",e=>{const b=e.target.closest('[data-a="sub"]');if(b)buySub(+b.dataset.v)});
@@ -2437,5 +2442,282 @@ CHANGELOG.unshift({v:"5.2",d:"27.11.2026",t:["Апгрейдер 2.0 ⚡","Upgra
 })();
 </script>
 <script>setTimeout(function(){if(window.__KX_OK)return;try{if(sessionStorage.getItem("kx_fix"))return;sessionStorage.setItem("kx_fix","1");var d=JSON.parse(localStorage.getItem("kx2_save")||"null");if(d&&typeof kxNorm==="function")localStorage.setItem("kx2_save",JSON.stringify(kxNorm(d)));location.reload()}catch(e){}},2500)</script>
+<style id="jxcss">
+#jxcv{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:58}
+.jxf{position:fixed;inset:0;z-index:55;pointer-events:none;animation:jxFlash .85s ease-out forwards}
+@keyframes jxFlash{from{opacity:1}to{opacity:0}}
+.jxsh{animation:jxSh .55s}
+@keyframes jxSh{0%,100%{transform:none}15%{transform:translate(-7px,3px)}30%{transform:translate(6px,-4px)}45%{transform:translate(-5px,-2px)}60%{transform:translate(4px,3px)}80%{transform:translate(-2px,1px)}}
+.jxfl{position:fixed;z-index:60;pointer-events:none;text-align:right;font:800 15px var(--fb);white-space:nowrap;text-shadow:0 2px 8px #0009;animation:jxFl 1.2s ease-out forwards}
+.jxfl.u{color:var(--ok)}.jxfl.d{color:var(--bad)}
+@keyframes jxFl{0%{opacity:0;transform:translateY(0) scale(.8)}15%{opacity:1;transform:translateY(-6px) scale(1.15)}100%{opacity:0;transform:translateY(-40px) scale(1)}}
+.bal.jxu{animation:jxBu .7s ease-out}.bal.jxd{animation:jxBd .7s ease-out}
+@keyframes jxBu{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 70%,transparent);border-color:var(--ok)}100%{box-shadow:0 0 0 12px transparent}}
+@keyframes jxBd{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--bad) 70%,transparent);border-color:var(--bad)}100%{box-shadow:0 0 0 12px transparent}}
+.jxrp{position:absolute;border-radius:50%;pointer-events:none;background:currentColor;opacity:.28;transform:scale(0);animation:jxRp .55s ease-out forwards}
+@keyframes jxRp{to{transform:scale(1);opacity:0}}
+.sec.jxin>*{animation:jxUp .42s cubic-bezier(.2,.8,.2,1) both}
+.sec.jxin>*:nth-child(2){animation-delay:0.05s}.sec.jxin>*:nth-child(3){animation-delay:0.10s}.sec.jxin>*:nth-child(4){animation-delay:0.15s}.sec.jxin>*:nth-child(5){animation-delay:0.20s}.sec.jxin>*:nth-child(6){animation-delay:0.25s}.sec.jxin>*:nth-child(7){animation-delay:0.30s}.sec.jxin>*:nth-child(8){animation-delay:0.35s}
+.sec.jxin .grid>.item:nth-child(-n+10){animation:jxPop .45s cubic-bezier(.3,1.5,.5,1) both}
+.sec.jxin .grid>.item:nth-child(1){animation-delay:0.12s}.sec.jxin .grid>.item:nth-child(2){animation-delay:0.16s}.sec.jxin .grid>.item:nth-child(3){animation-delay:0.20s}.sec.jxin .grid>.item:nth-child(4){animation-delay:0.24s}.sec.jxin .grid>.item:nth-child(5){animation-delay:0.28s}.sec.jxin .grid>.item:nth-child(6){animation-delay:0.32s}.sec.jxin .grid>.item:nth-child(7){animation-delay:0.36s}.sec.jxin .grid>.item:nth-child(8){animation-delay:0.40s}.sec.jxin .grid>.item:nth-child(9){animation-delay:0.44s}.sec.jxin .grid>.item:nth-child(10){animation-delay:0.48s}
+@keyframes jxUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes jxPop{from{opacity:0;transform:scale(.85) translateY(8px)}to{opacity:1;transform:none}}
+@media (hover:hover){.case{transition:transform .2s cubic-bezier(.3,1.4,.5,1)}.case:hover{transform:translateY(-4px)}}
+.grid .card.t7,.show .card.t7{animation:jxRare 2.6s ease-in-out infinite}
+@keyframes jxRare{0%,100%{box-shadow:0 8px 18px -8px #000b,0 0 0 0 rgba(255,205,70,0)}50%{box-shadow:0 8px 18px -8px #000b,0 0 18px 2px rgba(255,205,70,.55)}}
+@media (prefers-reduced-motion:reduce){.sec.jxin>*,.sec.jxin .grid>.item,.grid .card.t7,.show .card.t7{animation:none!important}}
+</style>
+<script>
+(()=>{"use strict";
+let ON=true;try{ON=localStorage.getItem("kx_jx")!=="0"}catch(e){}
+const RM=matchMedia("(prefers-reduced-motion:reduce)").matches,fxOn=()=>ON&&!RM,$$=id=>document.getElementById(id);
+const hap=p=>{if(!fxOn())return;try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+/* ---------- конфетти на canvas ---------- */
+let cv,cx,P=[],raf=0;
+function rs(){const d=Math.min(2,devicePixelRatio||1);cv.width=innerWidth*d;cv.height=innerHeight*d;cx.setTransform(d,0,0,d,0,0)}
+function ensure(){if(cv)return;cv=document.createElement("canvas");cv.id="jxcv";document.body.appendChild(cv);cx=cv.getContext("2d");rs();addEventListener("resize",rs)}
+function burst(x,y,n,cols,pw){if(!fxOn())return;ensure();n=Math.min(n,400-P.length);
+  for(let i=0;i<n;i++){const a=Math.random()*6.283,v=pw*.35+Math.random()*pw*.65;
+    P.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-pw*.4,r:Math.random()*6.28,vr:(Math.random()-.5)*.4,w:5+Math.random()*5,h:3+Math.random()*4,c:cols[i%cols.length],l:1,d:.011+Math.random()*.012,s:Math.random()<.3})}
+  if(!raf)raf=requestAnimationFrame(step)}
+function step(){cx.clearRect(0,0,innerWidth,innerHeight);P=P.filter(p=>p.l>0);
+  for(const p of P){p.vy+=.28;p.vx*=.985;p.vy*=.985;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.l-=p.d;
+    cx.save();cx.globalAlpha=Math.max(0,Math.min(1,p.l*1.6));cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;
+    if(p.s){cx.beginPath();cx.arc(0,0,p.w/2,0,6.283);cx.fill()}else cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);cx.restore()}
+  if(P.length)raf=requestAnimationFrame(step);else{raf=0;cx.clearRect(0,0,innerWidth,innerHeight)}}
+const RB=["#ff5a78","#ffb020","#ffe14d","#35e8a0","#5db2ff","#b79cff","#ff7ad9"],
+ PAL={2:["#7ddba3","#ffffff"],3:["#5db2ff","#6fe3c1","#ffffff"],4:["#b79cff","#ff7ad9","#ffffff"],5:["#ffd34d","#ffb020","#fff6c8"],6:RB,7:RB};
+function origin(){for(const q of[".res .card","#upWheel"]){const e=document.querySelector(q);if(e&&e.offsetParent){const r=e.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight)return[r.left+r.width/2,r.top+r.height/2]}}
+  return[innerWidth/2,innerHeight*.4]}
+function flash(c){const d=document.createElement("div");d.className="jxf";d.style.background=`radial-gradient(circle at 50% 45%,${c} 0,transparent 68%)`;document.body.appendChild(d);setTimeout(()=>d.remove(),900)}
+function shake(){const s=document.querySelector(".sec.on");if(!s)return;s.classList.remove("jxsh");void s.offsetWidth;s.classList.add("jxsh");setTimeout(()=>s.classList.remove("jxsh"),600)}
+const FL={3:"rgba(93,178,255,.30)",4:"rgba(183,156,255,.38)",5:"rgba(255,211,77,.45)",6:"rgba(255,122,217,.45)",7:"rgba(255,211,77,.55)"};
+function jxWin(t){const[x,y]=origin(),cols=PAL[Math.min(t,7)]||PAL[2];
+  if(t<=2){burst(x,y,16,cols,7);return}
+  flash(FL[Math.min(t,7)]);
+  if(t===3){burst(x,y,45,cols,10);hap(20)}
+  else if(t===4){burst(x,y,95,cols,12);hap([30,30,40])}
+  else{burst(x,y,150,cols,14);setTimeout(()=>burst(x,y,110,cols,16),220);shake();hap([40,40,40,40,90]);
+    if(t>=6)setTimeout(()=>{burst(innerWidth*.2,innerHeight*.5,70,cols,13);burst(innerWidth*.8,innerHeight*.5,70,cols,13)},450)}}
+const oW=window.winFx;window.winFx=function(t){try{oW&&oW.apply(this,arguments)}catch(e){}if(fxOn())try{jxWin(t|0)}catch(e){}};
+/* ---------- баланс: счётчик, всплывающие +/− и пульс ---------- */
+let shown=null,tgt=0,aid=0,uid0=null,gem0=null,lastFl=0;
+function floatTxt(d){const el=document.querySelector(".bal");if(!el)return;const now=Date.now();if(now-lastFl<120)return;lastFl=now;
+  const r=el.getBoundingClientRect(),f=document.createElement("div");f.className="jxfl "+(d>0?"u":"d");
+  f.textContent=(d>0?"+":"−")+fmt(Math.abs(d))+" $";f.style.left=(r.right-140)+"px";f.style.width="140px";f.style.top=(r.bottom+2)+"px";
+  document.body.appendChild(f);setTimeout(()=>f.remove(),1250);
+  el.classList.remove("jxu","jxd");void el.offsetWidth;el.classList.add(d>0?"jxu":"jxd");setTimeout(()=>el.classList.remove("jxu","jxd"),750)}
+function jxBal(){const el=$$("bal");if(!el||typeof S==="undefined"||!S)return;const b=S.bal;if(!isFinite(b))return;
+  if(uid0!==S.uid||shown===null){uid0=S.uid;shown=tgt=b;gem0=S.gem;return}
+  if(S.gem>gem0&&fxOn()){const g=el.parentElement&&el.parentElement.nextElementSibling;if(g){g.style.transition="transform .25s";g.style.transform="scale(1.35)";setTimeout(()=>{g.style.transform=""},260)}}
+  gem0=S.gem;
+  if(b===tgt)return;
+  const d=b-tgt;tgt=b;cancelAnimationFrame(aid);aid=0;
+  if(!fxOn()||Math.abs(b-shown)<.5||Math.abs(b)>=1e15){shown=b;el.textContent=fmtB(b);if(fxOn()&&Math.abs(d)>=1)floatTxt(d);return}
+  if(Math.abs(d)>=1)floatTxt(d);const from=shown,t0=performance.now(),dur=Math.min(900,350+Math.log10(Math.abs(b-from)+1)*90);
+  const st=n=>{const k=Math.min(1,(n-t0)/dur),e=1-Math.pow(1-k,3);shown=from+(b-from)*e;el.textContent=fmtB(k<1?shown:b);if(k<1)aid=requestAnimationFrame(st);else{aid=0;shown=b}};
+  aid=requestAnimationFrame(st)}
+const oU=window.upd;window.upd=function(){const r=oU.apply(this,arguments);try{jxBal()}catch(e){}return r};
+/* ---------- звук тиков: вибро-«трещотка» ---------- */
+const oS=window.sfx;window.sfx=function(k){const r=oS.apply(this,arguments);
+  if(fxOn()){if(k==="tick")hap(4);else if(k==="coin"||k==="buy"||k==="sell")hap(12);else if(k==="err")hap([40,40,40])}return r};
+/* ---------- рябь на кнопках ---------- */
+document.addEventListener("pointerdown",e=>{if(!fxOn())return;const b=e.target.closest&&e.target.closest(".btn");if(!b||b.disabled)return;
+  const r=b.getBoundingClientRect(),sz=Math.max(r.width,r.height)*2,sp=document.createElement("span"),cs=getComputedStyle(b),pp=b.style.position,po=b.style.overflow;
+  if(cs.position==="static")b.style.position="relative";b.style.overflow="hidden";
+  sp.className="jxrp";sp.style.cssText=`width:${sz}px;height:${sz}px;left:${e.clientX-r.left-sz/2}px;top:${e.clientY-r.top-sz/2}px`;b.appendChild(sp);
+  setTimeout(()=>{sp.remove();b.style.position=pp;b.style.overflow=po},580)},true);
+/* ---------- наклон карточек под мышкой ---------- */
+let tc=null;const un=c=>{c.style.transition="transform .25s";c.style.transform=""};
+document.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse"||!fxOn()){if(tc){un(tc);tc=null}return}
+  const c=e.target.closest&&e.target.closest(".grid .card,.res .card,.upslot .card,.show .card");
+  if(tc&&tc!==c)un(tc);if(!c){tc=null;return}tc=c;
+  const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+  c.style.transition="transform .08s";c.style.transform=`perspective(500px) rotateY(${(x*14).toFixed(1)}deg) rotateX(${(-y*14).toFixed(1)}deg) scale(1.05)`},{passive:true});
+/* ---------- появление вкладок + переключатель в настройках ---------- */
+const oT=window.tab;window.tab=function(v){const r=oT.apply(this,arguments);
+  if(fxOn()){const s=$$(v);if(s){s.classList.remove("jxin");void s.offsetWidth;s.classList.add("jxin");setTimeout(()=>s.classList.remove("jxin"),900)}}
+  if(v==="set")lab();return r};
+let jb=null;function lab(){if(jb)jb.textContent=tt(ON?"✨ Эффекты: вкл":"✨ Эффекты: выкл")}
+const sb=$$("snd");if(sb){jb=document.createElement("button");jb.className="btn alt";jb.id="jxbtn";jb.style.cssText="width:100%;margin-top:8px";sb.after(jb);
+  jb.onclick=()=>{ON=!ON;try{localStorage.setItem("kx_jx",ON?"1":"0")}catch(e){}lab();if(ON)burst(innerWidth/2,innerHeight/2,30,RB,9)};lab()}
+try{Object.assign(EN,{"✨ Эффекты: вкл":"✨ Effects: on","✨ Эффекты: выкл":"✨ Effects: off"});lab()}catch(e){}
+try{CHANGELOG.unshift({v:"5.3",d:"28.11.2026",t:["Анимации и «сок» ✨","Animations and juice ✨"],it:[
+["Конфетти, вспышки и тряска экрана на крупных выигрышах — чем реже карта, тем зрелищнее","Confetti, flashes and screen shake on big wins — the rarer the card, the bigger the show"],
+["Баланс плавно «накручивается», рядом всплывают +/− суммы","The balance counts up smoothly with floating +/− amounts"],
+["Вибро-отклик на телефоне: «трещотка» при прокрутке дропов и колеса","Haptic feedback on phones: a ratchet feel while cases and the wheel spin"],
+["Рябь на кнопках, наклон карточек под мышкой, плавное появление вкладок","Button ripples, card tilt on hover, smooth tab entrances"],
+["Самые редкие карточки светятся. Эффекты можно выключить в настройках","The rarest cards glow. Effects can be turned off in Settings"]]})}catch(e){}
+})();
+</script>
+<style id="dgcss">
+.dg{display:flex;flex-direction:column}
+.dgh{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:10px 12px;border:0;background:none;color:var(--muted);font:600 12px var(--fb);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border-radius:10px}
+.dgh>span{display:flex;align-items:center;gap:8px}.dgh i{font-style:normal;transition:transform .2s}.dg.open .dgh i{transform:rotate(180deg)}
+.dg.has .dgh{color:var(--text)}.dgh .gd{width:8px;height:8px;border-radius:50%;background:var(--ok);display:none}.dgh .gd.on{display:inline-block}
+.dgb{display:grid;grid-template-rows:0fr;transition:grid-template-rows .26s cubic-bezier(.2,.8,.2,1)}.dg.open .dgb{grid-template-rows:1fr}
+.dgi{overflow:hidden;min-height:0;display:flex;flex-direction:column;gap:4px;padding:0 2px}.dg:not(.open) .dgi{visibility:hidden;transition:visibility 0s .26s}
+.whw{--w:min(280px,76vw);position:relative;width:var(--w);height:var(--w);margin:8px auto 14px}
+.whd{position:absolute;inset:0;border-radius:50%;border:4px solid var(--line);box-shadow:0 10px 40px -12px #0008}
+.whd span{position:absolute;left:50%;top:50%;font-size:26px;line-height:1;text-align:center;transform:translate(-50%,-50%) rotate(var(--a)) translateY(calc(var(--w)*-.34))}
+.whd span small{display:block;font:800 11px var(--fb);color:#fff;text-shadow:0 1px 3px #000b;margin-top:3px;white-space:nowrap}
+.whp{position:absolute;left:50%;top:-10px;margin-left:-11px;border:11px solid transparent;border-top:20px solid var(--text);border-bottom:0;z-index:3;filter:drop-shadow(0 2px 2px #0006)}
+.whc{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:var(--panel);border:3px solid var(--line);z-index:2;display:flex;align-items:center;justify-content:center;font-size:28px}
+.whw.w .whd{animation:upGlow .9s}
+.whr{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}.whr:last-child{border:0}.whr span{color:var(--muted)}
+</style>
+<script>
+(()=>{"use strict";
+const $$=id=>document.getElementById(id);
+try{Object.assign(EN,{"Игра":"Game","Торговля":"Trading","Казино и VIP":"Casino & VIP","Прогресс":"Progress","Кошелёк":"Wallet","Аккаунт":"Account","Ещё":"More","Реставрация":"Restoration","🛠 Реставрация":"🛠 Restoration","Состояние карточек со временем падает, а цена падает вместе с ним. Здесь можно вернуть всё до выбранного уровня.":"Card condition drops over time and so does the price. Restore everything to the chosen level here.","Нужен ремонт":"Needs repair","Карточек для ремонта":"Cards to repair","Реставрировать всё":"Restore all","Все карточки в отличном состоянии ✨":"All cards are in great shape ✨","шт.":"pcs","🧩 Сеты":"🧩 Sets","Колесо фортуны":"Wheel of Fortune","Призы":"Prizes","Крутить бесплатно":"Spin for free","Крутить за {0} ◈":"Spin for {0} ◈","Следующая бесплатная попытка через {0}":"Next free spin in {0}","Колесо крутится…":"Spinning…","Дроп":"Case","Бесплатный дроп":"Free case","+{0} $":"+{0} $","ДЖЕКПОТ!":"JACKPOT!","Приз:":"Prize:","шанс":"chance","Можно крутить сразу — бесплатная попытка готова":"Ready to spin — your free spin is available","раз в 20 часов бесплатно, дальше за {0} ◈":"free once every 20 hours, then {0} ◈ each"})}catch(e){}
+/* ================= меню: разделы ================= */
+const GR=[["🎮","Игра","g1",["cases","inv","repair","up","wheel"]],["💱","Торговля","g2",["mk","trd","st"]],["🎰","Казино и VIP","g3",["vip","casino","editions","assets","club","prestige"]],["🏆","Прогресс","g4",["quests","tops","mods"]],["💳","Кошелёк","g5",["card","cshop"]],["👤","Аккаунт","g6",["prof","set","log"]]];
+let ST={};try{ST=JSON.parse(localStorage.getItem("kx_dg")||"{}")||{}}catch(e){}
+const svg=()=>{try{localStorage.setItem("kx_dg",JSON.stringify(ST))}catch(e){}};
+const dp=$$("dp");
+if(dp&&!dp.querySelector(".dg")){
+  const key=b=>b.dataset.v||b.dataset.a,all=[...dp.querySelectorAll(":scope>.tb")],used=new Set(),sp=dp.querySelector(".sp"),nvl=dp.querySelector(".nvl");
+  const mk=(em,name,id,keys)=>{const bs=keys.map(k=>all.find(b=>key(b)===k)).filter(Boolean);if(!bs.length)return;bs.forEach(b=>used.add(b));
+    const g=document.createElement("div");g.className="dg";g.dataset.g=id;
+    g.innerHTML=`<button type="button" class="dgh"><span>${em} ${tt(name)}<i class="gd"></i></span><i>▾</i></button><div class="dgb"><div class="dgi"></div></div>`;
+    const bx=g.querySelector(".dgi");bs.forEach(b=>bx.appendChild(b));dp.insertBefore(g,sp);
+    if(ST[id])g.classList.add("open");g.querySelector(".dgh").onclick=()=>{g.classList.toggle("open");ST[id]=g.classList.contains("open")?1:0;svg()}};
+  GR.forEach(x=>mk(x[0],x[1],x[2],x[3]));
+  const rest=all.filter(b=>!used.has(b));if(rest.length)mk("📂","Ещё","g9",rest.map(key));
+  if(!Object.keys(ST).length){const g=dp.querySelector('.dg[data-g="g1"]');if(g)g.classList.add("open")}
+}
+function openFor(){const on=dp&&dp.querySelector(".dg .tb.on");dp&&dp.querySelectorAll(".dg").forEach(g=>g.classList.remove("has"));
+  if(on){const g=on.closest(".dg");g.classList.add("has");if(!g.classList.contains("open")){g.classList.add("open");ST[g.dataset.g]=1;svg()}}}
+/* ================= реставрация ================= */
+const rpCost=(c,T)=>Math.round(Math.max(0,Math.round(bval(c)*cmult(T))-val(c))*rcost());
+function rRepair(){const T=+$$("rpT").value||RMAX;$$("rpTv").textContent=T+"%";
+  const L=S.inv.filter(c=>cond(c)<T-.5).map(c=>({c,k:rpCost(c,T)})).sort((a,b)=>b.k-a.k),tot=L.reduce((a,x)=>a+x.k,0);
+  $$("rpInfo").innerHTML=L.length?`${tt("Карточек для ремонта")}: <b>${L.length}</b> · ${tt("общая стоимость")} <b>${fmt(tot)} $</b>`:tt("Все карточки в отличном состоянии ✨");
+  $$("rpAll").textContent=tt("Реставрировать всё")+" · "+fmt(tot)+" $";$$("rpAll").disabled=!L.length||S.bal<tot;
+  $$("rpGrid").innerHTML=L.slice(0,60).map(x=>`<div class="item">${cardHTML(x.c)}<div class="sub">${Math.floor(cond(x.c))}% → ${T}%</div><button class="btn sm" data-a="rpone" data-v="${x.c.id}" ${S.bal<x.k?"disabled":""}>${fmt(x.k)} $</button></div>`).join("")}
+function rpDo(ids){const T=+$$("rpT").value||RMAX,L=S.inv.filter(c=>ids.includes(c.id)&&cond(c)<T-.5),tot=L.reduce((a,c)=>a+rpCost(c,T),0);
+  if(!L.length)return;if(S.bal<tot){toast(tt("Не хватает $ 😕"));return}
+  S.bal-=tot;L.forEach(c=>{c.cn=T;c.ct=Date.now()});sfx("coin");
+  toast(tt("Реставрация до {0}% за {1} $",T,fmt(tot))+(L.length>1?" · "+L.length+" "+tt("шт."):""));upd();rInv();rProf();rRepair()}
+document.addEventListener("input",e=>{if(e.target.id==="rpT")rRepair()});
+/* ================= колесо фортуны ================= */
+const CD=20*36e5,COST=5,COL=["#3b82f6","#8b5cf6","#ec4899","#f59e0b","#10b981","#06b6d4","#ef4444","#eab308"];
+const WP=[{e:"💵",t:"+1%",w:30,k:"m",p:.01,f:20},{e:"◈",t:"+2 ◈",w:20,k:"g",n:2},{e:"💰",t:"+2%",w:18,k:"m",p:.02,f:40},{e:"🎁",t:"Дроп",w:12,k:"c"},{e:"💸",t:"+3%",w:6,k:"m",p:.03,f:60},{e:"💎",t:"+8 ◈",w:6,k:"g",n:8},{e:"🚀",t:"+5%",w:6,k:"m",p:.05,f:100},{e:"👑",t:"+15%",w:2,k:"m",p:.15,f:300,j:1}];
+const WT=WP.reduce((a,x)=>a+x.w,0);let whBusy=false;
+const wh=()=>S.wh||(S.wh={ts:0,pend:null});
+const whReady=()=>Date.now()-(wh().ts||0)>=CD;
+const mm=ms=>{const t=Math.max(0,Math.ceil(ms/1000)),h=Math.floor(t/3600),m=Math.floor(t%3600/60),s=t%60;return(h?h+":":"")+String(m).padStart(h?2:1,"0")+":"+String(s).padStart(2,"0")};
+const whAmt=x=>Math.min(250000,Math.max(x.f,Math.round(S.bal*x.p)));
+const whTxt=x=>x.k==="m"?tt("+{0} $",fmt(whAmt(x))):x.k==="g"?"+"+x.n+" ◈":tt("Бесплатный дроп");
+function whApply(i){const x=WP[i];if(!x)return;let t=whTxt(x);
+  if(x.k==="m")S.bal+=whAmt(x);else if(x.k==="g")S.gem+=x.n;else S.cases[0]=(S.cases[0]||0)+1;
+  wh().pend=null;try{gEv("wheel",1)}catch(e){}return t}
+function whBuild(){const d=$$("whD");if(d.dataset.b)return;d.dataset.b=1;
+  d.style.background="conic-gradient("+WP.map((_,i)=>`${COL[i]} ${i*45}deg ${(i+1)*45}deg`).join(",")+")";
+  d.innerHTML=WP.map((x,i)=>`<span style="--a:${i*45+22.5}deg">${x.e}<small>${x.k==="c"?tt("Дроп"):x.t}</small></span>`).join("")}
+function whInfo(){const r=whReady(),b=$$("whGo");
+  if(whBusy){b.disabled=true;b.textContent=tt("Колесо крутится…");return}
+  b.textContent=r?tt("Крутить бесплатно"):tt("Крутить за {0} ◈",COST);b.disabled=!r&&S.gem<COST;
+  $$("whI").textContent=r?tt("Можно крутить сразу — бесплатная попытка готова"):tt("Следующая бесплатная попытка через {0}",mm(CD-(Date.now()-wh().ts)));
+  const dot=$$("whDot");if(dot)dot.hidden=!r;const gd=dp&&dp.querySelector('.dg[data-g="g1"] .gd');if(gd)gd.classList.toggle("on",r)}
+function rWheel(){whBuild();
+  if(!whBusy&&wh().pend!=null){const t=whApply(wh().pend);upd();toast("🎡 "+t)}
+  $$("whL").innerHTML=WP.map(x=>`<div class="whr"><b>${x.e} ${x.k==="c"?tt("Дроп"):x.t}${x.k==="m"?" ("+tt("+{0} $",fmt(whAmt(x)))+")":""}</b><span>${(x.w/WT*100).toFixed(0)}%</span></div>`).join("")+`<div class="hint" style="margin:8px 0 0">${tt("раз в 20 часов бесплатно, дальше за {0} ◈",COST)}</div>`;
+  whInfo()}
+function whGo(){if(whBusy)return;const free=whReady();
+  if(!free){if(S.gem<COST){toast(tt("Не хватает токенов ◈"));return}S.gem-=COST}else wh().ts=Date.now();
+  let r=Math.random()*WT,i=0;for(;i<WP.length-1;i++){r-=WP[i].w;if(r<0)break}
+  wh().pend=i;whBusy=true;upd();whInfo();
+  const d=$$("whD"),dur=4200,a=360*6-(i*45+22.5)+(Math.random()-.5)*28;
+  d.style.transition="none";d.style.transform="rotate(0deg)";void d.offsetWidth;
+  d.style.transition=`transform ${dur/1000}s cubic-bezier(.12,.7,.1,1)`;d.style.transform=`rotate(${a}deg)`;
+  sfx("init");for(let k=1;k<=30;k++)setTimeout(()=>sfx("tick"),dur*(1-Math.pow(1-k/30,1/3)));
+  $$("whRes").innerHTML="";
+  setTimeout(()=>{whBusy=false;const x=WP[i],t=whApply(i);upd();
+    const w=$$("whW");w.classList.remove("w");void w.offsetWidth;w.classList.add("w");
+    sfx("win",x.j?6:x.p>=.05?4:x.n>=8?3:2);winFx(x.j?6:x.p>=.05?4:x.n>=8?3:2);
+    $$("whRes").innerHTML=`<div class="good" style="font-size:20px;font-weight:800">${x.j?tt("ДЖЕКПОТ!")+" ":""}${x.e} ${t}</div>`;
+    whInfo()},dur+150)}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-a]");if(!b)return;const a=b.dataset.a,v=b.dataset.v;
+  if(a==="rpgo"){closeM();tab("repair")}else if(a==="rpall"){rpDo(S.inv.map(c=>c.id))}else if(a==="rpone"){rpDo([+v])}else if(a==="whgo")whGo()});
+setInterval(()=>{try{whInfo()}catch(e){}},1000);
+/* ================= навигация ================= */
+const oT=window.tab;window.tab=function(v){const r=oT.apply(this,arguments);openFor();if(v==="repair")rRepair();if(v==="wheel")rWheel();return r};
+openFor();try{whInfo()}catch(e){}
+try{CHANGELOG.unshift({v:"5.4",d:"28.11.2026",t:["Меню, реставрация и колесо фортуны 🎡","Menu, restoration and the Wheel of Fortune 🎡"],it:[
+["Меню из трёх полосок разбито на раскрывающиеся разделы: Игра, Торговля, Казино и VIP, Прогресс, Кошелёк, Аккаунт","The hamburger menu is grouped into collapsible sections: Game, Trading, Casino & VIP, Progress, Wallet, Account"],
+["Реставрация переехала на отдельную страницу: починка всех карточек разом или по одной до выбранного уровня","Restoration moved to its own page: repair all cards at once or one by one up to a chosen level"],
+["Крафт убран, сеты остались во вкладке «Сеты» коллекции","Crafting was removed, sets stay in the Sets tab of the collection"],
+["🎡 Колесо фортуны: бесплатная попытка раз в 20 часов, дальше за 5 ◈. Деньги, токены, бесплатный дроп и джекпот +15%","🎡 Wheel of Fortune: a free spin every 20 hours, then 5 ◈ each. Cash, tokens, a free case and a +15% jackpot"]]})}catch(e){}
+})();
+</script>
+<script>
+/* ===== v6.0: боты-игроки: торгуют на рынке, стоят в рейтинге, имеют профили ===== */
+(()=>{
+const KEY="kx_bots2",NB=40,TICK=15e3;
+const NM=["Nikita_TON","CryptoLisa","vlad4k","AlexGifts","DarkPepe","mishka99","SantaFlip","Kolya_NFT","tonwhale","SweetCandy","Sasha_K","FloorHunter","gift_lord","MaxTrader","Anya_Drop","ivanich","PlushKing","ZhenyaXD","lunar_snake","VoodooDan","Ghost_77","DashaDrop","Roman_Hodl","pepe_enjoyer","NeoGifts","kitty_cat","Timur_ton","ArtemRich","luckyLena","DiamondHands","Stas_flip","Mila_Gems","yury_sell","TopHat_Tim","oleg_nft","SkyWalker","BigBen","Fox_Trader","grisha_k","StarDust"];
+const BIO=["Собираю Voodoo Doll","Флиплю подарки","Холд до луны","Ищу редкие фоны","Покупаю ниже флора","Просто люблю NFT","Апгрейд или ничего","","Торгую каждый день","Гифты — это стиль",""];
+const TI=["","","","Флиппер","Охотник за флором","Фанат Voodoo","Гифтовод",""];
+let B=null;
+const bt=id=>B.b.find(b=>b.id===id),lc=l=>({c:l.c,g:l.g,v:l.v|0,cn:l.cn==null?100:l.cn,id:l.id}),cn1=()=>Math.round(rnd(55,100)*10)/10;
+const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(B))}catch(e){}};
+function rc(maxv){const L=[];CARDS.forEach((k,i)=>{if(k.p<=maxv)L.push(i)});if(!L.length)return null;
+  const c=wpick(L,i=>Math.pow(CARDS[i].p,.4));return{c,g:pickBg(),v:rollVar(c),cn:cn1(),id:Math.random()<.04?1+rn(99):1+rn(30000)}}
+const lotsOf=b=>B.lots.filter(l=>l.s===b.id);
+const capOf=b=>b.bal+b.inv.concat(lotsOf(b)).reduce((s,c)=>s+val(c),0);
+function cosm(b){const cap=capOf(b),h=k=>h32(b.i*131+k),pk=(L,k)=>L.length?L[Math.floor(h(k)*L.length)].id:"";
+  b.fi=h(1)<.7?pk(FRA.filter(f=>f.id!=="y26"&&f.p<=cap*.5),2):"";
+  b.nc=h(3)<.8?pk(NCS.filter(f=>f.p<=cap*.25),4):"";b.bn=h(5)<.6?pk(BNS.filter(f=>f.p<=cap*.25),6):"";
+  b.em=h(7)<.45?EMS[Math.floor(h(8)*EMS.length)]:"";b.bio=BIO[Math.floor(h(9)*BIO.length)];b.ti=TI[Math.floor(h(10)*TI.length)];
+  b.mn=cap>3e4?2:cap>1e4?1:0;b.vl=0}
+function mkBot(i){const W=Math.round(12*Math.exp(h32(i*977+3)*8.4)),b={i,id:String(7000100+i),n:NM[i%NM.length],bal:W*.2,W,sp:Math.round(W*(.4+h32(i+9))),inv:[],la:Date.now()-rn(90)*6e4,kc:h32(i*13+1)<.3?+(h32(i*7+2)*.25).toFixed(2):0};
+  let rem=W*.8,g=0;while(rem>=1.2&&b.inv.length<14&&g++<60){const c=rc(rem*.85);if(!c)break;const v=val(c);if(v>rem)continue;b.inv.push(c);rem-=v}
+  b.bal+=rem;B.b.push(b);cosm(b);
+  const top=b.inv.slice().sort((x,y)=>val(y)-val(x))[0];b.av=top&&h32(i*5+4)<.4?{c:top.c,g:top.g}:DAV[i%DAV.length]}
+function init(){B={v:2,t:Date.now(),b:[],lots:[]};for(let i=0;i<NB;i++)mkBot(i);
+  B.b.filter((b,i)=>i%3===0).forEach(b=>{if(b.inv.length){const c=b.inv.splice(rn(b.inv.length),1)[0];B.lots.push(Object.assign({},c,{price:Math.max(.5,r2(val(c)*rnd(1,1.2))),s:b.id,sn:b.n,ts:Date.now()-rn(30)*6e4}))}});
+  /* закреплённые лоты со скрина: Voodoo Doll на разных фонах */
+  const vd=CARDS.findIndex(k=>k.e==="Voodoo Doll"),gb=e=>BGS.findIndex(x=>x.e===e);
+  [[5576,0,"Cobweb",47.91,2],[8476,1,"Dusty Mauve",47.92,7],[13231,2,"Terracotta",47.94,11]].forEach(a=>{const s=B.b[a[4]];B.lots.push({id:a[0],c:vd,g:gb(a[2]),v:a[1],cn:100,price:a[3],s:s.id,sn:s.n,ts:Date.now(),pin:1})});
+  persist()}
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||"null");if(d&&d.v===2&&d.b&&d.b.length===NB&&d.b.every(b=>b.inv.every(c=>CARDS[c.c]&&BGS[c.g]))){B=d;return}}catch(e){}init()}
+function round(){const now=Date.now();let sold=0;
+  B.lots=B.lots.filter(l=>{if(l.pin)return true;if(now-l.ts>3e6){const b=bt(l.s);if(b)b.inv.push(lc(l));return false}return true});
+  B.b.forEach(b=>{const r=Math.random(),my=lotsOf(b);
+    if(r<.07&&b.inv.length&&my.length<3&&B.lots.length<45){const c=b.inv.splice(rn(b.inv.length),1)[0];B.lots.push(Object.assign({},c,{price:Math.max(.5,r2(val(c)*rnd(1,1.2))),s:b.id,sn:b.n,ts:now}));b.la=now}
+    else if(r<.15){const ok=l=>l.price<=b.bal*.8&&l.price/val(l)<=1.08,
+        pool=B.lots.filter(l=>!l.pin&&l.s!==b.id&&now-l.ts>45e3&&ok(l)).map(l=>({l,own:0})).concat((S.list||[]).filter(l=>l.loc&&now-l.ts>8e3&&ok(l)).map(l=>({l,own:1})));
+      if(pool.length){const q=pool[rn(pool.length)],l=q.l;b.bal-=l.price;b.sp+=l.price;b.la=now;b.inv.push(lc(l));
+        if(q.own){const a=r2(l.price*(modOn("nofee")?1:Math.min(1,FEE+SUB().fe)));S.bal+=a;S.list=S.list.filter(x=>x!==l);sold++;toast(tt("{0} купил твою карточку: +{1} $",b.n,fmt(a)))}
+        else{const s=bt(l.s);if(s){s.bal+=r2(l.price*.95);s.la=now}B.lots=B.lots.filter(x=>x!==l)}}}
+    else if(r<.19){const cs=CASES.filter(c=>!c.gem&&c.price<=b.bal*.5);if(cs.length){const c=cs[rn(cs.length)],k=roll1(c);b.bal-=c.price;b.sp+=c.price;b.inv.push({c:k.c,g:k.g,v:rollVar(k.c),cn:cn1(),id:1+rn(30000)});b.la=now}}
+    else if(r<.22&&b.inv.length>3){b.inv.sort((x,y)=>val(x)-val(y));b.bal+=val(b.inv.shift())*.85}
+    const T=b.W*(1+.25*Math.sin(now/36e5+b.i)),cap=capOf(b);if(cap<T)b.bal+=(T-cap)*.02;if(b.bal<3)b.bal+=rnd(2,8);
+    if(Math.random()<.01)cosm(b)});
+  B.t=now;if(sold){upd();rProf();if(cur==="mk")rMarket()}}
+function rows(){const o={};B.b.forEach(b=>{const all=b.inv.concat(lotsOf(b)).sort((x,y)=>val(y)-val(x)),cap=capOf(b);
+  o[b.id]={n:b.n,a:b.av,c:Math.round(cap),k:b.kc?Math.round(cap*b.kc):0,s:Math.round(b.sp),q:all.length,r:(RK.filter(r=>b.sp>=r[0]).pop()||RK[0])[1],ti:b.ti,f:(frDef(b.fi)||{}).e||"",nc:b.nc,bn:b.bn,em:b.em,bio:b.bio,se:SEASON,t:b.la,fi:b.fi,mn:b.mn,vl:b.vl,bc:all.length?val(all[0]):0,sh:all.slice(0,4).map(c=>({c:c.c,g:c.g,v:c.v|0,cn:c.cn,id:c.id}))}});return o}
+function mergeTB(){if(!B)return false;TB=TB&&typeof TB==="object"?TB:{};Object.assign(TB,rows());if(!DB_URL||!TB[S.uid])TB[String(S.uid)]=myTop();return true}
+/* переопределения: рынок, лоты, рейтинг */
+const _tp=tpull;tpull=async function(){try{await _tp()}catch(e){}mergeTB();if(cur==="tops")rTops()};
+const _rm=rMarket;rMarket=function(){const keep=M;M=keep.concat((B?B.lots:[]).filter(l=>!keep.some(x=>x.id===l.id)));try{_rm()}finally{M=keep}};
+const _buy=buy;buy=function(k){const l=B&&B.lots.find(x=>String(x.id)===String(k));if(!l)return _buy(k);
+  if(S.bal<l.price){toast(tt("Не хватает $ 😕"));return}
+  S.bal-=l.price;B.lots=B.lots.filter(x=>x!==l);const s=bt(l.s);if(s){s.bal+=r2(l.price*.95);s.la=Date.now()}
+  S.inv.push(newItem(lc(l),S.inv.some(x=>x.id===l.id)?0:l.id));persist();toast(tt("Куплено: {0}",CARDS[l.c].n));upd();rMarket();rInv();rProf()};
+const _dl=doList;doList=async function(id){if(DB_URL)return _dl(id);
+  const p=r2(+$("pr").value);if(!(p>=.5)){toast("Укажи цену от 0.50 $");return}
+  if(S.list.length>=MAXL){toast(tt("Максимум {0} лотов",MAXL));return}
+  const i=S.inv.findIndex(x=>x.id===id);if(i<0)return;const c=S.inv.splice(i,1)[0];S.prof.show=S.prof.show.filter(x=>x!==id);
+  S.list.push(Object.assign({id:c.id,price:p,loc:1,ts:Date.now()},frz(c)));closeM();toast(tt("Карточка выставлена на рынок"));save();rInv();rMarket();rProf()};
+const _ul=unlist;unlist=async function(k){const i=S.list.findIndex(x=>String(x.id)===String(k)&&x.loc);
+  if(i<0)return _ul(k);const l=S.list.splice(i,1)[0];S.inv.push(newItem(l,S.inv.some(x=>x.id===l.id)?0:l.id));save();rMarket();rInv();rProf()};
+function tickB(){if(LOCK||!B)return;const n=Math.max(1,Math.min(40,Math.floor((Date.now()-B.t)/TICK)));for(let i=0;i<n;i++)round();persist();
+  if(cur==="mk"&&!$("modal").classList.contains("on"))rMarket();if(cur==="tops"&&mergeTB())rTops()}
+load();mergeTB();setTimeout(tickB,3000);setInterval(tickB,TICK);
+try{CHANGELOG.unshift({v:"6.0",d:"28.11.2026",t:["Реальная экономика и боты 🤖","Real economy & bots 🤖"],it:[["Цены карт близки к реальным floor-ценам NFT-подарков, с копейками ($1.22 и т. д.). Прогресс сезона сброшен","Card prices follow real NFT gift floor prices, with cents ($1.22 etc.). Season progress reset"],["Voodoo Doll: три модели и три новых фона, лоты #5576, #8476, #13231 на рынке","Voodoo Doll: three models and three new backgrounds, lots #5576, #8476, #13231 on the market"],["Боты-игроки торгуют на рынке, покупают твои лоты по честной цене, есть в рейтинге и с профилями","Player bots trade on the market, buy your listings at fair prices, appear in rankings and have profiles"],["Апгрейдер: убран фильтр «Только раритет», цели считаются с точностью до центов","Upgrader: removed the “Rarity only” filter, targets are exact to the cent"]]})}catch(e){}
+})();
+
+</script>
 </body>
 </html>
